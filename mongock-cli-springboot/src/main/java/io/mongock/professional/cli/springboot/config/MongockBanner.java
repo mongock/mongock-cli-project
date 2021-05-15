@@ -5,7 +5,7 @@ import org.springframework.core.env.Environment;
 
 import java.io.PrintStream;
 
-public class MongockBanner implements Banner {
+public class MongockBanner implements org.springframework.boot.Banner {
     @Override
     public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
         out.println("\n" +
