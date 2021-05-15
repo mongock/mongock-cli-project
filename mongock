@@ -1,0 +1,9 @@
+#!/bin/sh
+
+
+  cp target/spring5-springdata3-1.0-SNAPSHOT.jar target/mongock-cli.jar
+  echo "Start-Class: io.mongock.professional.cli.springboot.MongockSpringbootCli" >> manifest.txt
+  jar ufm target/mongock-cli.jar manifest.txt
+
+#  mvn clean install -Pmongock-cli
+  java -jar target/mongock-cli.jar "$@"
