@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 public class ListCommand implements Callable<Integer> {
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         System.out.println("This command lists all the changes with state and more information");
         return 0;
     }

@@ -1,0 +1,9 @@
+#!/bin/sh
+#TODO search for a mongock-cli.jar. If it's not in the folder, take the first .jar and copy/past to mongock-cli.jar
+#TODO create a separated script, create-mongock-cli.sh, that takes the name of the jar as parameter, copy/past that jar to mongock-cli.jar and update manifest
+  cp target/spring5-springdata3-1.0-SNAPSHOT.jar target/mongock-cli.jar
+  tempManifest=$(mktemp manifest.txt)
+  echo "Start-Class: io.mongock.professional.cli.springboot.MongockSpringbootCli" >> "$tempManifest"
+  jar ufm target/mongock-cli.jar "$tempManifest"
+  rm "$tempManifest"
+  java -jar target/mongock-cli.jar "$@"
