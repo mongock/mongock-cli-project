@@ -56,8 +56,4 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
         return exitCode;
     }
 
-
-
-
-
 }
