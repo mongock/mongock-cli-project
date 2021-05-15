@@ -1,9 +1,11 @@
 package io.mongock.professional.cli.springboot;
 
+import com.github.cloudyrock.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.professional.cli.core.MongockCli;
 import io.mongock.professional.cli.springboot.config.CliProperties;
 import io.mongock.professional.cli.springboot.config.MongockBanner;
 import io.mongock.professional.cli.springboot.config.PropertyInitializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +25,9 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
     private final IFactory factory;
 
     private int exitCode;
+
+    @Autowired
+    private RunnerBuilder mongockBuilder;
 
     public MongockSpringbootCli(IFactory factory) {
         this.factory = factory;
@@ -47,6 +52,7 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
                 .builder()
                 .factory(factory)
                 .allCommands()
+                .runnerBuilder(mongockBuilder)
                 .build()
                 .execute(args);
     }

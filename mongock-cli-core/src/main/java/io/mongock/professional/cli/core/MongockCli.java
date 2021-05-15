@@ -1,15 +1,18 @@
 package io.mongock.professional.cli.core;
 
+import com.github.cloudyrock.mongock.exception.MongockException;
+import com.github.cloudyrock.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.professional.cli.core.commands.ListCommand;
 import io.mongock.professional.cli.core.commands.UndoCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import static picocli.CommandLine.IFactory;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import static picocli.CommandLine.IFactory;
 
 @Command(name = "mongock", description = "Mongock cli")
 public class MongockCli {
@@ -25,13 +28,15 @@ public class MongockCli {
 
         private Set<CommandDefinition> commands = new HashSet<>();
         private IFactory factory;
+        private boolean allCommands = false;
+        private RunnerBuilder builder;
 
         private Builder() {
         }
 
         public Builder allCommands() {
-            return addCommand("undo", new UndoCommand())
-                    .addCommand("list", new ListCommand());
+            allCommands = true;
+            return this;
         }
 
         public Builder addCommand(String name, Callable command) {
@@ -44,11 +49,27 @@ public class MongockCli {
             return this;
         }
 
+        public Builder runnerBuilder(RunnerBuilder builder) {
+            this.builder = builder;
+            return this;
+        }
+
         public CommandLine build() {
+            validate();
+            if (allCommands) {
+                addCommand("undo", new UndoCommand(builder))
+                        .addCommand("list", new ListCommand(builder));
+            }
             return getFactory()
                     .map(factory -> new CommandLineDecorator(new MongockCli(), factory))
                     .orElseGet(() -> new CommandLineDecorator(new MongockCli()))
                     .addSubCommands(commands);
+        }
+
+        private void validate() {
+            if (builder == null) {
+                throw new MongockException("builder needs to be provided to CLI");
+            }
         }
 
         private Optional<IFactory> getFactory() {
