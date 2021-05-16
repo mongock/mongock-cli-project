@@ -16,8 +16,31 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <java.version>1.8</java.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <artifactId>mongock-core-bom</artifactId>
+                <groupId>com.github.cloudyrock.mongock</groupId>
+                <version>${mongock.core.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.cloudyrock.mongock</groupId>
+            <artifactId>mongock-runner-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.mongock.project</groupId>
+            <artifactId>mongock-runner-common-professional</artifactId>
+            <version>${mongock.runner.professional.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>

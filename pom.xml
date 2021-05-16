@@ -21,25 +21,18 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <spring-boot.version>[2.0.0, 3.0.0)</spring-boot.version>
         <picocli.version>4.6.1</picocli.version>
+        <!-- CORE
+        TODO UPDATE THIS VERSION FOR CORE UPDATES
+        -->
+        <mongock.core.version>5.0.3.BETA-SNAPSHOT</mongock.core.version>
+
+        <mongock.runner.professional.version>5.0.3.BETA-SNAPSHOT</mongock.runner.professional.version>
     </properties>
 
     <build>
         <plugins>
 
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>springboot-boot-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <mainClass>com.cli.MongockSpringBootCLI</mainClass>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>repackage</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

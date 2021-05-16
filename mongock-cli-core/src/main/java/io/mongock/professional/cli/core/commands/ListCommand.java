@@ -1,15 +1,20 @@
 package io.mongock.professional.cli.core.commands;
 
+import com.github.cloudyrock.mongock.runner.core.builder.RunnerBuilder;
+import io.mongock.professional.cli.core.commands.base.CommunityCommandBase;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import java.util.concurrent.Callable;
+@Command(name = "list")
+public class ListCommand extends CommunityCommandBase {
 
-@Command(name = "undo")
-public class ListCommand implements Callable<Integer> {
+    public ListCommand(RunnerBuilder builder) {
+        super(builder);
+    }
 
     @Override
-    public Integer call() {
+    public Integer call(RunnerBuilder builder) {
         System.out.println("This command lists all the changes with state and more information");
-        return 0;
+        return CommandLine.ExitCode.OK;
     }
 }
