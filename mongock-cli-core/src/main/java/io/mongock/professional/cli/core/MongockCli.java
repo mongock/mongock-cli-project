@@ -1,9 +1,9 @@
 package io.mongock.professional.cli.core;
 
-import com.github.cloudyrock.mongock.exception.MongockException;
-import com.github.cloudyrock.mongock.runner.core.builder.RunnerBuilder;
+import io.mongock.api.exception.MongockException;
 import io.mongock.professional.cli.core.commands.ListCommand;
 import io.mongock.professional.cli.core.commands.UndoCommand;
+import io.mongock.runner.core.builder.RunnerBuilder;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 

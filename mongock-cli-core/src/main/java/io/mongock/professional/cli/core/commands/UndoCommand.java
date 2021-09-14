@@ -1,25 +1,26 @@
 package io.mongock.professional.cli.core.commands;
 
-import com.github.cloudyrock.mongock.runner.core.builder.RunnerBuilder;
-import io.mongock.professional.cli.core.commands.base.ProfessionalBuilderHolder;
-import io.mongock.professional.cli.core.commands.base.ProfessionalCommandBase;
+import io.mongock.professional.runner.common.executor.operation.undo.UndoOp;
+import io.mongock.runner.core.builder.RunnerBuilder;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "undo", description = "")
-public class UndoCommand extends ProfessionalCommandBase {
+@Command(name = "undo", description = "Reverts the applied changelogs")
+public class UndoCommand extends CommandBase<Integer> {
 
-    @Option(names = {"-c", "--changeSetId"}, required = true)
-    private String changeSetId;
+    @Option(names = {"-c", "--changeLogId"},
+            required = true,
+            description = "Not inclusive changelog up to which Mongock will rollback the changes")
+    private String changelogId;
 
     public UndoCommand(RunnerBuilder builder) {
         super(builder);
     }
 
     @Override
-    public Integer call(ProfessionalBuilderHolder builder) {
-        System.out.println(String.format("This command runs the undo with changeSetId[%s]", changeSetId));
-        builder.getBuilder().undo("change");
-        return 0;
+    public Integer call( ) {
+        builder.buildRunner(new UndoOp(changelogId)).execute();
+        return CommandLine.ExitCode.OK;
     }
 }
