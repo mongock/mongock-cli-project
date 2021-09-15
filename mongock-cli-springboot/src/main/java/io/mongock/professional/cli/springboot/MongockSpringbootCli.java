@@ -6,6 +6,7 @@ import io.mongock.professional.cli.springboot.config.CliProperties;
 import io.mongock.professional.cli.springboot.config.MongockBanner;
 import io.mongock.professional.cli.springboot.config.PropertyInitializer;
 import io.mongock.runner.core.builder.RunnerBuilder;
+import io.mongock.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
                 .banner(new MongockBanner())
                 .logStartupInfo(false)
                 .sources(ConfigUtil.getConfigSourcesFromProperties(cliProperties))
-                .profiles("mongock-cli");
+                .profiles(Constants.CLI_PROFILE);
         System.exit(SpringApplication.exit(springApplicationBuilder.run(args)));
     }
 
