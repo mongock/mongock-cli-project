@@ -4,7 +4,9 @@ import io.mongock.runner.core.builder.RunnerBuilder;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-@Command(name = "list")
+import static io.mongock.professional.cli.core.commands.CommandName.LIST;
+
+@Command(name = LIST)
 public class ListCommand extends CommandBase<Integer> {
 
     public ListCommand(RunnerBuilder builder) {

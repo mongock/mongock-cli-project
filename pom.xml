@@ -24,9 +24,9 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.core.version>5.0.3.BETA-SNAPSHOT</mongock.core.version>
+        <mongock.core.version>5.0.8.RC-SNAPSHOT</mongock.core.version>
 
-        <mongock.runner.professional.version>5.0.3.BETA-SNAPSHOT</mongock.runner.professional.version>
+        <mongock.runner.professional.version>5.0.8.RC-SNAPSHOT</mongock.runner.professional.version>
     </properties>
 
     <build>
