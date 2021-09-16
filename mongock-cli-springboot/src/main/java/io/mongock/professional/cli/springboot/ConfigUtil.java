@@ -2,6 +2,8 @@ package io.mongock.professional.cli.springboot;
 
 import io.mongock.professional.cli.springboot.config.CliProperties;
 import io.mongock.professional.cli.springboot.config.WrapperProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
@@ -9,13 +11,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 final class ConfigUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(ConfigUtil.class);
+
     private ConfigUtil() {
     }
 
     static CliProperties getMongockCliProperties() {
         WrapperProperties wrapper = new Yaml().loadAs(MongockSpringbootCli.class.getClassLoader().getResourceAsStream("mongock-cli.yaml"), WrapperProperties.class);
         CliProperties cliProperties = wrapper.getMongock().getCli();
-        cliProperties.getConfigSources().forEach(System.out::println);
+        cliProperties.getConfigSources().forEach(source ->  logger.debug("Added source class " + source));
         return cliProperties;
     }
 
@@ -38,7 +43,7 @@ final class ConfigUtil {
         }
 
         for (Class<?> source : sources) {
-            System.out.println("Added source class " + source.getSimpleName());
+            logger.debug("Added source class " + source.getSimpleName());
         }
         return sources;
     }

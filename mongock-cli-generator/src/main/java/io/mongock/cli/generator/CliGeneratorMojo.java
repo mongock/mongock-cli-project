@@ -24,36 +24,50 @@ import java.util.Set;
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PACKAGE)
 public class CliGeneratorMojo extends AbstractMojo {
 
-    private static final String CLI_SCRIPT = "#!/bin/sh\n java -jar target/mongock-cli.jar \"$@\"\n";
 
-    private static final String CLI_NAME = "target/mongock-cli.jar";
+    private static final String MONGOCK_FOLDER = "target/mongock";
+    private static final String TEMP_MANIFEST_FILE = MONGOCK_FOLDER + "/mongock.manifest.XXXXXXX";
+    private static final String CLI_JAR_NAME_TEMPLATE = MONGOCK_FOLDER + "/%s-mongock-cli.jar";
+    private static final String CLI_LINUX_SCRIPT_TEMPLATE = "#!/bin/sh\n" +
+            "#Generated cli script for application: %s\n" +
+            " java -jar %s \"$@\"\n";
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
 
-    //TODO implement for windows
-    //todo test for mac
     public void execute() throws MojoExecutionException {
         try {
-            generateCliArtifact();
+            getLog().info("Generating Mongock cli");
+            String appJar = getJarPath();//target/app.jar
+            String cliJar = getCliName();//target/mongock/[app-name]-mongock-cli.jar
+            if(!createMongockFolder()) {
+                throw new MojoExecutionException("Error creating Mongock cli script: Mongock folder cannot be created");
+            }
+            generateCliArtifact(appJar, cliJar);
             File file = getFileWithPermissions();
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write(CLI_SCRIPT);
+            writer.write(String.format(CLI_LINUX_SCRIPT_TEMPLATE, appJar, cliJar));
             writer.close();
+            getLog().info("Finished Mongock cli generation");
         } catch (IOException e) {
             throw new MojoExecutionException("Error creating Mongock cli script", e);
         }
     }
 
-    private void generateCliArtifact() throws IOException {
-        String artifact = getArtifactPath();
-        String cliName = getCliName();
-        getLog().info("generating cli script for artifact: " +  artifact);
-        execCommand(String.format("cp %s %s", artifact, cliName));
-        String tempFile = execCommand("mktemp mongock.manifest.XXXXXXX ");
+
+    private boolean createMongockFolder() {
+        File mongockFolder = new File(MONGOCK_FOLDER);
+        return mongockFolder.exists() || mongockFolder.mkdir();
+    }
+
+    private void generateCliArtifact(String appJar, String cliJar) throws IOException {
+        getLog().debug("Generating cli script for artifact: " +  appJar);
+        execCommand(String.format("cp %s %s", appJar, cliJar));
+        String tempFile = execCommand("mktemp " + TEMP_MANIFEST_FILE);
         execCommand("echo \"Start-Class: io.mongock.professional.cli.springboot.MongockSpringbootCli\" >> " + tempFile);
-        execCommand(String.format("jar ufm %s %s" , CLI_NAME, tempFile), false);
+        String cliJarName = String.format(CLI_JAR_NAME_TEMPLATE, getArtifactName());
+        execCommand(String.format("jar ufm %s %s" , cliJarName, tempFile), false);
         execCommand("rm " + tempFile);
     }
 
@@ -62,13 +76,18 @@ public class CliGeneratorMojo extends AbstractMojo {
     }
 
     private String execCommand(String command, boolean printError) throws IOException {
+
+        getLog().debug("Executing command: " +  command);
         String[] cpArgs = new String[]{"/bin/sh", "-c", command};
         Process process =  new ProcessBuilder(cpArgs).start();
         String error = getFromStream(process.getErrorStream());
         if(printError && StringUtils.isNotEmpty(error)) {
            getLog().error(error);
         }
-        return getFromStream(process.getInputStream());
+
+        String output = getFromStream(process.getInputStream());
+        getLog().debug("Finished execution command(" +  command + ") with output: " + output);
+        return output;
     }
 
     private String getFromStream(InputStream input) throws IOException {
@@ -99,14 +118,21 @@ public class CliGeneratorMojo extends AbstractMojo {
     }
 
     private String getCliName() {
-        return "target/mongock-cli.jar";
+        return String.format(CLI_JAR_NAME_TEMPLATE, getArtifactName());
     }
 
-    private String getArtifactPath() {
-        String artifactTemplate = "%s/%s-%s.jar";
-        String folder = "target";
+
+    private String getArtifactName() {
+        String artifactTemplate = "%s-%s";
         String artifactId = project.getArtifactId();
         String version = project.getVersion();
-        return String.format(artifactTemplate, folder, artifactId, version);
+        return String.format(artifactTemplate, artifactId, version);
+    }
+    private String getArtifactPath() {
+        return "target/" + getArtifactName();
+    }
+
+    private String getJarPath() {
+        return getArtifactPath() + ".jar";
     }
 }
