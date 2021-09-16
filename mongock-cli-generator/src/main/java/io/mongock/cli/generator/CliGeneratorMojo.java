@@ -51,7 +51,7 @@ public class CliGeneratorMojo extends AbstractMojo {
         String cliName = getCliName();
         getLog().info("generating cli script for artifact: " +  artifact);
         execCommand(String.format("cp %s %s", artifact, cliName));
-        String tempFile = execCommand("mktemp mongock.manifest.XXXXXXX --suffix \".txt\"");
+        String tempFile = execCommand("mktemp mongock.manifest.XXXXXXX ");
         execCommand("echo \"Start-Class: io.mongock.professional.cli.springboot.MongockSpringbootCli\" >> " + tempFile);
         execCommand(String.format("jar ufm %s %s" , CLI_NAME, tempFile), false);
         execCommand("rm " + tempFile);
