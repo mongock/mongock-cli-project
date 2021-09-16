@@ -20,7 +20,7 @@
         <dependencies>
             <dependency>
                 <artifactId>mongock-core-bom</artifactId>
-                <groupId>com.github.cloudyrock.mongock</groupId>
+                <groupId>io.mongock</groupId>
                 <version>${mongock.core.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -31,11 +31,11 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.github.cloudyrock.mongock</groupId>
+            <groupId>io.mongock</groupId>
             <artifactId>mongock-runner-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.mongock.project</groupId>
+            <groupId>io.mongock.professional</groupId>
             <artifactId>mongock-runner-common-professional</artifactId>
             <version>${mongock.runner.professional.version}</version>
             <scope>provided</scope>
