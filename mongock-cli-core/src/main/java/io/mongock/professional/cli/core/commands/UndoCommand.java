@@ -5,15 +5,19 @@ import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
 
 import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
 
 @Command(name = UNDO, description = "Reverts the applied changelogs", mixinStandardHelpOptions = true, version = "1.0")
 public class UndoCommand extends CommandBase<Integer> {
 
-    @CommandLine.Parameters(index = "0", description = "Not inclusive changelog up to which Mongock will rollback the change.")
+    @Parameters(index = "0", description = "  Changelog up to which Mongock will rollback(inclusive)." +
+            " If the changeLog implements the interface ChangeLog or BasicChangeLog, please provide the id.\n" +
+            "  Alternatively, provide the full name of the changeLog class")
     private String changelogId;
 
+    @SuppressWarnings("rawtypes")
     public UndoCommand(RunnerBuilder builder) {
         super(builder);
     }
