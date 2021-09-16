@@ -1,1 +1,1 @@
-# Mongock examples
+# Mongock CLI
