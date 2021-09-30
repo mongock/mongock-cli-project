@@ -12,10 +12,8 @@ import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
 @Command(name = UNDO, description = "Reverts the applied migration", mixinStandardHelpOptions = true, version = "1.0")
 public class UndoCommand extends CommandBase<Integer> {
 
-    @Parameters(index = "0", description = "  ChangeUnit id   up to which Mongock will rollback(inclusive).\n" +
-            " If  implements the interface ChangeLog or BasicChangeLog, please provide the id.\n" +
-            "  Alternatively, provide the full name of the changeLog class")
-    private String changelogId;
+    @Parameters(index = "0", description = "  ChangeUnit id   up to which Mongock will rollback(inclusive).")
+    private String changeId;
 
     @SuppressWarnings("rawtypes")
     public UndoCommand(RunnerBuilder builder) {
@@ -24,7 +22,7 @@ public class UndoCommand extends CommandBase<Integer> {
 
     @Override
     public Integer call( ) {
-        MongockRunner mongockRunner = builder.buildRunner(new UndoOp(changelogId));
+        MongockRunner mongockRunner = builder.buildRunner(new UndoOp(changeId));
         mongockRunner.forceEnable();
         mongockRunner.execute();
         return CommandLine.ExitCode.OK;

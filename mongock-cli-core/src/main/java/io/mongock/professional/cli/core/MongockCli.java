@@ -1,7 +1,6 @@
 package io.mongock.professional.cli.core;
 
 import io.mongock.api.exception.MongockException;
-import io.mongock.professional.cli.core.commands.ListCommand;
 import io.mongock.professional.cli.core.commands.UndoCommand;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import picocli.CommandLine;
@@ -57,8 +56,7 @@ public class MongockCli {
         public CommandLine build() {
             validate();
             if (allCommands) {
-                addCommand("undo", new UndoCommand(builder))
-                        .addCommand("list", new ListCommand(builder));
+                addCommand("undo", new UndoCommand(builder));
             }
             return getFactory()
                     .map(factory -> new CommandLineDecorator(new MongockCli(), factory))

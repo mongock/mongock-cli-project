@@ -19,9 +19,7 @@ final class ConfigUtil {
 
     static CliProperties getMongockCliProperties() {
         WrapperProperties wrapper = new Yaml().loadAs(MongockSpringbootCli.class.getClassLoader().getResourceAsStream("mongock-cli.yaml"), WrapperProperties.class);
-        CliProperties cliProperties = wrapper.getMongock().getCli();
-        cliProperties.getConfigSources().forEach(source ->  logger.debug("Added source class " + source));
-        return cliProperties;
+        return wrapper.getMongock().getCli();
     }
 
     static Class<?>[] getConfigSourcesFromProperties(CliProperties cliProperties) {
