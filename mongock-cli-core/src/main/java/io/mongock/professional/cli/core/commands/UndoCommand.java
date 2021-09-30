@@ -9,11 +9,11 @@ import picocli.CommandLine.Parameters;
 
 import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
 
-@Command(name = UNDO, description = "Reverts the applied changelogs", mixinStandardHelpOptions = true, version = "1.0")
+@Command(name = UNDO, description = "Reverts the applied migration", mixinStandardHelpOptions = true, version = "1.0")
 public class UndoCommand extends CommandBase<Integer> {
 
-    @Parameters(index = "0", description = "  Changelog up to which Mongock will rollback(inclusive)." +
-            " If the changeLog implements the interface ChangeLog or BasicChangeLog, please provide the id.\n" +
+    @Parameters(index = "0", description = "  ChangeUnit id   up to which Mongock will rollback(inclusive).\n" +
+            " If  implements the interface ChangeLog or BasicChangeLog, please provide the id.\n" +
             "  Alternatively, provide the full name of the changeLog class")
     private String changelogId;
 
