@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import picocli.CommandLine;
 
+import static io.mongock.runner.core.builder.BuilderType.PROFESSIONAL;
 import static picocli.CommandLine.IFactory;
 
 
@@ -76,7 +77,8 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
 
     private boolean isBuilderProfessional() {
         //TODO improve this check
-        return builder.getClass().getName().contains("professional");
+        return true;
+//        return builder.getTye() == PROFESSIONAL;
     }
 
     @Override

@@ -25,9 +25,10 @@ import java.util.Set;
 public class CliGeneratorMojo extends AbstractMojo {
 
 
-    private static final String MONGOCK_FOLDER = "target/mongock";
-    private static final String TEMP_MANIFEST_FILE = MONGOCK_FOLDER + "/mongock.manifest.XXXXXXX";
-    private static final String CLI_JAR_NAME_TEMPLATE = MONGOCK_FOLDER + "/%s-mongock-cli.jar";
+    private static final String TARGET_FOLDER = "target/";
+    private static final String MONGOCK_FOLDER = "mongock";
+    private static final String TEMP_MANIFEST_FILE = TARGET_FOLDER + MONGOCK_FOLDER + "/mongock.manifest.XXXXXXX";
+    private static final String CLI_JAR_NAME_TEMPLATE = TARGET_FOLDER + MONGOCK_FOLDER + "/%s-mongock-cli.jar";
     private static final String CLI_LINUX_SCRIPT_TEMPLATE = "#!/bin/sh\n" +
             "#Generated cli script for application: %s\n" +
             " java -jar %s \"$@\"\n";
@@ -35,13 +36,16 @@ public class CliGeneratorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
 
+    @Parameter(defaultValue = "${project.build.directory}", readonly = true)
+    private File target;
+
     public void execute() throws MojoExecutionException {
         try {
             getLog().info("Generating Mongock cli");
             String appJar = getJarPath();//target/app.jar
             String cliJar = getCliName();//target/mongock/[app-name]-mongock-cli.jar
             if(!createMongockFolder()) {
-                throw new MojoExecutionException("Error creating Mongock cli script: Mongock folder cannot be created");
+                throw new MojoExecutionException("Error creating Mongock cli script: Mongock folder CANNOT be created");
             }
             generateCliArtifact(appJar, cliJar);
             File file = getFileWithPermissions();
@@ -56,8 +60,13 @@ public class CliGeneratorMojo extends AbstractMojo {
     }
 
 
-    private boolean createMongockFolder() {
-        File mongockFolder = new File(MONGOCK_FOLDER);
+    private boolean createMongockFolder() throws MojoExecutionException {
+        if(target.exists()) {
+            getLog().info("target folder created");
+        } else {
+            getLog().error("target folder NOT created at the time of Mongock folder creation");
+        }
+        File mongockFolder = new File(target, MONGOCK_FOLDER);
         return mongockFolder.exists() || mongockFolder.mkdir();
     }
 
