@@ -11,11 +11,12 @@
     <groupId>io.mongock</groupId>
     <artifactId>mongock-cli</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.12.BETA-SNAPSHOT</version>
+    <version>5.0.14.BETA-SNAPSHOT</version>
     <modules>
         <module>mongock-cli-core</module>
         <module>mongock-cli-springboot</module>
         <module>mongock-cli-generator</module>
+        <module>mongock-cli-bom</module>
     </modules>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -29,8 +30,8 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.core.version>5.0.12.RC</mongock.core.version>
-        <mongock.runner.professional.version>5.0.12.BETA</mongock.runner.professional.version>
+        <mongock.core.version>5.0.13.RC</mongock.core.version>
+        <mongock.core.professional.version>5.0.14.BETA</mongock.core.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
