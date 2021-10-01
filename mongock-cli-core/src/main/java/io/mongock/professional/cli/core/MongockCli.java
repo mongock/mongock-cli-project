@@ -1,6 +1,7 @@
 package io.mongock.professional.cli.core;
 
 import io.mongock.api.exception.MongockException;
+import io.mongock.professional.cli.core.commands.MigrateCommand;
 import io.mongock.professional.cli.core.commands.UndoCommand;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import picocli.CommandLine;
@@ -11,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import static io.mongock.professional.cli.core.commands.CommandName.MIGRATE;
+import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
 import static picocli.CommandLine.IFactory;
 
 @Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true, version = "1.0")
@@ -56,7 +59,8 @@ public class MongockCli {
         public CommandLine build() {
             validate();
             if (allCommands) {
-                addCommand("undo", new UndoCommand(builder));
+                addCommand(UNDO , new UndoCommand(builder));
+                addCommand(MIGRATE, new MigrateCommand(builder));
             }
             return getFactory()
                     .map(factory -> new CommandLineDecorator(new MongockCli(), factory))

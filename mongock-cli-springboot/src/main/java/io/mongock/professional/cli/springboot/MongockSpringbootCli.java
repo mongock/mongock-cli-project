@@ -6,6 +6,7 @@ import io.mongock.professional.cli.springboot.config.CliProperties;
 import io.mongock.professional.cli.springboot.config.MongockBanner;
 import io.mongock.professional.cli.springboot.config.PropertyInitializer;
 import io.mongock.runner.core.builder.RunnerBuilder;
+import io.mongock.runner.core.builder.RunnerBuilderBase;
 import io.mongock.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,9 +77,8 @@ class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
     }
 
     private boolean isBuilderProfessional() {
-        //TODO improve this check
-        return true;
-//        return builder.getTye() == PROFESSIONAL;
+
+        return ((RunnerBuilderBase)builder).getType() == PROFESSIONAL;
     }
 
     @Override
