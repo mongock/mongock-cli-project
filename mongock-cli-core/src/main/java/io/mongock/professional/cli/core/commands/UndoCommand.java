@@ -9,7 +9,7 @@ import picocli.CommandLine.Parameters;
 
 import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
 
-@Command(name = UNDO, description = "Reverts the applied migration", mixinStandardHelpOptions = true, version = "1.0")
+@Command(name = UNDO, description = "Reverts the applied migration (./mongock undo -h for more details)", mixinStandardHelpOptions = true, version = "1.0")
 public class UndoCommand extends CommandBase<Integer> {
 
     @Parameters(index = "0", description = "  ChangeUnit id   up to which Mongock will rollback(inclusive).")
