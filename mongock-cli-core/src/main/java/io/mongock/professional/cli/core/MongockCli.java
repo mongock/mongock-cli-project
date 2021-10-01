@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 
 import static picocli.CommandLine.IFactory;
 
-@Command(name = "mongock", description = "Mongock cli")
+@Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true, version = "1.0")
 public class MongockCli {
 
     public static Builder builder() {
