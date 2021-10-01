@@ -25,10 +25,9 @@ import java.util.Set;
 public class CliGeneratorMojo extends AbstractMojo {
 
 
-    private static final String TARGET_FOLDER = "target/";
     private static final String MONGOCK_FOLDER = "mongock";
-    private static final String TEMP_MANIFEST_FILE = TARGET_FOLDER + MONGOCK_FOLDER + "/mongock.manifest.XXXXXXX";
-    private static final String CLI_JAR_NAME_TEMPLATE = TARGET_FOLDER + MONGOCK_FOLDER + "/%s-mongock-cli.jar";
+    private static final String TEMP_MANIFEST_FILE_TEMPLATE =  "%s/" + MONGOCK_FOLDER + "/mongock.manifest.XXXXXXX";
+    private static final String CLI_JAR_NAME_TEMPLATE =  "%s/" + MONGOCK_FOLDER + "/%s-mongock-cli.jar";
     private static final String CLI_LINUX_SCRIPT_TEMPLATE = "#!/bin/sh\n" +
             "#Generated cli script for application: %s\n" +
             " java -jar %s \"$@\"\n";
@@ -37,7 +36,7 @@ public class CliGeneratorMojo extends AbstractMojo {
     MavenProject project;
 
     @Parameter(defaultValue = "${project.build.directory}", readonly = true)
-    private File target;
+    private File outputFolder;
 
     public void execute() throws MojoExecutionException {
         try {
@@ -61,21 +60,21 @@ public class CliGeneratorMojo extends AbstractMojo {
 
 
     private boolean createMongockFolder() throws MojoExecutionException {
-        if(target.exists()) {
+        if(outputFolder.exists()) {
             getLog().info("target folder created");
         } else {
             getLog().error("target folder NOT created at the time of Mongock folder creation");
         }
-        File mongockFolder = new File(target, MONGOCK_FOLDER);
+        File mongockFolder = new File(outputFolder, MONGOCK_FOLDER);
         return mongockFolder.exists() || mongockFolder.mkdir();
     }
 
     private void generateCliArtifact(String appJar, String cliJar) throws IOException {
         getLog().debug("Generating cli script for artifact: " +  appJar);
         execCommand(String.format("cp %s %s", appJar, cliJar));
-        String tempFile = execCommand("mktemp " + TEMP_MANIFEST_FILE);
+        String tempFile = execCommand(String .format("%s " + TEMP_MANIFEST_FILE_TEMPLATE, "mktemp", outputFolder.getPath()));
         execCommand("echo \"Start-Class: io.mongock.professional.cli.springboot.MongockSpringbootCli\" >> " + tempFile);
-        String cliJarName = String.format(CLI_JAR_NAME_TEMPLATE, getArtifactName());
+        String cliJarName = String.format(CLI_JAR_NAME_TEMPLATE, outputFolder.getPath(), getArtifactName());
         execCommand(String.format("jar ufm %s %s" , cliJarName, tempFile), false);
         execCommand("rm " + tempFile);
     }
@@ -127,7 +126,7 @@ public class CliGeneratorMojo extends AbstractMojo {
     }
 
     private String getCliName() {
-        return String.format(CLI_JAR_NAME_TEMPLATE, getArtifactName());
+        return String.format(CLI_JAR_NAME_TEMPLATE, outputFolder.getPath(), getArtifactName());
     }
 
 
