@@ -19,7 +19,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.mongock.professional</groupId>
+            <groupId>io.mongock</groupId>
             <artifactId>mongock-cli-core</artifactId>
             <version>${project.version}</version>
         </dependency>
