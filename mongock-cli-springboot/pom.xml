@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.mongock.professional</groupId>
             <artifactId>mongock-cli-core</artifactId>
-            <version>${project.version}</version>
+            <version>5.0.16.BETA</version>
         </dependency>
 
         <dependency>
