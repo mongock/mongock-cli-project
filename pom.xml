@@ -8,7 +8,7 @@
     <description>Mongock CLI project</description>
     <url>https://github.com/mongock/mongock-cli</url>
 
-    <groupId>io.mongock.professional</groupId>
+    <groupId>io.mongock</groupId>
     <artifactId>mongock-cli</artifactId>
     <packaging>pom</packaging>
     <version>5.0.16.BETA-SNAPSHOT</version>
