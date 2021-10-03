@@ -8,10 +8,10 @@
     <description>Mongock CLI project</description>
     <url>https://github.com/mongock/mongock-cli</url>
 
-    <groupId>io.mongock</groupId>
+    <groupId>io.mongock.professional</groupId>
     <artifactId>mongock-cli</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.15.BETA-SNAPSHOT</version>
+    <version>5.0.16.BETA-SNAPSHOT</version>
     <modules>
         <module>mongock-cli-core</module>
         <module>mongock-cli-springboot</module>
@@ -31,7 +31,7 @@
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
         <mongock.core.version>5.0.13.RC</mongock.core.version>
-        <mongock.core.professional.version>5.0.14.BETA</mongock.core.professional.version>
+        <mongock.core.professional.version>5.0.16.BETA</mongock.core.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
