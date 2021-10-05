@@ -80,6 +80,6 @@ Vagrantfile
 #Ignoring OSX files
 **/.DS_Store
 .DS_Store
-mongock
 dependency-reduced-pom.xml
 **/dependency-reduced-pom.xml
+mongock-cli/mongock
