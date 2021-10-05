@@ -1,4 +1,4 @@
-package io.mongock.professional.cli.springboot;
+package io.mongock.cli.springboot;
 
 import org.springframework.core.env.Environment;
 

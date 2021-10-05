@@ -1,4 +1,4 @@
-package io.mongock.professional.cli.core;
+package io.mongock.cli.core;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;

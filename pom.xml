@@ -9,14 +9,13 @@
     <url>https://github.com/mongock/mongock-cli</url>
 
     <groupId>io.mongock</groupId>
-    <artifactId>mongock-cli</artifactId>
+    <artifactId>mongock-cli-project</artifactId>
     <packaging>pom</packaging>
     <version>5.0.16.BETA-SNAPSHOT</version>
     <modules>
         <module>mongock-cli-core</module>
         <module>mongock-cli-springboot</module>
-        <module>mongock-cli-generator</module>
-        <module>mongock-cli-bom</module>
+        <module>mongock-cli</module>
     </modules>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>

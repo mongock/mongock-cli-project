@@ -1,4 +1,4 @@
-package io.mongock.professional.cli.core.commands;
+package io.mongock.cli.core.commands;
 
 import io.mongock.runner.core.builder.RunnerBuilder;
 import java.util.concurrent.Callable;
