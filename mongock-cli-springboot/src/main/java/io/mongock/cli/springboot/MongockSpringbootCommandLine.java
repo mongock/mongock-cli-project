@@ -2,9 +2,6 @@ package io.mongock.professional.cli.springboot;
 
 import io.mongock.professional.cli.core.CommandHelper;
 import io.mongock.professional.cli.core.MongockCli;
-import io.mongock.professional.cli.springboot.config.CliProperties;
-import io.mongock.professional.cli.springboot.config.MongockBanner;
-import io.mongock.professional.cli.springboot.config.PropertyInitializer;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.builder.RunnerBuilderBase;
 import io.mongock.utils.Constants;
@@ -22,36 +19,48 @@ import picocli.CommandLine;
 import static io.mongock.runner.core.builder.BuilderType.PROFESSIONAL;
 import static picocli.CommandLine.IFactory;
 
-
-//TODO support .yaml and .properties
-//TODO support profiles
-
 @SpringBootApplication
-class MongockSpringbootCli implements CommandLineRunner, ExitCodeGenerator {
+class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongockSpringbootCli.class);
+    private static final Logger logger = LoggerFactory.getLogger(MongockSpringbootCommandLine.class);
 
-    private final IFactory factory;
+    private static Class<?>[] sources;
 
     private int exitCode;
 
     @Autowired
     private RunnerBuilder builder;
 
-    @Autowired
+    @Autowired(required = false)
+    private IFactory factory;
 
-    public MongockSpringbootCli(IFactory factory) {
-        this.factory = factory;
+
+    //This is called from the Springboot launcher in the wrapper project
+    public static void setSources(Class<?>... sources) {
+        MongockSpringbootCommandLine.sources = new Class[sources.length + 1];
+        MongockSpringbootCommandLine.sources[0] = MongockSpringbootCommandLine.class;
+        for(int i=0 ; i< sources.length ; i++) {
+            Class<?> source = sources[i];
+            logger.debug("Setting config source: {}", source);
+            MongockSpringbootCommandLine.sources[i + 1] = source;
+        }
+    }
+
+    public static Class<?>[] getSources() {
+        if(sources != null) {
+            return sources;
+        } else  {
+            logger.warn("Sources not added. This will probably cause the process to break");
+            return new Class<?>[]{MongockSpringbootCommandLine.class};
+        }
     }
 
     public static void main(String... args) {
-        CliProperties cliProperties = ConfigUtil.getMongockCliProperties();
         SpringApplicationBuilder springApplicationBuilder =  new SpringApplicationBuilder()
                 .web(WebApplicationType.NONE)
-                .initializers(new PropertyInitializer())
                 .banner(new MongockBanner())
                 .logStartupInfo(false)
-                .sources(ConfigUtil.getConfigSourcesFromProperties(cliProperties))
+                .sources(getSources())
                 .profiles(Constants.CLI_PROFILE);
         System.exit(SpringApplication.exit(springApplicationBuilder.run(args)));
     }
