@@ -9,7 +9,7 @@
     </formats>
     <files>
         <file>
-            <source>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</source>
+            <source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
@@ -17,4 +17,13 @@
             <outputDirectory>/</outputDirectory>
         </file>
     </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <excludes>
+                <exclude>${project.groupId}:${project.artifactId}:jar:*</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
