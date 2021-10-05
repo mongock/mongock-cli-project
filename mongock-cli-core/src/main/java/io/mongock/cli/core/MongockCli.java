@@ -1,8 +1,8 @@
-package io.mongock.professional.cli.core;
+package io.mongock.cli.core;
 
 import io.mongock.api.exception.MongockException;
-import io.mongock.professional.cli.core.commands.MigrateCommand;
-import io.mongock.professional.cli.core.commands.UndoCommand;
+import io.mongock.cli.core.commands.MigrateCommand;
+import io.mongock.cli.core.commands.UndoCommand;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -12,8 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static io.mongock.professional.cli.core.commands.CommandName.MIGRATE;
-import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
+import static io.mongock.cli.core.commands.CommandName.MIGRATE;
+import static io.mongock.cli.core.commands.CommandName.UNDO;
 import static picocli.CommandLine.IFactory;
 
 @Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true, version = "1.0")

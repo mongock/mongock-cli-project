@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>io.mongock</groupId>
-        <artifactId>mongock-cli</artifactId>
+        <artifactId>mongock-cli-project</artifactId>
         <version>5.0.16.BETA-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>

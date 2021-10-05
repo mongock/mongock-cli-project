@@ -1,10 +1,10 @@
-package io.mongock.professional.cli.core;
+package io.mongock.cli.core;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.mongock.professional.cli.core.commands.CommandName.UNDO;
+import static io.mongock.cli.core.commands.CommandName.UNDO;
 
 public final class CommandHelper {
 

@@ -1,7 +1,7 @@
-package io.mongock.professional.cli.springboot;
+package io.mongock.cli.springboot;
 
-import io.mongock.professional.cli.core.CommandHelper;
-import io.mongock.professional.cli.core.MongockCli;
+import io.mongock.cli.core.CommandHelper;
+import io.mongock.cli.core.MongockCli;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.builder.RunnerBuilderBase;
 import io.mongock.utils.Constants;
