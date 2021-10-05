@@ -19,7 +19,6 @@ public class CliMainMethodRunner extends MainMethodRunner {
 
 	public void run() throws Exception {
 		Class<?> mainClass = Class.forName(this.cliMainClass, false, Thread.currentThread().getContextClassLoader());
-
 		Class<?> originalMainClass = Class.forName(this.originalMainClass, false, Thread.currentThread().getContextClassLoader());
 		setSources(mainClass, new Class[]{originalMainClass});
 		runMainMethod(mainClass, this.mainArgs);
