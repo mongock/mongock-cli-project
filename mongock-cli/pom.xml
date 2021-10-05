@@ -54,19 +54,21 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
+                        <id>linux-script</id> <!-- has to be set -->
                         <phase>process-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <copy file="${project.build.outputDirectory}/linux_script_template"
-                                      toFile="mongock" overwrite="true" />
-                            </tasks>
-                        </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <target name="linux-script">
+                                <copy file="${project.build.outputDirectory}/linux_script_template"
+                                      toFile="mongock" overwrite="true" />
+                                <chmod file="mongock" perm="ugo+rx"/>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
