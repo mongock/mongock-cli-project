@@ -45,10 +45,10 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:cloudyrock/mongock-professional-core.git</connection>
-        <developerConnection>scm:git:https://github.com/mongock/mongock-cli.git</developerConnection>
-        <url>https://github.com/mongock/mongock-cli</url>
-        <tag>mongock-cli-5.0.12.BETA</tag>
+        <connection>scm:git:git@github.com:mongock/mongock-cli-project.git</connection>
+        <developerConnection>scm:git:https://github.com/mongock/mongock-cli-project.git</developerConnection>
+        <url>https://github.com/mongock/mongock-cli-project</url>
+        <tag>mongock-cli-project-5.0.17.BETA</tag>
     </scm>
 
     <developers>
