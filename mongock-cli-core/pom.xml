@@ -20,8 +20,16 @@
         <dependencies>
             <dependency>
                 <groupId>io.mongock</groupId>
-                <artifactId>mongock-core-bom</artifactId>
-                <version>${mongock.core.version}</version>
+                <artifactId>mongock-bom</artifactId>
+                <version>${mongock.community.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.mongock.professional</groupId>
+                <artifactId>mongock-professional-bom</artifactId>
+                <version>${mongock.professional.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -37,7 +45,6 @@
         <dependency>
             <groupId>io.mongock.professional</groupId>
             <artifactId>mongock-runner-common</artifactId>
-            <version>${mongock.core.professional.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

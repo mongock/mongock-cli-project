@@ -29,8 +29,8 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.core.version>5.0.13.RC</mongock.core.version>
-        <mongock.core.professional.version>5.0.16.BETA</mongock.core.professional.version>
+        <mongock.community.version>5.0.17.RC</mongock.community.version>
+        <mongock.professional.version>5.0.17.BETA</mongock.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
