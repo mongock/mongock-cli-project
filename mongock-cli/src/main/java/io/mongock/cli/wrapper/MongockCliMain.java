@@ -10,15 +10,15 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MongockCliMain {
 
 //	private static final Logger logger = LoggerFactory.getLogger(MongockCliMain.class);
-
-	//TODO this should ba passed as parameter in the CLI
-	private static final String CLI_JAR = "/home/dieppa/dev/cli.jar";
 
 
 	public static final String CLI_MAIN_CLASS = "io.mongock.cli.springboot.MongockSpringbootCommandLine";
@@ -28,30 +28,35 @@ public class MongockCliMain {
 
 	public static void main(String... args) throws Exception {
 
-		String pathToSpringJar = getJarParameter(args);
+		String appJar = getParameter(args, "-appJar");
+		String cliJar = getParameter(args, "-cliJar");
 
-		JarFileArchive jarArchive = new JarFileArchive(new File(pathToSpringJar));
+		JarFileArchive jarArchive = new JarFileArchive(new File(appJar));
 
 		// Class name to Class object mapping.
 		URLClassLoader classLoader = URLClassLoader.newInstance(
-				new URL[]{new URL(String.format(JAR_URL_TEMPLATE, pathToSpringJar))}
+				new URL[]{new URL(String.format(JAR_URL_TEMPLATE, appJar))}
 		);
 
 		// Create the jar from the path and retrieves
-		JarFile AppJarFile = new JarFile(pathToSpringJar);
+		JarFile AppJarFile = new JarFile(appJar);
 
 		// Loads the spring's main components to be able to launch it
 		loadSpringJar(AppJarFile.entries(), classLoader);
-
 		AppJarFile.close();
-		new SpringbootLauncher(jarArchive, CLI_JAR, CLI_MAIN_CLASS).launch(getCleanArgs(args));
+		new SpringbootLauncher(jarArchive, cliJar, CLI_MAIN_CLASS).launch(getCleanArgs(args, "-appJar", "-cliJar"));
 	}
 
-	private static String[] getCleanArgs(String[] args) {
-		String[] newArgs = new String[args.length - 2];
+	private static String[] getCleanArgs(String[] args, String... paramNames) {
+
+		Set<String> paramNamesSet = Stream.of(paramNames)
+				.map(String::toLowerCase)
+				.collect(Collectors.toSet());
+
+		String[] newArgs = new String[args.length - (paramNames.length * 2)];
 		int newArgsIndex = 0;
 		for (int i = 0; i < args.length; i++) {
-			if (!"-appJar".equalsIgnoreCase(args[i])) {
+			if (!paramNamesSet.contains(args[i].toLowerCase())) {
 				newArgs[newArgsIndex++] = args[i];
 			} else {
 				i++;
@@ -60,17 +65,19 @@ public class MongockCliMain {
 		return newArgs;
 	}
 
-	private static String getJarParameter(String[] args) {
+	private static String getParameter(String[] args, String paramName) {
 		int i = 0;
 		do {
-			if ("-appJar".equalsIgnoreCase(args[i])) {
+			if (paramName.equalsIgnoreCase(args[i])) {
 				if (args.length == i + 1) {
-					throw new RuntimeException("Found \"-appJar\" flag with missing value. Please follow the format \"-appJar jar_path\"");
+					throw new RuntimeException(
+							String.format("Found [%s] flag with missing value. Please follow the format \"%s value\"", paramName, paramName)
+					);
 				}
 				return args[i + 1];
 			}
 		} while ((++i) < args.length);
-		throw new RuntimeException("Missing jar parameter. Please follow the format \"-appJar jar_path\"");
+		throw new RuntimeException(String.format("Missing jar parameter. Please follow the format \"-%s jar_path\"", paramName));
 	}
 
 
