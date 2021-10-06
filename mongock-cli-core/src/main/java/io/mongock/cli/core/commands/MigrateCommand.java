@@ -1,14 +1,19 @@
 package io.mongock.cli.core.commands;
 
+import io.mongock.cli.core.VersionProvider;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
 import io.mongock.runner.core.executor.operation.change.MigrationOp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import static io.mongock.cli.core.commands.CommandName.MIGRATE;
 import static io.mongock.cli.core.commands.CommandName.UNDO;
 
-@Command(name = UNDO, description = "Executes all the pending changes", mixinStandardHelpOptions = true, version = "1.0")
+@Command(name = MIGRATE,
+        description = "Executes all the pending changes",
+        mixinStandardHelpOptions = true,
+        versionProvider = VersionProvider.class)
 public class MigrateCommand extends CommandBase<Integer> {
 
 

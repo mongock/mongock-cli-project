@@ -1,5 +1,6 @@
 package io.mongock.cli.core.commands;
 
+import io.mongock.cli.core.VersionProvider;
 import io.mongock.professional.runner.common.executor.operation.undo.UndoOp;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
@@ -7,7 +8,10 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = CommandName.UNDO, description = "Reverts the applied migration (./mongock undo -h for more details)", mixinStandardHelpOptions = true, version = "1.0")
+@Command(name = CommandName.UNDO,
+        description = "Reverts the applied migration (./mongock undo -h for more details)",
+        mixinStandardHelpOptions = true,
+        versionProvider = VersionProvider.class)
 public class UndoCommand extends CommandBase<Integer> {
 
     @Parameters(index = "0", description = "  ChangeUnit id   up to which Mongock will rollback(inclusive).")

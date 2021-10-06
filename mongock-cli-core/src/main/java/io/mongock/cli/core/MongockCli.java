@@ -16,7 +16,8 @@ import static io.mongock.cli.core.commands.CommandName.MIGRATE;
 import static io.mongock.cli.core.commands.CommandName.UNDO;
 import static picocli.CommandLine.IFactory;
 
-@Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true, version = "1.0")
+@Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true,
+versionProvider = VersionProvider.class)
 public class MongockCli {
 
     public static Builder builder() {
