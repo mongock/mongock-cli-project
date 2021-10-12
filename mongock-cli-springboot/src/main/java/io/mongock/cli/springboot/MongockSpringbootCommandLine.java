@@ -79,7 +79,6 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
                 exitCode = MongockCli
                         .builder()
                         .factory(factory)
-                        .allCommands()
                         .runnerBuilder(builder)
                         .build()
                         .execute(args);

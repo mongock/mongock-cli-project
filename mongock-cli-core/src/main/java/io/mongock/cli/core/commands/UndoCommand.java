@@ -1,7 +1,6 @@
 package io.mongock.cli.core.commands;
 
 import io.mongock.cli.core.VersionProvider;
-import io.mongock.professional.runner.common.executor.operation.undo.UndoOp;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
 import picocli.CommandLine;
@@ -24,7 +23,7 @@ public class UndoCommand extends CommandBase<Integer> {
 
     @Override
     public Integer call( ) {
-        MongockRunner mongockRunner = builder.buildRunner(new UndoOp(changeId));
+        MongockRunner mongockRunner = builder.buildRunner(ProfessionalOperationProxy.undoOp(changeId));
         mongockRunner.forceEnable();
         mongockRunner.execute();
         return CommandLine.ExitCode.OK;

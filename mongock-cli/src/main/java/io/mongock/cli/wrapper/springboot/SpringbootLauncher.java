@@ -52,7 +52,6 @@ public class SpringbootLauncher extends JarLauncher {
 
 	@Override
 	protected ClassLoader createClassLoader(Iterator<Archive> archives) throws Exception {
-		System.out.println("\n\nCREATE CLASS LOADER\n\n");
 		return new LaunchedURLClassLoader(
 				this.isExploded(),
 				this.getArchive(),

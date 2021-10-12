@@ -31,15 +31,9 @@ public class MongockCli {
 
         private Set<CommandDefinition> commands = new HashSet<>();
         private IFactory factory;
-        private boolean allCommands = false;
         private RunnerBuilder builder;
 
         private Builder() {
-        }
-
-        public Builder allCommands() {
-            allCommands = true;
-            return this;
         }
 
         public Builder addCommand(String name, Callable command) {
@@ -59,10 +53,8 @@ public class MongockCli {
 
         public CommandLine build() {
             validate();
-            if (allCommands) {
-                addCommand(UNDO , new UndoCommand(builder));
-                addCommand(MIGRATE, new MigrateCommand(builder));
-            }
+            addCommand(UNDO , new UndoCommand(builder));
+            addCommand(MIGRATE, new MigrateCommand(builder));
             return getFactory()
                     .map(factory -> new CommandLineDecorator(new MongockCli(), factory))
                     .orElseGet(() -> new CommandLineDecorator(new MongockCli()))
