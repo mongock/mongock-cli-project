@@ -44,7 +44,7 @@ public class MongockCliMain {
 		// Loads the spring's main components to be able to launch it
 		loadSpringJar(AppJarFile.entries(), classLoader);
 		AppJarFile.close();
-		new SpringbootLauncher(jarArchive, cliJar, CLI_MAIN_CLASS).launch(getCleanArgs(args, "-appJar", "-cliJar"));
+		new SpringbootLauncher(jarArchive, cliJar).launch(getCleanArgs(args, "-appJar", "-cliJar"));
 	}
 
 	private static String[] getCleanArgs(String[] args, String... paramNames) {

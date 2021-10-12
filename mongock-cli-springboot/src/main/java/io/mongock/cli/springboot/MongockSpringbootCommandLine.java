@@ -71,23 +71,20 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
         if(args.length == 0) {
             System.err.println("command format: 'mongock [operation] [parameters]'");
             exitCode = CommandLine.ExitCode.USAGE;
-        } else if(CommandHelper.isProfessionalCommand(args[0]) && !isBuilderProfessional()){
-            logger.error("Professional operation {} not supported in community edition", args[0]);
-            exitCode = CommandLine.ExitCode.USAGE;
         } else {
-            exitCode = MongockCli
-                    .builder()
-                    .factory(factory)
-                    .allCommands()
-                    .runnerBuilder(builder)
-                    .build()
-                    .execute(args);
+            if(CommandHelper.isProfessionalCommand(args[0]) && builder.getType() != PROFESSIONAL){
+                logger.error("Professional operation {} not supported in community edition", args[0]);
+                exitCode = CommandLine.ExitCode.USAGE;
+            } else {
+                exitCode = MongockCli
+                        .builder()
+                        .factory(factory)
+                        .allCommands()
+                        .runnerBuilder(builder)
+                        .build()
+                        .execute(args);
+            }
         }
-    }
-
-    private boolean isBuilderProfessional() {
-
-        return ((RunnerBuilderBase)builder).getType() == PROFESSIONAL;
     }
 
     @Override

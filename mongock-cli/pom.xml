@@ -31,6 +31,12 @@
 
         <dependency>
             <groupId>io.mongock</groupId>
+            <artifactId>mongock-api</artifactId>
+            <version>${mongock.community.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
             <artifactId>mongock-cli-springboot</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -100,6 +106,7 @@
                                     <includes>
                                         <include>org/springframework/boot/loader/**</include>
                                         <include>io/mongock/cli/wrapper/**</include>
+                                        <include>io/mongock/api/annotations/**</include>
                                     </includes>
                                 </filter>
                             </filters>
