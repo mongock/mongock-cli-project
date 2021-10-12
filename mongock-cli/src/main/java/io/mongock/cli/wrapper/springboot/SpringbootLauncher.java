@@ -1,5 +1,6 @@
 package io.mongock.cli.wrapper.springboot;
 
+import io.mongock.cli.wrapper.ClassLoaderUtil;
 import org.springframework.boot.loader.JarLauncher;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
 import org.springframework.boot.loader.MainMethodRunner;
@@ -14,6 +15,8 @@ import java.util.jar.JarFile;
 
 public class SpringbootLauncher extends JarLauncher {
 
+
+	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
 	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.MongockSpringbootCommandLine";
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
@@ -27,12 +30,21 @@ public class SpringbootLauncher extends JarLauncher {
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
+
 	public String getOriginalMainClass() {
 		try {
 			return super.getMainClass();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public SpringbootLauncher loadSpringJar(JarFile appJarFile, URLClassLoader classLoader) throws Exception {
+		ClassLoaderUtil.loadJarClasses(
+				appJarFile,
+				classLoader,
+				entryName -> entryName.startsWith(SPRINGBOOT_PREFIX) && entryName.endsWith(CLASS_EXT));
+		return this;
 	}
 
 	@Override
