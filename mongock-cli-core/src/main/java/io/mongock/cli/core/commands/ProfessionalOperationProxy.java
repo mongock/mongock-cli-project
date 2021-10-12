@@ -4,8 +4,7 @@ import io.mongock.runner.core.executor.operation.Operation;
 
 
 /**
- * This class is used to avoid using professional classes when the professional library is not imported,
- * so ClassNotFoundException is not thrown
+ * This class is used to avoid ClassNotFoundException when professional library is not imported
  */
 public final class ProfessionalOperationProxy {
 	private ProfessionalOperationProxy(){
