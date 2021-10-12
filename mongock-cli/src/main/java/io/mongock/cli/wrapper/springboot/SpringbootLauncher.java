@@ -6,16 +6,25 @@ import org.springframework.boot.loader.MainMethodRunner;
 import org.springframework.boot.loader.archive.Archive;
 
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class SpringbootLauncher extends JarLauncher {
+
+	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.MongockSpringbootCommandLine";
+	private static final String CLASS_EXT = ".class";
+	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
+
 	private final String cliJarPath;
 	private final String cliMainClass;
 
-	public SpringbootLauncher(Archive archive, String cliJarPath, String cliMainClass) {
+	public SpringbootLauncher(Archive archive, String cliJarPath) {
 		super(archive);
 		this.cliJarPath = cliJarPath;
-		this.cliMainClass = cliMainClass;
+		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
 	public String getOriginalMainClass() {
@@ -41,6 +50,7 @@ public class SpringbootLauncher extends JarLauncher {
 		return new CliMainMethodRunner(mainClass, getOriginalMainClass(), args);
 	}
 
+	@Override
 	protected ClassLoader createClassLoader(Iterator<Archive> archives) throws Exception {
 		return new LaunchedURLClassLoader(
 				this.isExploded(),

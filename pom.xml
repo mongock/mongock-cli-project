@@ -29,7 +29,7 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.community.version>5.0.17.RC</mongock.community.version>
+        <mongock.community.version>5.0.18.RC-SNAPSHOT</mongock.community.version>
         <mongock.professional.version>5.0.17.BETA</mongock.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
