@@ -29,7 +29,10 @@ public final class ClassLoaderUtil {
 				try {
 					classLoader.loadClass(className);
 				} catch (NoClassDefFoundError e) {
-					System.err.println("[warning] not loaded class(not found)" + className);
+					System.out.println("[warning] not loaded class(not found)" + className);
+				}
+				if(className.contains("mongock")) {
+					System.out.println(className + " : LOADED");
 				}
 			}
 		}

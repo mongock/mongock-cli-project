@@ -4,20 +4,26 @@ import picocli.CommandLine;
 
 import java.util.Collection;
 
-class CommandLineDecorator extends CommandLine {
+public class CommandLineDecorator extends CommandLine {
 
-    CommandLineDecorator(Object command, IFactory factory) {
+    public CommandLineDecorator(Object command, IFactory factory) {
         super(command, factory);
     }
 
-    CommandLineDecorator(Object command) {
+    public CommandLineDecorator(Object command) {
         super(command);
     }
 
-    CommandLineDecorator addSubCommands(Collection<CommandDefinition> commandDefinitions) {
+    public CommandLineDecorator addSubCommands(Collection<CommandDefinition> commandDefinitions) {
         commandDefinitions.forEach(this::addSubCommand);
         return this;
     }
+
+    @Override
+    public int execute(String[] args) {
+        return super.execute(args);
+    }
+
 
     private void addSubCommand(CommandDefinition commandDefinition) {
         addSubcommand(commandDefinition.getName(), commandDefinition.getCommand());
