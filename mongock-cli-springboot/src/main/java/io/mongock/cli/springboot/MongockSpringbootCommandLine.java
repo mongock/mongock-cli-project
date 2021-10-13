@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import picocli.CommandLine;
 
+import java.util.Properties;
+
 import static io.mongock.runner.core.builder.BuilderType.PROFESSIONAL;
 import static picocli.CommandLine.IFactory;
 
@@ -56,13 +58,23 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
     }
 
     public static void main(String... args) {
+        Properties properties = getProperties();
+
         SpringApplicationBuilder springApplicationBuilder =  new SpringApplicationBuilder()
                 .web(WebApplicationType.NONE)
                 .banner(new MongockBanner())
                 .logStartupInfo(false)
                 .sources(getSources())
+                .properties(properties)
                 .profiles(Constants.CLI_PROFILE);
         System.exit(SpringApplication.exit(springApplicationBuilder.run(args)));
+    }
+
+    private static Properties getProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("logging.level.root", "ERROR");
+        properties.setProperty("logging.level.io.mongock", "INFO");
+        return properties;
     }
 
 

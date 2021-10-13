@@ -50,6 +50,7 @@ public class MongockCliMain {
 
 			ClassLoaderUtil.loadJarClasses(appJarFile, classLoader);
 			ClassLoaderUtil.loadJarClasses( new JarFile(cliCoreJar), classLoader);
+
 			String mainClassName = JarUtil.getMainClass(jarArchive);
 			System.out.println("Main class: " + mainClassName);
 			Class<?> mainClass = classLoader.loadClass(mainClassName);
