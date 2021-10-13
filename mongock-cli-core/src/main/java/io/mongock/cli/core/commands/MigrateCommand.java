@@ -8,7 +8,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import static io.mongock.cli.core.commands.CommandName.MIGRATE;
-import static io.mongock.cli.core.commands.CommandName.UNDO;
 
 @Command(name = MIGRATE,
         description = "Executes all the pending changes",

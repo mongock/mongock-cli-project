@@ -35,6 +35,11 @@
             <version>${mongock.community.version}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>io.mongock</groupId>-->
+<!--            <artifactId>mongock-cli-core</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-cli-springboot</artifactId>
