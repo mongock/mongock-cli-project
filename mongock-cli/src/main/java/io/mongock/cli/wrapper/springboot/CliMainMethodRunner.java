@@ -1,15 +1,18 @@
 package io.mongock.cli.wrapper.springboot;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
-import io.mongock.cli.wrapper.MongockCliMain;
+import io.mongock.cli.util.logger.CliLogger;
+import io.mongock.cli.util.logger.CliLoggerFactory;
 import org.springframework.boot.loader.MainMethodRunner;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.stream.Stream;
 
 public class CliMainMethodRunner extends MainMethodRunner {
+
+	private static final CliLogger logger = CliLoggerFactory.getLogger(CliMainMethodRunner.class);
+
 	private final String cliMainClass;
 	private final String originalMainClass;
 	private final String[] mainArgs;
@@ -38,16 +41,13 @@ public class CliMainMethodRunner extends MainMethodRunner {
 		Class<?>[] sources = originalMainClass.isAnnotationPresent(MongockCliConfiguration.class)
 				? getSources(originalMainClass)
 				: new Class<?>[]{originalMainClass};
-		Stream.of(sources)
-				.forEach(source -> System.out.println("Added source: " + source));
 		Method method = cliMainClass.getDeclaredMethod("setSources", Class[].class);
 		method.setAccessible(true);
 		method.invoke(null, new Object[] { sources });
 	}
 
 	private Class<?>[] getSources(Class<?> originalMainClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		System.out.println("Sources added with " + MongockCliConfiguration.class.getSimpleName());
-
+		logger.debug("Sources added with " + MongockCliConfiguration.class.getSimpleName());
 		Annotation annotation = originalMainClass.getAnnotation(MongockCliConfiguration.class);
 		Method sourcesMethod = annotation.getClass().getDeclaredMethod("sources");
 		return (Class<?>[])sourcesMethod.invoke(annotation);

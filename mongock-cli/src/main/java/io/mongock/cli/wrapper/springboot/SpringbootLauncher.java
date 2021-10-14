@@ -1,6 +1,6 @@
 package io.mongock.cli.wrapper.springboot;
 
-import io.mongock.cli.wrapper.ClassLoaderUtil;
+import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import org.springframework.boot.loader.JarLauncher;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
 import org.springframework.boot.loader.MainMethodRunner;
@@ -8,16 +8,14 @@ import org.springframework.boot.loader.archive.Archive;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class SpringbootLauncher extends JarLauncher {
 
 
 	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
-	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.MongockSpringbootCommandLine";
+	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.CliSpringbootRunner";
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
 
@@ -39,7 +37,7 @@ public class SpringbootLauncher extends JarLauncher {
 		}
 	}
 
-	public SpringbootLauncher loadSpringJar(JarFile appJarFile, URLClassLoader classLoader) throws Exception {
+	public SpringbootLauncher loadClasses(JarFile appJarFile, URLClassLoader classLoader) throws Exception {
 		ClassLoaderUtil.loadJarClasses(
 				appJarFile,
 				classLoader,

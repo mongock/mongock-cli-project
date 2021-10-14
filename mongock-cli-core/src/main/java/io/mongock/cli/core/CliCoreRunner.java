@@ -18,13 +18,13 @@ import static picocli.CommandLine.IFactory;
 
 @Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true,
 versionProvider = VersionProvider.class)
-public class MongockCli {
+public class CliCoreRunner {
 
     public static Builder builder() {
         return new Builder();
     }
 
-    private MongockCli() {
+    private CliCoreRunner() {
     }
 
     public static class Builder {
@@ -56,8 +56,8 @@ public class MongockCli {
             addCommand(UNDO , new UndoCommand(builder));
             addCommand(MIGRATE, new MigrateCommand(builder));
             return getFactory()
-                    .map(factory -> new CommandLineDecorator(new MongockCli(), factory))
-                    .orElseGet(() -> new CommandLineDecorator(new MongockCli()))
+                    .map(factory -> new CommandLineDecorator(new CliCoreRunner(), factory))
+                    .orElseGet(() -> new CommandLineDecorator(new CliCoreRunner()))
                     .addSubCommands(commands);
         }
 

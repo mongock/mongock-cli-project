@@ -1,14 +1,14 @@
 package io.mongock.cli.springboot;
 
 import io.mongock.cli.core.CommandHelper;
-import io.mongock.cli.core.MongockCli;
+import io.mongock.cli.core.CliCoreRunner;
+import io.mongock.cli.util.logger.CliLogger;
+import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.runner.core.builder.RunnerBuilder;
-import io.mongock.runner.core.builder.RunnerBuilderBase;
 import io.mongock.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
@@ -22,9 +22,9 @@ import static io.mongock.runner.core.builder.BuilderType.PROFESSIONAL;
 import static picocli.CommandLine.IFactory;
 
 @SpringBootApplication
-class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerator {
+class CliSpringbootRunner implements org.springframework.boot.CommandLineRunner, ExitCodeGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongockSpringbootCommandLine.class);
+    private static final CliLogger logger = CliLoggerFactory.getLogger(CliSpringbootRunner.class);
 
     private static Class<?>[] sources;
 
@@ -39,12 +39,12 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
 
     //This is called from the Springboot launcher in the wrapper project
     public static void setSources(Class<?>... sources) {
-        MongockSpringbootCommandLine.sources = new Class[sources.length + 1];
-        MongockSpringbootCommandLine.sources[0] = MongockSpringbootCommandLine.class;
+        CliSpringbootRunner.sources = new Class[sources.length + 1];
+        CliSpringbootRunner.sources[0] = CliSpringbootRunner.class;
         for(int i=0 ; i< sources.length ; i++) {
             Class<?> source = sources[i];
             logger.debug("Setting config source: {}", source);
-            MongockSpringbootCommandLine.sources[i + 1] = source;
+            CliSpringbootRunner.sources[i + 1] = source;
         }
     }
 
@@ -53,7 +53,7 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
             return sources;
         } else  {
             logger.warn("Sources not added. This will probably cause the process to break");
-            return new Class<?>[]{MongockSpringbootCommandLine.class};
+            return new Class<?>[]{CliSpringbootRunner.class};
         }
     }
 
@@ -81,14 +81,14 @@ class MongockSpringbootCommandLine implements CommandLineRunner, ExitCodeGenerat
     @Override
     public void run(String... args) {
         if(args.length == 0) {
-            System.err.println("command format: 'mongock [operation] [parameters]'");
+            logger.error("command format: 'mongock [operation] [parameters]'");
             exitCode = CommandLine.ExitCode.USAGE;
         } else {
             if(CommandHelper.isProfessionalCommand(args[0]) && builder.getType() != PROFESSIONAL){
                 logger.error("Professional operation {} not supported in community edition", args[0]);
                 exitCode = CommandLine.ExitCode.USAGE;
             } else {
-                exitCode = MongockCli
+                exitCode = CliCoreRunner
                         .builder()
                         .factory(factory)
                         .runnerBuilder(builder)

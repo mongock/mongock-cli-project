@@ -1,6 +1,7 @@
-package io.mongock.cli.wrapper;
+package io.mongock.cli.wrapper.util;
 
-import io.mongock.cli.wrapper.springboot.SpringbootLauncher;
+import io.mongock.cli.util.logger.CliLogger;
+import io.mongock.cli.util.logger.CliLoggerFactory;
 
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -9,6 +10,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public final class ClassLoaderUtil {
+
+	private static final CliLogger logger = CliLoggerFactory.getLogger(ClassLoaderUtil.class);
 
 	private static final String CLASS_EXT = ".class";
 
@@ -20,6 +23,7 @@ public final class ClassLoaderUtil {
 	public static void loadJarClasses(JarFile appJarFile,
 									  URLClassLoader classLoader,
 									  Function<String, Boolean> jarEntryFilter) throws Exception {
+		logger.debug("lading jar: %s, with classLoader %s", appJarFile.getName(), classLoader.getClass().getName() );
 		Thread.currentThread().getContextClassLoader();
 		Enumeration<JarEntry> jarEntryEnum = appJarFile.entries();
 		while (jarEntryEnum.hasMoreElements()) {
@@ -29,10 +33,10 @@ public final class ClassLoaderUtil {
 				try {
 					classLoader.loadClass(className);
 				} catch (NoClassDefFoundError e) {
-					System.out.println("[warning] not loaded class(not found)" + className);
+					logger.warn(e.getMessage());
 				}
 				if(className.contains("mongock")) {
-					System.out.println(className + " : LOADED");
+					logger.trace(className + " : LOADED");
 				}
 			}
 		}
