@@ -1,6 +1,9 @@
 package io.mongock.cli.wrapper.springboot;
 
+import io.mongock.cli.util.logger.CliLogger;
+import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.CliJarLauncher;
+import io.mongock.cli.wrapper.MongockCli;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.JarLauncher;
@@ -18,6 +21,7 @@ import static io.mongock.cli.wrapper.CliJarLauncher.Type.SPRINGBOOT;
 public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 
 
+	private static final CliLogger logger = CliLoggerFactory.getLogger(SpringbootLauncher.class);
 	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
 	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.CliSpringbootRunner";
 	private static final String CLASS_EXT = ".class";
@@ -84,6 +88,7 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 	@Override
 	public void launch(String[] args) {
 		try {
+			logger.info("launching Mongock CLI runner with Springboot launcher");
 			super.launch(args);
 		} catch (Exception e) {
 			throw new RuntimeException(e);

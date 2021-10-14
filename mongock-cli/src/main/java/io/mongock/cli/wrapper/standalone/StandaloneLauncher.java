@@ -71,6 +71,7 @@ public class StandaloneLauncher implements CliJarLauncher {
 	@Override
 	public void launch(String[] args) {
 		try {
+			logger.info("launching Mongock CLI runner with Standalone launcher");
 			String mainClassName = JarUtil.getMainClass(appJarArchive);
 			Class<?> mainClass = getMainClass(mainClassName);
 			if (mainClass.isAnnotationPresent(MongockCliConfiguration.class)) {
@@ -100,52 +101,52 @@ public class StandaloneLauncher implements CliJarLauncher {
 	private Class<?> getMainClass(String mainClassName) throws ClassNotFoundException {
 		logger.debug("Main class: " + mainClassName);
 		Class<?> mainClass = classLoader.loadClass(mainClassName);
-		logger.debug("Loaded Main class");
+		logger.debug("loaded Main class");
 		return mainClass;
 	}
 
 	private void executeCli(String[] args, Object commandLine) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		StringBuilder sb = new StringBuilder();
 		Stream.of(args).forEach(s -> sb.append(s).append(" "));
-		logger.debug("(6)Executing CommandLine with args: " + sb);
+		logger.debug("executing CommandLine with args: " + sb);
 		Method executeMethod = commandLine.getClass().getDeclaredMethod("execute", String[].class);
 		executeMethod.setAccessible(true);
 		executeMethod.invoke(commandLine, new Object[]{args});
-		logger.debug("(6)Successful call to commandLine.execute()");
+		logger.debug("successful call to commandLine.execute()");
 	}
 
 	private Object buildCli(Object cliBuilder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		logger.debug("(5)Building CommandLine");
+		logger.debug("building CommandLine");
 		Method buildMethod = cliBuilder.getClass().getDeclaredMethod("build");
 		buildMethod.setAccessible(true);
 		Object commandLine = buildMethod.invoke(cliBuilder);
-		logger.debug("(5)Successful built commandLine " + commandLine);
+		logger.debug("successful built commandLine " + commandLine);
 		return commandLine;
 	}
 
 	private void setRunnerBuilderToCli(Object runnerBuilder, Object cliBuilder) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		logger.debug("(3)Loading class RunnerBuilder");
+		logger.debug("loading class RunnerBuilder");
 		Class<?> runnerBuilderClass = Class.forName("io.mongock.runner.core.builder.RunnerBuilder", false, classLoader);
-		logger.debug("(3)SUCCESSFULLY Loaded class RunnerBuilder");
+		logger.debug("successfully loaded class RunnerBuilder");
 
-		logger.debug("(4)Setting RunnerBuilder to MongockCli.builder");
+		logger.debug("setting RunnerBuilder to MongockCli.builder");
 		Method runnerBuilderSetter = cliBuilder.getClass().getDeclaredMethod("runnerBuilder", runnerBuilderClass);
 		runnerBuilderSetter.setAccessible(true);
 		runnerBuilderSetter.invoke(cliBuilder, runnerBuilder);
-		logger.debug("(4)Successful set RunnerBuilder to MongockCli.builder");
+		logger.debug("successfully set RunnerBuilder to MongockCli.builder");
 	}
 
 	private Object getCliBuilder() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		logger.debug("(1)LOADING MongockCLI class");
+		logger.debug("loading MongockCLI class");
 		Class<?> mongockCliClass = Class.forName("io.mongock.cli.core.CliCoreRunner", false, classLoader);
-		logger.debug("(1)SUCCESSFULLY LOADED MongockCLI class");
+		logger.debug("successfully loaded MongockCLI class");
 
 
-		logger.debug("(2)Obtaining builder setter");
+		logger.debug("obtaining builder setter");
 		Method builderMethod = mongockCliClass.getDeclaredMethod("builder");
 		builderMethod.setAccessible(true);
 		Object cliBuilder = builderMethod.invoke(null);
-		logger.debug("(2)Obtained cliBuilder");
+		logger.debug("obtained cliBuilder");
 		return cliBuilder;
 	}
 

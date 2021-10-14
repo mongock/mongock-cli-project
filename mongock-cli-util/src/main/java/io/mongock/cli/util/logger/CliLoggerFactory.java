@@ -18,7 +18,8 @@ import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
 
 public final class CliLoggerFactory {
 
-	private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+	private static final int CLASS_NAME_LIMIT = 40;
+	private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
 
 	private CliLoggerFactory() {
@@ -70,10 +71,27 @@ public final class CliLoggerFactory {
 				String levelMsg = getColoredLevel(level);
 
 				PrintStream out = level.isGreaterEqual(ERROR) ? System.err : System.out;
-				String application = colorize("--- [mongock-cli]", WHITE_TEXT());
-				String classColored = colorize(className, CYAN_TEXT());
-				out.println(time + " " + levelMsg + " " + pidColored + " " +  application + " " + classColored + "  :\t " + message );
+				String application = colorize("--- [    mongock-cli]", WHITE_TEXT());
+				String classColored = getFormattedClassName(className);
+				String colon = colorize( " : ", WHITE_TEXT());
+				out.println(time + " " + levelMsg + " " + pidColored + " " +  application + " " + classColored + colon + message );
 			}
+		}
+
+		private String getFormattedClassName(String classname) {
+
+			String finalClassName = className;
+			if(classname.length() > CLASS_NAME_LIMIT) {
+				String[] split = classname.split("\\.");
+				for(int i = 0 ; i < split.length;i++) {
+					split[i] = String.valueOf(split[i].charAt(0));
+					finalClassName = String.join(".", split);
+					if(finalClassName.length() <= CLASS_NAME_LIMIT) {
+						break;
+					}
+				}
+			}
+			return colorize(String.format("%-40s", finalClassName), CYAN_TEXT());
 		}
 
 		private String getColoredLevel(Level level) {
