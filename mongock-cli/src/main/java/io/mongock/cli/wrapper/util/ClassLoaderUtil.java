@@ -16,30 +16,34 @@ public final class ClassLoaderUtil {
 	private static final String CLASS_EXT = ".class";
 
 	public static void loadJarClasses(JarFile appJarFile,
-									  URLClassLoader classLoader) throws Exception {
+									  URLClassLoader classLoader) {
 		loadJarClasses(appJarFile, classLoader, e -> e.endsWith(CLASS_EXT));
 	}
 
 	public static void loadJarClasses(JarFile appJarFile,
 									  URLClassLoader classLoader,
-									  Function<String, Boolean> jarEntryFilter) throws Exception {
-		logger.debug("lading jar: %s, with classLoader %s", appJarFile.getName(), classLoader.getClass().getName() );
-		Thread.currentThread().getContextClassLoader();
-		Enumeration<JarEntry> jarEntryEnum = appJarFile.entries();
-		while (jarEntryEnum.hasMoreElements()) {
-			String entryName = jarEntryEnum.nextElement().getName();
-			if (jarEntryFilter.apply(entryName)) {
-				String className = entryName.substring(0, entryName.lastIndexOf(CLASS_EXT)).replace('/', '.');
-				try {
-					classLoader.loadClass(className);
-				} catch (NoClassDefFoundError e) {
-					logger.warn(e.getMessage());
-				}
-				if(className.contains("mongock")) {
-					logger.trace(className + " : LOADED");
+									  Function<String, Boolean> jarEntryFilter) {
+		try {
+			logger.debug("lading jar: %s, with classLoader %s", appJarFile.getName(), classLoader.getClass().getName() );
+			Thread.currentThread().getContextClassLoader();
+			Enumeration<JarEntry> jarEntryEnum = appJarFile.entries();
+			while (jarEntryEnum.hasMoreElements()) {
+				String entryName = jarEntryEnum.nextElement().getName();
+				if (jarEntryFilter.apply(entryName)) {
+					String className = entryName.substring(0, entryName.lastIndexOf(CLASS_EXT)).replace('/', '.');
+					try {
+						classLoader.loadClass(className);
+					} catch (NoClassDefFoundError e) {
+						logger.warn(className + " not loaded(not found)");
+					}
+					if(className.contains("mongock")) {
+						logger.trace(className + " loaded ");
+					}
 				}
 			}
+			appJarFile.close();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
 		}
-		appJarFile.close();
 	}
 }

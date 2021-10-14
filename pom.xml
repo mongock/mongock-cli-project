@@ -30,8 +30,8 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.community.version>5.0.18.RC</mongock.community.version>
-        <mongock.professional.version>5.0.18.BETA</mongock.professional.version>
+        <mongock.community.version>5.0.19.RC</mongock.community.version>
+        <mongock.professional.version>5.0.19.BETA</mongock.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>

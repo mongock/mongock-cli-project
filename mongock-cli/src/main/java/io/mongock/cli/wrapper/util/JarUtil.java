@@ -22,8 +22,12 @@ public final class JarUtil {
 		return mainClass;
 	}
 
-	public static boolean isSpringApplication(JarFileArchive archive) throws IOException {
-		return getAttributes(archive).getValue(SpringbootLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE) != null;
+	public static boolean isSpringApplication(JarFileArchive archive) {
+		try {
+			return getAttributes(archive).getValue(SpringbootLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE) != null;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static Attributes getAttributes(JarFileArchive archive) throws IOException {

@@ -3,6 +3,8 @@ package io.mongock.cli.wrapper.util;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,16 +25,20 @@ public final class ArgsUtil {
 				.collect(Collectors.toSet());
 		logger.debug(sb.toString());
 
-		String[] newArgs = new String[args.length - (paramNames.length * 2)];
-		logger.debug("cleaned args size: " + newArgs.length);
-		int newArgsIndex = 0;
+
+		List<String> tempNewArgs = new ArrayList<>();
+
 		for (int i = 0; i < args.length; i++) {
 			if (!paramNamesSet.contains(args[i].toLowerCase())) {
-				newArgs[newArgsIndex++] = args[i];
+				tempNewArgs.add(args[i]);
 			} else {
 				i++;
 			}
 		}
+
+		String[] newArgs = new String[tempNewArgs.size()];
+		tempNewArgs.toArray(newArgs);
+		logger.debug("cleaned args size: " + newArgs.length);
 		StringBuilder sb2 = new StringBuilder("cleaned args: ");
 		Stream.of(newArgs).forEach(arg -> sb2.append(arg).append(" "));
 		logger.debug(sb2.toString());

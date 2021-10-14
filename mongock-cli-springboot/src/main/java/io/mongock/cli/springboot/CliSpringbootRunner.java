@@ -72,6 +72,7 @@ class CliSpringbootRunner implements org.springframework.boot.CommandLineRunner,
 
     private static Properties getProperties() {
         Properties properties = new Properties();
+        properties.setProperty("spring.main.banner-mode","off");
         properties.setProperty("logging.level.root", "ERROR");
         properties.setProperty("logging.level.io.mongock", "INFO");
         return properties;

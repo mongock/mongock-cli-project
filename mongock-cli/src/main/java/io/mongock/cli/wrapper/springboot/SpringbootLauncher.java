@@ -1,6 +1,8 @@
 package io.mongock.cli.wrapper.springboot;
 
+import io.mongock.cli.wrapper.CliJarLauncher;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
+import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.JarLauncher;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
 import org.springframework.boot.loader.MainMethodRunner;
@@ -11,7 +13,9 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-public class SpringbootLauncher extends JarLauncher {
+import static io.mongock.cli.wrapper.CliJarLauncher.Type.SPRINGBOOT;
+
+public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 
 
 	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
@@ -19,12 +23,12 @@ public class SpringbootLauncher extends JarLauncher {
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
 
-	private final String cliJarPath;
+	private String cliJarPath;
 	private final String cliMainClass;
+	private String appJar;
 
-	public SpringbootLauncher(Archive archive, String cliJarPath) {
+	public SpringbootLauncher(Archive archive) {
 		super(archive);
-		this.cliJarPath = cliJarPath;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
@@ -37,12 +41,39 @@ public class SpringbootLauncher extends JarLauncher {
 		}
 	}
 
-	public SpringbootLauncher loadClasses(JarFile appJarFile, URLClassLoader classLoader) throws Exception {
-		ClassLoaderUtil.loadJarClasses(
-				appJarFile,
-				classLoader,
-				entryName -> entryName.startsWith(SPRINGBOOT_PREFIX) && entryName.endsWith(CLASS_EXT));
+
+	@Override
+	public CliJarLauncher appJar(String appJar) {
+		this.appJar = appJar;
 		return this;
+	}
+
+	@Override
+	public Type getType() {
+		return SPRINGBOOT;
+	}
+
+	@Override
+	public CliJarLauncher cliJar(String cliJar) {
+		this.cliJarPath = cliJar;
+		return this;
+	}
+
+	public SpringbootLauncher loadClasses() {
+		try {
+			URLClassLoader classLoader = URLClassLoader.newInstance(
+					new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar))},
+					Thread.currentThread().getContextClassLoader()
+			);
+
+			ClassLoaderUtil.loadJarClasses(
+					new JarFile(appJar),
+					classLoader,
+					entryName -> entryName.startsWith(SPRINGBOOT_PREFIX) && entryName.endsWith(CLASS_EXT));
+			return this;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -51,8 +82,12 @@ public class SpringbootLauncher extends JarLauncher {
 	}
 
 	@Override
-	public void launch(String[] args) throws Exception {
-		super.launch(args);
+	public void launch(String[] args) {
+		try {
+			super.launch(args);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
