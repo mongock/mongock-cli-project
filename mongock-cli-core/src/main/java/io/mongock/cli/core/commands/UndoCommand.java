@@ -8,7 +8,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = CommandName.UNDO,
-        description = "Reverts the applied migration (./mongock undo -h for more details)",
+        description = "(pro) - Reverts the applied migration (./mongock undo -h for more details)",
         mixinStandardHelpOptions = true,
         versionProvider = VersionProvider.class)
 public class UndoCommand extends CommandBase<Integer> {

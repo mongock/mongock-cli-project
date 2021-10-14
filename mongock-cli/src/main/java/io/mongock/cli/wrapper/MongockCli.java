@@ -19,10 +19,12 @@ import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
 public class MongockCli {
 
 	private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
-	public static final String LOG_LEVEL_ARG = "-logLevel";
-	public static final String APP_JAR_ARG = "-appJar";
-	public static final String CLI_SPRING_JAR_ARG = "-cliSpringJar";
-	public static final String CLI_CORE_JAR_ARG = "-cliCoreJar";
+	private static final String LOG_LEVEL_ARG = "-logLevel";
+	private static final String APP_JAR_ARG_LONG = "--app-jar";
+	private static final String APP_JAR_ARG_SHORT = "-aj";
+	private static final String CLI_SPRING_JAR_ARG = "-cliSpringJar";
+	private static final String CLI_CORE_JAR_ARG = "-cliCoreJar";
+	private static final String[] argumentsToCleanUp = {APP_JAR_ARG_LONG, APP_JAR_ARG_SHORT, CLI_SPRING_JAR_ARG, CLI_CORE_JAR_ARG, LOG_LEVEL_ARG};
 
 	static {
 		Banner.print(System.out);
@@ -31,15 +33,19 @@ public class MongockCli {
 	public static void main(String... args) throws Exception {
 		setLogger(args);
 		printArgs(args);
-		String appJar = ArgsUtil.getParameter(args, APP_JAR_ARG);
+
+		String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
+				.orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT));
+
 		CliJarLauncher launcher = LauncherFactory.getLauncher(new JarFileArchive(new File(appJar)));
 		launcher.appJar(appJar)
 				.cliJar(ArgsUtil.getParameter(args, launcher.getType() == SPRINGBOOT ? CLI_SPRING_JAR_ARG : CLI_CORE_JAR_ARG))
 				.loadClasses()
-				.launch(getCleanArgs(args, APP_JAR_ARG, CLI_SPRING_JAR_ARG, CLI_CORE_JAR_ARG, LOG_LEVEL_ARG));
+				.launch(getCleanArgs(args, argumentsToCleanUp));
 
 	}
 
+	// Unneeded loop when level > DEBUG...but small ;)
 	private static void printArgs(String[] args) {
 		StringBuilder sb = new StringBuilder("CLI arguments: ");
 		Stream.of(args).forEach(arg -> sb.append(arg).append(" "));
