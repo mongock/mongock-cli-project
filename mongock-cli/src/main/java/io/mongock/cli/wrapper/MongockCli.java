@@ -1,8 +1,5 @@
 package io.mongock.cli.wrapper;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
