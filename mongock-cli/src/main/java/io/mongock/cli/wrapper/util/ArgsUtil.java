@@ -71,7 +71,7 @@ public final class ArgsUtil {
 			}
 		} while ((++i) < args.length);
 		if(throwException) {
-			throw new RuntimeException(String.format("Missing jar parameter. Please follow the format \"-%s jar_path\"", paramName));
+			throw new RuntimeException(String.format("Missing jar parameter. Please follow the format \"%s jar_path\"", paramName));
 
 		} else {
 			return null;
