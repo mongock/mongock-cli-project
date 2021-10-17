@@ -1,3 +1,3 @@
 #!/bin/sh
 #Generated cli script
- java -jar ${project.artifactId}-${project.version}.jar -cliSpringJar lib/mongock-cli-springboot-${project.version}.jar -cliCoreJar lib/mongock-cli-core-${project.version}.jar "$@"
+ java -jar ${project.artifactId}-${project.version}.jar --cli-spring-jar lib/mongock-cli-springboot-${project.version}.jar -cli-core-jar lib/mongock-cli-core-${project.version}.jar "$@"

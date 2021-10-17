@@ -33,12 +33,10 @@ public final class ClassLoaderUtil {
 					String className = entryName.substring(0, entryName.lastIndexOf(CLASS_EXT)).replace('/', '.');
 					try {
 						classLoader.loadClass(className);
-					} catch (NoClassDefFoundError e) {
-						logger.warn(className + " not loaded(not found)");
+					} catch (Throwable e) {
+						logger.warn(String.format("%s not loaded(%s)", className, e.getMessage()));
 					}
-					if(className.contains("mongock")) {
-						logger.trace(className + " loaded ");
-					}
+					logger.trace(className + " loaded ");
 				}
 			}
 			appJarFile.close();

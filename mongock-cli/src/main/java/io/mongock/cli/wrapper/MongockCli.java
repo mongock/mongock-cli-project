@@ -19,11 +19,12 @@ import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
 public class MongockCli {
 
 	private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
-	private static final String LOG_LEVEL_ARG = "-logLevel";
-	private static final String APP_JAR_ARG_LONG = "--app-jar";
 	private static final String APP_JAR_ARG_SHORT = "-aj";
-	private static final String CLI_SPRING_JAR_ARG = "-cliSpringJar";
-	private static final String CLI_CORE_JAR_ARG = "-cliCoreJar";
+	private static final String APP_JAR_ARG_LONG = "--app-jar";
+	private static final String CLI_SPRING_JAR_ARG = "--cli-spring-jar";
+	private static final String CLI_CORE_JAR_ARG = "-cli-core-jar";
+	private static final String LOG_LEVEL_ARG = "--log-level";
+
 	private static final String[] argumentsToCleanUp = {APP_JAR_ARG_LONG, APP_JAR_ARG_SHORT, CLI_SPRING_JAR_ARG, CLI_CORE_JAR_ARG, LOG_LEVEL_ARG};
 
 	static {

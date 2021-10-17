@@ -97,8 +97,8 @@ public final class CliLoggerFactory {
 		private String getColoredLevel(Level level) {
 			switch (level) {
 				case ERROR: return colorize(level.name(), RED_TEXT());
-				case INFO: return colorize(level.name(), GREEN_TEXT()) + " ";
-				case WARN: return colorize(level.name(), YELLOW_TEXT()) + " ";
+				case INFO: return " " + colorize(level.name(), GREEN_TEXT());
+				case WARN: return " " + colorize(level.name(), YELLOW_TEXT());
 				case DEBUG: return colorize(level.name(), BLUE_TEXT());
 				case TRACE: return colorize(level.name(), CYAN_TEXT());
 				default:  return level.name();
