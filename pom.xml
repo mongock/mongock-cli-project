@@ -11,7 +11,7 @@
     <groupId>io.mongock</groupId>
     <artifactId>mongock-cli-project</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.18.BETA-SNAPSHOT</version>
+    <version>5.0.20.BETA-SNAPSHOT</version>
     <modules>
         <module>mongock-cli-core</module>
         <module>mongock-cli-springboot</module>
@@ -30,8 +30,8 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.community.version>5.0.20.RC-SNAPSHOT</mongock.community.version>
-        <mongock.professional.version>5.0.19.BETA</mongock.professional.version>
+        <mongock.community.version>5.0.20.RC</mongock.community.version>
+        <mongock.professional.version>5.0.20.BETA</mongock.professional.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
