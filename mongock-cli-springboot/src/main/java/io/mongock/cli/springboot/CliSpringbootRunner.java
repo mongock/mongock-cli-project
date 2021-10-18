@@ -1,13 +1,11 @@
 package io.mongock.cli.springboot;
 
-import io.mongock.cli.core.CommandHelper;
 import io.mongock.cli.core.CliCoreRunner;
+import io.mongock.cli.core.CommandHelper;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.utils.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
