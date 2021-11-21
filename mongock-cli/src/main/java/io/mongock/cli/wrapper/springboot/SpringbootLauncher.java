@@ -3,7 +3,6 @@ package io.mongock.cli.wrapper.springboot;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.CliJarLauncher;
-import io.mongock.cli.wrapper.MongockCli;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.JarLauncher;

@@ -3,20 +3,20 @@ package io.mongock.cli.core;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-class CommandDefinition {
+public class CommandDefinition {
     private final String name;
     private final Callable command;
 
-    CommandDefinition(String name, Callable command) {
+    public CommandDefinition(String name, Callable command) {
         this.name = name;
         this.command = command;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Callable getCommand() {
+    public Callable getCommand() {
         return command;
     }
 

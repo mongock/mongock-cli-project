@@ -1,6 +1,9 @@
-package io.mongock.cli.core.commands;
+package io.mongock.cli.core.commands.undo;
 
 import io.mongock.cli.core.VersionProvider;
+import io.mongock.cli.core.commands.CommandBase;
+import io.mongock.cli.core.commands.CommandName;
+import io.mongock.cli.core.commands.ProfessionalOperationProxy;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
 import picocli.CommandLine;

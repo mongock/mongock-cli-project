@@ -1,13 +1,11 @@
 package io.mongock.cli.wrapper.standalone;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
-import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.CliJarLauncher;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
-import org.springframework.boot.loader.archive.Archive;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.lang.reflect.Constructor;

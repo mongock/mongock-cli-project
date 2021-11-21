@@ -19,7 +19,7 @@ public class MongockCli {
 	private static final String APP_JAR_ARG_SHORT = "-aj";
 	private static final String APP_JAR_ARG_LONG = "--app-jar";
 	private static final String CLI_SPRING_JAR_ARG = "--cli-spring-jar";
-	private static final String CLI_CORE_JAR_ARG = "-cli-core-jar";
+	private static final String CLI_CORE_JAR_ARG = "--cli-core-jar";
 	private static final String LOG_LEVEL_ARG = "--log-level";
 
 	private static final String[] argumentsToCleanUp = {APP_JAR_ARG_LONG, APP_JAR_ARG_SHORT, CLI_SPRING_JAR_ARG, CLI_CORE_JAR_ARG, LOG_LEVEL_ARG};

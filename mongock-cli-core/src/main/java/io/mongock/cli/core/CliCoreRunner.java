@@ -1,23 +1,23 @@
 package io.mongock.cli.core;
 
 import io.mongock.api.exception.MongockException;
-import io.mongock.cli.core.commands.MigrateCommand;
-import io.mongock.cli.core.commands.UndoCommand;
+import io.mongock.cli.core.commands.MainCommand;
+import io.mongock.cli.core.commands.migrate.MigrateCommand;
+import io.mongock.cli.core.commands.undo.UndoCommand;
+import io.mongock.cli.core.commands.state.StateCommand;
 import io.mongock.runner.core.builder.RunnerBuilder;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import picocli.CommandLine;
 
 import static io.mongock.cli.core.commands.CommandName.MIGRATE;
+import static io.mongock.cli.core.commands.CommandName.STATE;
 import static io.mongock.cli.core.commands.CommandName.UNDO;
 import static picocli.CommandLine.IFactory;
 
-@Command(name = "mongock", description = "Mongock command line", mixinStandardHelpOptions = true,
-versionProvider = VersionProvider.class)
 public class CliCoreRunner {
 
     public static Builder builder() {
@@ -29,7 +29,7 @@ public class CliCoreRunner {
 
     public static class Builder {
 
-        private Set<CommandDefinition> commands = new HashSet<>();
+        private final Set<CommandDefinition> commands = new HashSet<>();
         private IFactory factory;
         private RunnerBuilder builder;
 
@@ -55,9 +55,10 @@ public class CliCoreRunner {
             validate();
             addCommand(UNDO , new UndoCommand(builder));
             addCommand(MIGRATE, new MigrateCommand(builder));
+            addCommand(STATE, new StateCommand(builder));
             return getFactory()
-                    .map(factory -> new CommandLineDecorator(new CliCoreRunner(), factory))
-                    .orElseGet(() -> new CommandLineDecorator(new CliCoreRunner()))
+                    .map(f -> new CommandLineDecorator(new MainCommand(), f))
+                    .orElseGet(() -> new CommandLineDecorator(new MainCommand()))
                     .addSubCommands(commands);
         }
 
