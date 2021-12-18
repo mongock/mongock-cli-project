@@ -30,8 +30,7 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.community.version>5.0.25-SNAPSHOT</mongock.community.version>
-        <mongock.professional.version>5.0.22.BETA-SNAPSHOT</mongock.professional.version>
+        <mongock.version>5.0.32-SNAPSHOT</mongock.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
@@ -77,6 +76,18 @@
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.mongock</groupId>
+                <artifactId>mongock-bom</artifactId>
+                <version>${mongock.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
