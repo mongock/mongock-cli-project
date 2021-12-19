@@ -11,6 +11,9 @@ import io.mongock.runner.core.executor.MongockRunner;
 import io.mongock.cli.core.commands.CommandBase;
 import io.mongock.cli.core.commands.CommandName;
 import io.mongock.cli.core.commands.ProfessionalOperationProxy;
+import io.mongock.professional.runner.common.executor.operation.state.StateOpResultItem;
+import java.util.List;
+import java.util.function.Consumer;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -28,16 +31,21 @@ public class StateCommand extends CommandBase<Integer> {
 
   @Override
   public Integer call() {
-
+    return CommandLine.ExitCode.USAGE;
+  }
+  
+  private int runStateOperation(Consumer<MigrationSuccessResult> successListener) {
+    
     MongockRunner mongockRunner = builder
-            .setEventPublisher(new EventPublisher(null, this::migrationSuccessListener, null))
+            .setEventPublisher(new EventPublisher(null, successListener, null))
             .buildRunner(ProfessionalOperationProxy.stateOp());
     mongockRunner.forceEnable();
     mongockRunner.execute();
+
     return CommandLine.ExitCode.OK;
   }
-
-  private void migrationSuccessListener(MigrationSuccessResult result) {
+  
+  private void processResult(MigrationSuccessResult result, Consumer<List<StateOpResultItem>> consumer) {
     if (result == null || !(result.getResult() instanceof StateOpResult)) {
       throw new MongockException("The operation has finished with invalid result.");
     } else {
@@ -47,10 +55,32 @@ public class StateCommand extends CommandBase<Integer> {
         System.out.println(">>> The operation has finished with empty result.");
         System.out.println("");
       } else {
-        StateCommandHelper.printDbTable(stateOpResult.getItems());
-        StateCommandHelper.printCodeBaseTable(stateOpResult.getItems());
-        StateCommandHelper.printCompareTable(stateOpResult.getItems());
+        consumer.accept(stateOpResult.getItems());
       }
     }
+  }
+  
+  @Command(name = "db",
+          description = "(pro) - Show the current state of changes (./mongock state db -h for more details)",
+          mixinStandardHelpOptions = true,
+          versionProvider = VersionProvider.class)
+  public Integer db() {
+    return this.runStateOperation(result -> processResult(result, StateCommandHelper::printDbTable));
+  }
+  
+  @Command(name = "code-base",
+          description = "(pro) - List the existing code changeUnits and their current state (./mongock state code-base -h for more details)",
+          mixinStandardHelpOptions = true,
+          versionProvider = VersionProvider.class)
+  public Integer codeBase() {
+    return this.runStateOperation(result -> processResult(result, StateCommandHelper::printCodeBaseTable));
+  }
+  
+  @Command(name = "compare",
+          description = "(pro) - Compare the existing code changeUnits with the current state of changes (./mongock state compare -h for more details)",
+          mixinStandardHelpOptions = true,
+          versionProvider = VersionProvider.class)
+  public Integer compare() {
+    return this.runStateOperation(result -> processResult(result, StateCommandHelper::printCompareTable));
   }
 }

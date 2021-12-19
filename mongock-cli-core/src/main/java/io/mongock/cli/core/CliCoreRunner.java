@@ -16,6 +16,7 @@ import picocli.CommandLine;
 import static io.mongock.cli.core.commands.CommandName.MIGRATE;
 import static io.mongock.cli.core.commands.CommandName.STATE;
 import static io.mongock.cli.core.commands.CommandName.UNDO;
+
 import static picocli.CommandLine.IFactory;
 
 public class CliCoreRunner {
