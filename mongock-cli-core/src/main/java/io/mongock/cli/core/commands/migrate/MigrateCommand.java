@@ -1,6 +1,7 @@
-package io.mongock.cli.core.commands;
+package io.mongock.cli.core.commands.migrate;
 
 import io.mongock.cli.core.VersionProvider;
+import io.mongock.cli.core.commands.CommandBase;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.executor.MongockRunner;
 import io.mongock.runner.core.executor.operation.change.MigrationOp;

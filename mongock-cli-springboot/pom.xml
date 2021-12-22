@@ -23,26 +23,30 @@
             <artifactId>mongock-cli-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-cli-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-runner-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli-spring-boot-starter</artifactId>
-            <version>4.6.1</version>
+            <version>${picocli.version}</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -52,7 +56,7 @@
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>io.mongock.professional.cli.springboot.CliSpringbootRunner</mainClass>
+                                    <mainClass>io.mongock.cli.springboot.CliSpringbootRunner</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

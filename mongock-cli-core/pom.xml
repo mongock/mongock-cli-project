@@ -16,27 +16,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <java.version>1.8</java.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.mongock</groupId>
-                <artifactId>mongock-bom</artifactId>
-                <version>${mongock.community.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>io.mongock.professional</groupId>
-                <artifactId>mongock-professional-bom</artifactId>
-                <version>${mongock.professional.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-cli-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.mongock</groupId>
@@ -48,6 +34,7 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+                
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
@@ -63,29 +50,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-<!--                            <transformers>-->
-<!--                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-<!--                                    <mainClass>io.mongock.professional.cli.springboot.CliSpringbootRunner</mainClass>-->
-<!--                                </transformer>-->
-<!--                            </transformers>-->
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
-
 
 </project>
