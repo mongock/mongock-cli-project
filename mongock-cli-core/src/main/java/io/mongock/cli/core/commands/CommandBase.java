@@ -17,7 +17,7 @@ public abstract class CommandBase<T> implements Callable<T> {
         if(builder == null) {
             throw new MongockException("Mongock builder needs to be provided for this command");
         }
-        return null;
+        return execution();
     }
 
     public abstract T execution() throws Exception;
