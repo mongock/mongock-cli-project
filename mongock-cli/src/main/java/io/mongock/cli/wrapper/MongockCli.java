@@ -15,6 +15,7 @@ import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_SHORT;
 import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.LOG_LEVEL_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
 
 public class MongockCli {
     private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
@@ -24,7 +25,8 @@ public class MongockCli {
             APP_JAR_ARG_SHORT,
             CLI_SPRING_JAR_ARG,
             CLI_CORE_JAR_ARG,
-            LOG_LEVEL_ARG
+            LOG_LEVEL_ARG,
+            MONGOCK_CORE_JAR_ARG
     };
 
     static {
@@ -44,11 +46,12 @@ public class MongockCli {
                     .setAppJarFile(appJar)
                     .setCliCoreJar(ArgsUtil.getParameter(args, CLI_CORE_JAR_ARG, false))
                     .setCliSpringJar(ArgsUtil.getParameter(args, CLI_SPRING_JAR_ARG, false))
-					.setMongockCoreJarFile("lib/mongock-runner-core-5.0.34.jar")//todo pass as parameter
+					.setMongockCoreJarFile(ArgsUtil.getParameter(args, MONGOCK_CORE_JAR_ARG, false))//todo pass as parameter
                     .build();
 
             launcher.loadClasses()
                     .launch(getCleanArgs(args, argumentsToCleanUp));
+            System.exit(0);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
 			System.exit(1);
