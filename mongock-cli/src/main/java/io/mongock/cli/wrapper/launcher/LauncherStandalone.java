@@ -16,11 +16,11 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.STANDALONE;
+import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.STANDALONE;
 
-public class StandaloneLauncher implements CliJarLauncher {
+public class LauncherStandalone implements LauncherCliJar {
 
-	private static final CliLogger logger = CliLoggerFactory.getLogger(StandaloneLauncher.class);
+	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherStandalone.class);
 	private final JarFileArchive appJarArchive;
 
 
@@ -29,7 +29,7 @@ public class StandaloneLauncher implements CliJarLauncher {
 
 	private URLClassLoader classLoader;
 
-	public StandaloneLauncher(JarFileArchive appArchive, String appJar) {
+	public LauncherStandalone(JarFileArchive appArchive, String appJar) {
 		this.appJarArchive = appArchive;
 		this.appJar = appJar;
 	}
@@ -40,13 +40,13 @@ public class StandaloneLauncher implements CliJarLauncher {
 	}
 
 	@Override
-	public CliJarLauncher cliJar(String cliJar) {
+	public LauncherCliJar cliJar(String cliJar) {
 		this.cliJar = cliJar;
 		return this;
 	}
 
 	@Override
-	public CliJarLauncher loadClasses() {
+	public LauncherCliJar loadClasses() {
 
 		try {
 			this.classLoader = buildClassLoader();

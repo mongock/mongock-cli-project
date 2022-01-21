@@ -3,13 +3,13 @@ package io.mongock.cli.wrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.launcher.CliJarLauncher;
+import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 import io.mongock.cli.wrapper.util.ArgsUtil;
 
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.SPRINGBOOT;
+import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.SPRINGBOOT;
 import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
 
 public class MongockCli {
@@ -36,7 +36,7 @@ public class MongockCli {
 			String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
 					.orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT));
 
-			CliJarLauncher launcher = CliJarLauncher.builder()
+			LauncherCliJar launcher = LauncherCliJar.builder()
 					.setAppJarFile(appJar)
 					.build();
 			launcher.cliJar(ArgsUtil.getParameter(args, launcher.getType() == SPRINGBOOT ? CLI_SPRING_JAR_ARG : CLI_CORE_JAR_ARG))

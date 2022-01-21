@@ -15,12 +15,12 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.SPRINGBOOT;
+import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.SPRINGBOOT;
 
-public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
+public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 
 
-	private static final CliLogger logger = CliLoggerFactory.getLogger(SpringbootLauncher.class);
+	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherSpringboot.class);
 	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
 	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.CliSpringbootRunner";
 	private static final String CLASS_EXT = ".class";
@@ -30,7 +30,7 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 	private final String cliMainClass;
 	private String appJar;
 
-	public SpringbootLauncher(Archive archive, String appJar) {
+	public LauncherSpringboot(Archive archive, String appJar) {
 		super(archive);
 		this.appJar = appJar;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
@@ -52,12 +52,12 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 	}
 
 	@Override
-	public CliJarLauncher cliJar(String cliJar) {
+	public LauncherCliJar cliJar(String cliJar) {
 		this.cliJarPath = cliJar;
 		return this;
 	}
 
-	public SpringbootLauncher loadClasses() {
+	public LauncherSpringboot loadClasses() {
 		try {
 			URLClassLoader classLoader = URLClassLoader.newInstance(
 					new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar))},
