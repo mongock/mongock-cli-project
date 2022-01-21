@@ -5,7 +5,6 @@ import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -44,7 +43,6 @@ public class LauncherWithoutApp implements LauncherCliJar {
         try {
             this.classLoader = buildClassLoader();
             ClassLoaderUtil.loadJarClasses(new JarFile(cliJar), classLoader);
-
             return this;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -57,11 +55,15 @@ public class LauncherWithoutApp implements LauncherCliJar {
         try {
             logger.info("launching Mongock CLI runner with Standalone launcher");
 
-            Object cliBuilder = getCliBuilder();
+            Object commandLine = buildCli(getCliBuilder());
 
-            Object commandLine = buildCli(cliBuilder);
-
-            executeCli(args, commandLine);
+            StringBuilder sb = new StringBuilder();
+            Stream.of(args).forEach(s -> sb.append(s).append(" "));
+            logger.debug("executing CommandLine with args: " + sb);
+            Method executeMethod = commandLine.getClass().getDeclaredMethod("execute", String[].class);
+            executeMethod.setAccessible(true);
+            executeMethod.invoke(commandLine, new Object[]{args});
+            logger.debug("successful call to commandLine.execute()");
 
 
         } catch (Exception ex) {
@@ -69,16 +71,6 @@ public class LauncherWithoutApp implements LauncherCliJar {
         }
     }
 
-
-    private void executeCli(String[] args, Object commandLine) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        StringBuilder sb = new StringBuilder();
-        Stream.of(args).forEach(s -> sb.append(s).append(" "));
-        logger.debug("executing CommandLine with args: " + sb);
-        Method executeMethod = commandLine.getClass().getDeclaredMethod("execute", String[].class);
-        executeMethod.setAccessible(true);
-        executeMethod.invoke(commandLine, new Object[]{args});
-        logger.debug("successful call to commandLine.execute()");
-    }
 
     private Object buildCli(Object cliBuilder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         logger.debug("building CommandLine");
@@ -107,8 +99,7 @@ public class LauncherWithoutApp implements LauncherCliJar {
 
     private URLClassLoader buildClassLoader() throws MalformedURLException {
         return URLClassLoader.newInstance(
-                new URL[]{
-                        new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJar))},
+                new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJar))},
                 Thread.currentThread().getContextClassLoader()
         );
     }
