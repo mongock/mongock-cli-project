@@ -15,8 +15,6 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.SPRINGBOOT;
-
 public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 
 
@@ -26,13 +24,14 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
 
-	private String cliJarPath;
+	private final String cliJarPath;
 	private final String cliMainClass;
-	private String appJar;
+	private final String appJar;
 
-	public LauncherSpringboot(Archive archive, String appJar) {
+	public LauncherSpringboot(Archive archive, String appJar, String cliJarPath) {
 		super(archive);
 		this.appJar = appJar;
+		this.cliJarPath = cliJarPath;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
@@ -43,18 +42,6 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-
-	@Override
-	public Type getType() {
-		return SPRINGBOOT;
-	}
-
-	@Override
-	public LauncherCliJar cliJar(String cliJar) {
-		this.cliJarPath = cliJar;
-		return this;
 	}
 
 	public LauncherSpringboot loadClasses() {

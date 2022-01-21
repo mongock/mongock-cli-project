@@ -16,33 +16,21 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.STANDALONE;
-
 public class LauncherStandalone implements LauncherCliJar {
 
 	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherStandalone.class);
 	private final JarFileArchive appJarArchive;
 
 
-	private String appJar;
-	private String cliJar;
+	private final String appJar;
+	private final String cliJarPath;
 
 	private URLClassLoader classLoader;
 
-	public LauncherStandalone(JarFileArchive appArchive, String appJar) {
+	public LauncherStandalone(JarFileArchive appArchive, String appJar, String cliJarPath) {
 		this.appJarArchive = appArchive;
 		this.appJar = appJar;
-	}
-
-	@Override
-	public Type getType() {
-		return STANDALONE;
-	}
-
-	@Override
-	public LauncherCliJar cliJar(String cliJar) {
-		this.cliJar = cliJar;
-		return this;
+		this.cliJarPath = cliJarPath;
 	}
 
 	@Override
@@ -51,7 +39,7 @@ public class LauncherStandalone implements LauncherCliJar {
 		try {
 			this.classLoader = buildClassLoader();
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
-			ClassLoaderUtil.loadJarClasses(new JarFile(cliJar), classLoader);
+			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
 			
 			return this;	
 		} catch (Exception ex) {
@@ -153,7 +141,8 @@ public class LauncherStandalone implements LauncherCliJar {
 		return URLClassLoader.newInstance(
 				new URL[]{
 						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar)),
-						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJar))},
+						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath))
+				},
 				Thread.currentThread().getContextClassLoader()
 		);
 	}

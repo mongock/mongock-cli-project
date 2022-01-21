@@ -13,28 +13,19 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.STANDALONE;
-
 public class LauncherWithoutApp implements LauncherCliJar {
 
     private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherWithoutApp.class);
 
-    private String cliJar;
+    private final String cliJarPath;
+
+    private final String mongockCoreJarFile;
 
     private URLClassLoader classLoader;
 
-    public LauncherWithoutApp() {
-    }
-
-    @Override
-    public Type getType() {
-        return STANDALONE;
-    }
-
-    @Override
-    public LauncherCliJar cliJar(String cliJar) {
-        this.cliJar = cliJar;
-        return this;
+    public LauncherWithoutApp(String mongockCoreJarFile, String cliJarPath) {
+        this.mongockCoreJarFile = mongockCoreJarFile;
+        this.cliJarPath = cliJarPath;
     }
 
     @Override
@@ -42,7 +33,8 @@ public class LauncherWithoutApp implements LauncherCliJar {
 
         try {
             this.classLoader = buildClassLoader();
-            ClassLoaderUtil.loadJarClasses(new JarFile(cliJar), classLoader);
+            ClassLoaderUtil.loadJarClasses(new JarFile(mongockCoreJarFile), classLoader);
+            ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
             return this;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -99,7 +91,10 @@ public class LauncherWithoutApp implements LauncherCliJar {
 
     private URLClassLoader buildClassLoader() throws MalformedURLException {
         return URLClassLoader.newInstance(
-                new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJar))},
+                new URL[]{
+                        new URL(String.format(JarUtil.JAR_URL_TEMPLATE, mongockCoreJarFile)),
+                        new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath))
+                },
                 Thread.currentThread().getContextClassLoader()
         );
     }

@@ -9,61 +9,65 @@ import io.mongock.cli.wrapper.util.ArgsUtil;
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.launcher.LauncherCliJar.Type.SPRINGBOOT;
 import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
+import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
+import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_SHORT;
+import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.LOG_LEVEL_ARG;
 
 public class MongockCli {
+    private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
 
-	private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
-	private static final String APP_JAR_ARG_SHORT = "-aj";
-	private static final String APP_JAR_ARG_LONG = "--app-jar";
-	private static final String CLI_SPRING_JAR_ARG = "--cli-spring-jar";
-	private static final String CLI_CORE_JAR_ARG = "--cli-core-jar";
-	private static final String LOG_LEVEL_ARG = "--log-level";
+    private static final String[] argumentsToCleanUp = {
+            APP_JAR_ARG_LONG,
+            APP_JAR_ARG_SHORT,
+            CLI_SPRING_JAR_ARG,
+            CLI_CORE_JAR_ARG,
+            LOG_LEVEL_ARG
+    };
 
-	private static final String[] argumentsToCleanUp = {APP_JAR_ARG_LONG, APP_JAR_ARG_SHORT, CLI_SPRING_JAR_ARG, CLI_CORE_JAR_ARG, LOG_LEVEL_ARG};
+    static {
+        Banner.print(System.out);
+    }
 
-	static {
-		Banner.print(System.out);
-	}
+    public static void main(String... args) {
+        setLogger(args);
+        printArgs(args);
 
-	public static void main(String... args) {
-		setLogger(args);
-		printArgs(args);
+        try {
 
-		try {
+            String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
+                    .orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT, false));
 
-			String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
-					.orElseGet(() -> ArgsUtil.getOptionalParam(args, APP_JAR_ARG_SHORT).orElse(null));
-			if(appJar == null) {
-				logger.debug("missing parameter {}. Most of commands require this parameter", APP_JAR_ARG_LONG);
-			}
+            LauncherCliJar launcher = LauncherCliJar.builder()
+                    .setAppJarFile(appJar)
+                    .setCliCoreJar(ArgsUtil.getParameter(args, CLI_CORE_JAR_ARG, false))
+                    .setCliSpringJar(ArgsUtil.getParameter(args, CLI_SPRING_JAR_ARG, false))
+					.setMongockCoreJarFile("lib/mongock-runner-core-5.0.34.jar")//todo pass as parameter
+                    .build();
 
-			LauncherCliJar launcher = LauncherCliJar.builder()
-					.setAppJarFile(appJar)
-					.build();
-			launcher.cliJar(ArgsUtil.getParameter(args, launcher.getType() == SPRINGBOOT ? CLI_SPRING_JAR_ARG : CLI_CORE_JAR_ARG))
-					.loadClasses()
-					.launch(getCleanArgs(args, argumentsToCleanUp));
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			throw new RuntimeException(ex);
+            launcher.loadClasses()
+                    .launch(getCleanArgs(args, argumentsToCleanUp));
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            throw new RuntimeException(ex);
 //			System.exit(1);
-		}
+        }
 
-	}
+    }
 
-	// Unneeded loop when level > DEBUG...but small ;)
-	private static void printArgs(String[] args) {
-		StringBuilder sb = new StringBuilder("CLI arguments: ");
-		Stream.of(args).forEach(arg -> sb.append(arg).append(" "));
-		logger.debug(sb.toString());
-	}
+    // Unneeded loop when level > DEBUG...but small ;)
+    private static void printArgs(String[] args) {
+        StringBuilder sb = new StringBuilder("CLI arguments: ");
+        Stream.of(args).forEach(arg -> sb.append(arg).append(" "));
+        logger.debug(sb.toString());
+    }
 
-	private static void setLogger(String[] args) {
-		CliLoggerFactory.setLevel(ArgsUtil.getOptionalParam(args, LOG_LEVEL_ARG)
-				.map(CliLogger.Level::fromStringDefaultInfo)
-				.orElse(INFO));
-	}
+    private static void setLogger(String[] args) {
+        CliLoggerFactory.setLevel(ArgsUtil.getOptionalParam(args, LOG_LEVEL_ARG)
+                .map(CliLogger.Level::fromStringDefaultInfo)
+                .orElse(INFO));
+    }
 
 }

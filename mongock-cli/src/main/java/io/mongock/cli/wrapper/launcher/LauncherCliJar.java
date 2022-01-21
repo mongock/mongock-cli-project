@@ -7,57 +7,97 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
+import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
+
 public interface LauncherCliJar {
-	enum Type{SPRINGBOOT, STANDALONE};
-
-	Type getType();
-
-	LauncherCliJar cliJar(String jar);
 
 
-	LauncherCliJar loadClasses();
+    LauncherCliJar loadClasses();
 
-	void launch(String[] args);
-
-
-	static LauncherBuilder builder() {
-		return new LauncherBuilder();
-	}
-
-	class LauncherBuilder {
-
-		private String appJarFile;
-
-		public LauncherBuilder() {}
-
-		public LauncherBuilder setAppJarFile(String appJarFile) {
-			this.appJarFile = appJarFile;
-			return this;
-		}
-
-		public LauncherCliJar build() {
-			return getAppJar()
-					.map(LauncherBuilder::getLauncherWithAppJar)
-					.orElseGet(LauncherWithoutApp::new);
-		}
+    void launch(String[] args);
 
 
-		private Optional<String> getAppJar() {
-			return Optional.ofNullable(appJarFile);
-		}
+    static LauncherBuilder builder() {
+        return new LauncherBuilder();
+    }
 
-		private static  LauncherCliJar getLauncherWithAppJar(String appJarFile) {
-			try {
-				JarFileArchive archive = new JarFileArchive(new File(appJarFile));
-				return JarUtil.isSpringApplication(archive)
-						? new LauncherSpringboot(archive, appJarFile)
-						: new LauncherStandalone(archive, appJarFile);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+    class LauncherBuilder {
+
+        private String cliSpringJar;
+        private String cliCoreJar;
+
+        private String appJarFile;
+
+        private String mongockCoreJarFile;
+
+
+        public LauncherBuilder() {
+        }
+
+        public LauncherBuilder setAppJarFile(String appJarFile) {
+            this.appJarFile = appJarFile;
+            return this;
+        }
+
+        public LauncherBuilder setCliSpringJar(String cliSpringJar) {
+            this.cliSpringJar = cliSpringJar;
+            return this;
+        }
+
+        public LauncherBuilder setCliCoreJar(String cliCoreJar) {
+            this.cliCoreJar = cliCoreJar;
+            return this;
+        }
+
+        public LauncherBuilder setMongockCoreJarFile(String mongockCoreJarFile) {
+            this.mongockCoreJarFile = mongockCoreJarFile;
+            return this;
+        }
+
+        public LauncherCliJar build() throws IOException {
+            if (getAppJar().isPresent()) {
+                JarFileArchive archive = new JarFileArchive(new File(appJarFile));
+                if (JarUtil.isSpringApplication(archive)) {
+                    return buildLauncherSpring(archive);
+                } else {
+                    return buildLauncherStandalone(archive);
+                }
+            } else {
+                return buildLauncherWithoutApp();
+            }
+        }
+
+        private LauncherWithoutApp buildLauncherWithoutApp() {
+            validateNotNullParameter(mongockCoreJarFile, "parameter " + MONGOCK_CORE_JAR_ARG);
+            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
+            return new LauncherWithoutApp(mongockCoreJarFile, cliCoreJar);
+        }
+
+        private LauncherStandalone buildLauncherStandalone(JarFileArchive archive) {
+            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
+            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
+            return new LauncherStandalone(archive, appJarFile, cliCoreJar);
+        }
+
+        private LauncherSpringboot buildLauncherSpring(JarFileArchive archive) {
+            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
+            validateNotNullParameter(cliSpringJar, "parameter " + CLI_SPRING_JAR_ARG);
+            return new LauncherSpringboot(archive, appJarFile, cliSpringJar);
+        }
+
+
+        private Optional<String> getAppJar() {
+            return Optional.ofNullable(appJarFile);
+        }
+
+        private void validateNotNullParameter(Object parameter, String name) {
+        	if(parameter == null) {
+        		throw new RuntimeException(name + " must be provided");
 			}
-
 		}
-
-	}
+    }
 
 }
