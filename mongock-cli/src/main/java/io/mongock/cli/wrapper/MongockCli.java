@@ -34,7 +34,10 @@ public class MongockCli {
 		try {
 
 			String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
-					.orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT));
+					.orElseGet(() -> ArgsUtil.getOptionalParam(args, APP_JAR_ARG_SHORT).orElse(null));
+			if(appJar == null) {
+				logger.debug("missing parameter {}. Most of commands require this parameter", APP_JAR_ARG_LONG);
+			}
 
 			LauncherCliJar launcher = LauncherCliJar.builder()
 					.setAppJarFile(appJar)
@@ -44,7 +47,8 @@ public class MongockCli {
 					.launch(getCleanArgs(args, argumentsToCleanUp));
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
-			System.exit(1);
+			throw new RuntimeException(ex);
+//			System.exit(1);
 		}
 
 	}
