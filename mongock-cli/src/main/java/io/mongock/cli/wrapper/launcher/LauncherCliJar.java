@@ -70,10 +70,10 @@ public interface LauncherCliJar {
             }
         }
 
-        private LauncherWithoutApp buildLauncherWithoutApp() {
+        private LauncherDefault buildLauncherWithoutApp() {
             validateNotNullParameter(mongockCoreJarFile, "parameter " + MONGOCK_CORE_JAR_ARG);
             validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
-            return new LauncherWithoutApp(mongockCoreJarFile, cliCoreJar);
+            return new LauncherDefault(mongockCoreJarFile, cliCoreJar);
         }
 
         private LauncherStandalone buildLauncherStandalone(JarFileArchive archive) {

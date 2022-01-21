@@ -13,9 +13,9 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-public class LauncherWithoutApp implements LauncherCliJar {
+public class LauncherDefault implements LauncherCliJar {
 
-    private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherWithoutApp.class);
+    private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherDefault.class);
 
     private final String cliJarPath;
 
@@ -23,7 +23,7 @@ public class LauncherWithoutApp implements LauncherCliJar {
 
     private URLClassLoader classLoader;
 
-    public LauncherWithoutApp(String mongockCoreJarFile, String cliJarPath) {
+    public LauncherDefault(String mongockCoreJarFile, String cliJarPath) {
         this.mongockCoreJarFile = mongockCoreJarFile;
         this.cliJarPath = cliJarPath;
     }
@@ -45,7 +45,7 @@ public class LauncherWithoutApp implements LauncherCliJar {
     @Override
     public void launch(String[] args) {
         try {
-            logger.info("launching Mongock CLI runner with Standalone launcher");
+            logger.info("launching Mongock CLI runner with default launcher");
 
             Object commandLine = buildCli(getCliBuilder());
 
