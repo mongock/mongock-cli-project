@@ -23,7 +23,7 @@ public class MigrateCommand extends CommandBase<Integer> {
     }
 
     @Override
-    public Integer call( ) {
+    public Integer execution() throws Exception {
         MongockRunner mongockRunner = builder.buildRunner(new MigrationOp());
         mongockRunner.forceEnable();
         mongockRunner.execute();

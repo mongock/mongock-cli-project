@@ -25,7 +25,7 @@ public class UndoCommand extends CommandBase<Integer> {
     }
 
     @Override
-    public Integer call( ) {
+    public Integer execution() throws Exception {
         MongockRunner mongockRunner = builder.buildRunner(ProfessionalOperationProxy.undoOp(changeId));
         mongockRunner.forceEnable();
         mongockRunner.execute();

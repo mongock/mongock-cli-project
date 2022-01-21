@@ -11,4 +11,10 @@ public abstract class CommandBase<T> implements Callable<T> {
         this.builder = builder;
     }
 
+    @Override
+    public T call() throws Exception {
+        return null;
+    }
+
+    abstract T execution() throws Exception;
 }

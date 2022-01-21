@@ -51,8 +51,7 @@ public class MongockCli {
                     .launch(getCleanArgs(args, argumentsToCleanUp));
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            throw new RuntimeException(ex);
-//			System.exit(1);
+			System.exit(1);
         }
 
     }

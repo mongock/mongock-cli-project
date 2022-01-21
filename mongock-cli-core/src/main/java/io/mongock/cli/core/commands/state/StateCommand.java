@@ -30,7 +30,7 @@ public class StateCommand extends CommandBase<Integer> {
   }
 
   @Override
-  public Integer call() {
+  public Integer execution() throws Exception {
     return CommandLine.ExitCode.USAGE;
   }
   
