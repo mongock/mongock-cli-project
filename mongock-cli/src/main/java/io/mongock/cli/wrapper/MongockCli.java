@@ -3,14 +3,13 @@ package io.mongock.cli.wrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
+import io.mongock.cli.wrapper.launcher.CliJarLauncher;
 import io.mongock.cli.wrapper.util.ArgsUtil;
-import org.springframework.boot.loader.archive.JarFileArchive;
 
-import java.io.File;
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.CliJarLauncher.Type.SPRINGBOOT;
+import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.SPRINGBOOT;
 import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
 
 public class MongockCli {
@@ -28,18 +27,25 @@ public class MongockCli {
 		Banner.print(System.out);
 	}
 
-	public static void main(String... args) throws Exception {
+	public static void main(String... args) {
 		setLogger(args);
 		printArgs(args);
 
-		String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
-				.orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT));
+		try {
 
-		CliJarLauncher launcher = LauncherFactory.getLauncher(new JarFileArchive(new File(appJar)));
-		launcher.appJar(appJar)
-				.cliJar(ArgsUtil.getParameter(args, launcher.getType() == SPRINGBOOT ? CLI_SPRING_JAR_ARG : CLI_CORE_JAR_ARG))
-				.loadClasses()
-				.launch(getCleanArgs(args, argumentsToCleanUp));
+			String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
+					.orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT));
+
+			CliJarLauncher launcher = CliJarLauncher.builder()
+					.setAppJarFile(appJar)
+					.build();
+			launcher.cliJar(ArgsUtil.getParameter(args, launcher.getType() == SPRINGBOOT ? CLI_SPRING_JAR_ARG : CLI_CORE_JAR_ARG))
+					.loadClasses()
+					.launch(getCleanArgs(args, argumentsToCleanUp));
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+			System.exit(1);
+		}
 
 	}
 
@@ -55,6 +61,5 @@ public class MongockCli {
 				.map(CliLogger.Level::fromStringDefaultInfo)
 				.orElse(INFO));
 	}
-
 
 }

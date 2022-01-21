@@ -1,8 +1,8 @@
-package io.mongock.cli.wrapper.springboot;
+package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.CliJarLauncher;
+import io.mongock.cli.wrapper.launcher.springboot.CliMainMethodRunner;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.JarLauncher;
@@ -15,7 +15,7 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-import static io.mongock.cli.wrapper.CliJarLauncher.Type.SPRINGBOOT;
+import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.SPRINGBOOT;
 
 public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 
@@ -30,8 +30,9 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 	private final String cliMainClass;
 	private String appJar;
 
-	public SpringbootLauncher(Archive archive) {
+	public SpringbootLauncher(Archive archive, String appJar) {
 		super(archive);
+		this.appJar = appJar;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
@@ -44,12 +45,6 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 		}
 	}
 
-
-	@Override
-	public CliJarLauncher appJar(String appJar) {
-		this.appJar = appJar;
-		return this;
-	}
 
 	@Override
 	public Type getType() {

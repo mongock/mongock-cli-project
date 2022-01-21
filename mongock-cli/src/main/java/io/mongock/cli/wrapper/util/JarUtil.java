@@ -2,7 +2,7 @@ package io.mongock.cli.wrapper.util;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.springboot.SpringbootLauncher;
+import io.mongock.cli.wrapper.launcher.SpringbootLauncher;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.io.IOException;

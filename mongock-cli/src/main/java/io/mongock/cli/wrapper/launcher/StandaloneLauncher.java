@@ -1,9 +1,8 @@
-package io.mongock.cli.wrapper.standalone;
+package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.CliJarLauncher;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;
@@ -17,7 +16,7 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-import static io.mongock.cli.wrapper.CliJarLauncher.Type.STANDALONE;
+import static io.mongock.cli.wrapper.launcher.CliJarLauncher.Type.STANDALONE;
 
 public class StandaloneLauncher implements CliJarLauncher {
 
@@ -30,8 +29,9 @@ public class StandaloneLauncher implements CliJarLauncher {
 
 	private URLClassLoader classLoader;
 
-	public StandaloneLauncher(JarFileArchive appArchive) {
+	public StandaloneLauncher(JarFileArchive appArchive, String appJar) {
 		this.appJarArchive = appArchive;
+		this.appJar = appJar;
 	}
 
 	@Override
@@ -42,12 +42,6 @@ public class StandaloneLauncher implements CliJarLauncher {
 	@Override
 	public CliJarLauncher cliJar(String cliJar) {
 		this.cliJar = cliJar;
-		return this;
-	}
-
-	@Override
-	public CliJarLauncher appJar(String appJar) {
-		this.appJar = appJar;
 		return this;
 	}
 
