@@ -22,6 +22,6 @@ jobs:
         run: mvn -B -Pit verify
 
       - name: integration test
-      - run: |
+        run: |
           cd mongock-cli/src/test
           ./test.sh
