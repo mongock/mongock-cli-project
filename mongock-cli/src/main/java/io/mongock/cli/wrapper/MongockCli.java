@@ -42,19 +42,18 @@ public class MongockCli {
             String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
                     .orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT, false));
 
-            LauncherCliJar launcher = LauncherCliJar.builder()
+            LauncherCliJar.builder()
                     .setAppJarFile(appJar)
                     .setCliCoreJar(ArgsUtil.getParameter(args, CLI_CORE_JAR_ARG, false))
                     .setCliSpringJar(ArgsUtil.getParameter(args, CLI_SPRING_JAR_ARG, false))
-					.setMongockCoreJarFile(ArgsUtil.getParameter(args, MONGOCK_CORE_JAR_ARG, false))//todo pass as parameter
-                    .build();
-
-            launcher.loadClasses()
+                    .setMongockCoreJarFile(ArgsUtil.getParameter(args, MONGOCK_CORE_JAR_ARG, false))
+                    .build()
+                    .loadClasses()
                     .launch(getCleanArgs(args, argumentsToCleanUp));
             System.exit(0);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-			System.exit(1);
+            System.exit(1);
         }
 
     }
