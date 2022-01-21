@@ -20,8 +20,3 @@ jobs:
 
       - name: Unit and Integration tests
         run: mvn -B -Pit verify
-
-      - name: integration test
-        run: |
-          cd mongock-cli/src/test
-          ./test.sh
