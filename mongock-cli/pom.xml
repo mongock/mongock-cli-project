@@ -88,8 +88,8 @@
                         <configuration>
                             <target name="linux-script">
                                 <copy file="${project.build.outputDirectory}/linux_script_template"
-                                      toFile="mongock" overwrite="true" />
-                                <chmod file="mongock" perm="ugo+rx"/>
+                                      toFile="target/mongock" overwrite="true" />
+                                <chmod file="target/mongock" perm="ugo+rx"/>
                             </target>
                         </configuration>
                     </execution>

@@ -13,7 +13,7 @@
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
-            <source>mongock</source>
+            <source>${project.build.directory}/mongock</source>
             <outputDirectory>/</outputDirectory>
         </file>
     </files>
