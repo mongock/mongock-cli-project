@@ -17,8 +17,11 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
-      - name: Set up testcontainers
-        run: docker image pull quay.io/testcontainers/dynalite:v1.2.1-1
 
       - name: Unit and Integration tests
         run: mvn -B -Pit verify
+
+      - name: integration test
+      - run: |
+          cd mongock-cli/src/test
+          ./test.sh
