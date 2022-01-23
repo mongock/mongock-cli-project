@@ -53,7 +53,6 @@ public class CliCoreRunner {
         }
 
         public CommandLine build() {
-            validate();
             addCommand(UNDO , new UndoCommand(builder));
             addCommand(MIGRATE, new MigrateCommand(builder));
             addCommand(STATE, new StateCommand(builder));
@@ -63,11 +62,7 @@ public class CliCoreRunner {
                     .addSubCommands(commands);
         }
 
-        private void validate() {
-            if (builder == null) {
-                throw new MongockException("builder needs to be provided to CLI");
-            }
-        }
+
 
         private Optional<IFactory> getFactory() {
             return Optional.ofNullable(factory);

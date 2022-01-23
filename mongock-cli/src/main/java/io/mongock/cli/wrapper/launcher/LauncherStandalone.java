@@ -1,9 +1,8 @@
-package io.mongock.cli.wrapper.standalone;
+package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.CliJarLauncher;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;
@@ -17,47 +16,30 @@ import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-import static io.mongock.cli.wrapper.CliJarLauncher.Type.STANDALONE;
+public class LauncherStandalone implements LauncherCliJar {
 
-public class StandaloneLauncher implements CliJarLauncher {
-
-	private static final CliLogger logger = CliLoggerFactory.getLogger(StandaloneLauncher.class);
+	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherStandalone.class);
 	private final JarFileArchive appJarArchive;
 
 
-	private String appJar;
-	private String cliJar;
+	private final String appJar;
+	private final String cliJarPath;
 
 	private URLClassLoader classLoader;
 
-	public StandaloneLauncher(JarFileArchive appArchive) {
+	public LauncherStandalone(JarFileArchive appArchive, String appJar, String cliJarPath) {
 		this.appJarArchive = appArchive;
-	}
-
-	@Override
-	public Type getType() {
-		return STANDALONE;
-	}
-
-	@Override
-	public CliJarLauncher cliJar(String cliJar) {
-		this.cliJar = cliJar;
-		return this;
-	}
-
-	@Override
-	public CliJarLauncher appJar(String appJar) {
 		this.appJar = appJar;
-		return this;
+		this.cliJarPath = cliJarPath;
 	}
 
 	@Override
-	public CliJarLauncher loadClasses() {
+	public LauncherCliJar loadClasses() {
 
 		try {
 			this.classLoader = buildClassLoader();
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
-			ClassLoaderUtil.loadJarClasses(new JarFile(cliJar), classLoader);
+			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
 			
 			return this;	
 		} catch (Exception ex) {
@@ -159,7 +141,8 @@ public class StandaloneLauncher implements CliJarLauncher {
 		return URLClassLoader.newInstance(
 				new URL[]{
 						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar)),
-						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJar))},
+						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath))
+				},
 				Thread.currentThread().getContextClassLoader()
 		);
 	}

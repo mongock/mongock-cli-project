@@ -1,8 +1,8 @@
-package io.mongock.cli.wrapper.springboot;
+package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.CliJarLauncher;
+import io.mongock.cli.wrapper.launcher.springboot.CliMainMethodRunner;
 import io.mongock.cli.wrapper.util.ClassLoaderUtil;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.JarLauncher;
@@ -15,23 +15,23 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-import static io.mongock.cli.wrapper.CliJarLauncher.Type.SPRINGBOOT;
-
-public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
+public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 
 
-	private static final CliLogger logger = CliLoggerFactory.getLogger(SpringbootLauncher.class);
+	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherSpringboot.class);
 	public static final String BOOT_CLASSPATH_INDEX_ATTRIBUTE = JarLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE;
 	private static final String SPRING_CLI_MAIN_CLASS = "io.mongock.cli.springboot.CliSpringbootRunner";
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
 
-	private String cliJarPath;
+	private final String cliJarPath;
 	private final String cliMainClass;
-	private String appJar;
+	private final String appJar;
 
-	public SpringbootLauncher(Archive archive) {
+	public LauncherSpringboot(Archive archive, String appJar, String cliJarPath) {
 		super(archive);
+		this.appJar = appJar;
+		this.cliJarPath = cliJarPath;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
@@ -44,25 +44,7 @@ public class SpringbootLauncher extends JarLauncher implements CliJarLauncher {
 		}
 	}
 
-
-	@Override
-	public CliJarLauncher appJar(String appJar) {
-		this.appJar = appJar;
-		return this;
-	}
-
-	@Override
-	public Type getType() {
-		return SPRINGBOOT;
-	}
-
-	@Override
-	public CliJarLauncher cliJar(String cliJar) {
-		this.cliJarPath = cliJar;
-		return this;
-	}
-
-	public SpringbootLauncher loadClasses() {
+	public LauncherSpringboot loadClasses() {
 		try {
 			URLClassLoader classLoader = URLClassLoader.newInstance(
 					new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar))},

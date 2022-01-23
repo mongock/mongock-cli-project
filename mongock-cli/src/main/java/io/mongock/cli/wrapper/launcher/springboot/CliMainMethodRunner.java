@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.springboot;
+package io.mongock.cli.wrapper.launcher.springboot;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;

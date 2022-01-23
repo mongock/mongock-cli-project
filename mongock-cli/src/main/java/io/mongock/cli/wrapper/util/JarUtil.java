@@ -2,7 +2,7 @@ package io.mongock.cli.wrapper.util;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.springboot.SpringbootLauncher;
+import io.mongock.cli.wrapper.launcher.LauncherSpringboot;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public final class JarUtil {
 
 	public static boolean isSpringApplication(JarFileArchive archive) {
 		try {
-			return getAttributes(archive).getValue(SpringbootLauncher.BOOT_CLASSPATH_INDEX_ATTRIBUTE) != null;
+			return getAttributes(archive).getValue(LauncherSpringboot.BOOT_CLASSPATH_INDEX_ATTRIBUTE) != null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
