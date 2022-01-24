@@ -19,10 +19,14 @@ import picocli.CommandLine.Command;
 
 
 @Command(name = CommandName.STATE,
-        description = "(pro) - Show the current state of changes (./mongock state -h for more details)",
+        description = "",
         mixinStandardHelpOptions = true,
         versionProvider = VersionProvider.class)
 public class StateCommand extends CommandBase<Integer> {
+  
+  private static final String SUBCOMMAND_DB = "db";
+  private static final String SUBCOMMAND_CODE_BASE = "code-base";
+  private static final String SUBCOMMAND_COMPARE = "compare";
   
   @SuppressWarnings("rawtypes")
   public StateCommand(RunnerBuilder builder) {
@@ -31,6 +35,7 @@ public class StateCommand extends CommandBase<Integer> {
 
   @Override
   public Integer execution() throws Exception {
+    printUsage();
     return CommandLine.ExitCode.USAGE;
   }
   
@@ -60,24 +65,27 @@ public class StateCommand extends CommandBase<Integer> {
     }
   }
   
-  @Command(name = "db",
-          description = "(pro) - Show the current state of changes (./mongock state db -h for more details)",
+  @Command(name = SUBCOMMAND_DB,
+          description = "(pro) - Show the current state of changes (./mongock " + CommandName.STATE + 
+                  " " + SUBCOMMAND_DB + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer db() {
     return this.runStateOperation(result -> processResult(result, StateCommandHelper::printDbTable));
   }
   
-  @Command(name = "code-base",
-          description = "(pro) - List the existing code changeUnits and their current state (./mongock state code-base -h for more details)",
+  @Command(name = SUBCOMMAND_CODE_BASE,
+          description = "(pro) - List the existing code changeUnits and their current state (./mongock " + CommandName.STATE + 
+                  " " + SUBCOMMAND_CODE_BASE + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer codeBase() {
     return this.runStateOperation(result -> processResult(result, StateCommandHelper::printCodeBaseTable));
   }
   
-  @Command(name = "compare",
-          description = "(pro) - Compare the existing code changeUnits with the current state of changes (./mongock state compare -h for more details)",
+  @Command(name = SUBCOMMAND_COMPARE,
+          description = "(pro) - Compare the existing code changeUnits with the current state of changes (./mongock " + CommandName.STATE + 
+                  " " + SUBCOMMAND_COMPARE + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer compare() {

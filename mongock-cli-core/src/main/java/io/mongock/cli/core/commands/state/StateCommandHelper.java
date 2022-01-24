@@ -22,7 +22,8 @@ import static com.diogonunes.jcolor.Attribute.YELLOW_TEXT;
 
 public class StateCommandHelper {
   
-  private static final String COLUMN_CHANGE_ID = "changeId";
+  private static final String COLUMN_CHANGE_UNIT_ID = "change unit id";
+  private static final String COLUMN_CHANGE_ID = "change id";
   private static final String COLUMN_AUTHOR = "author";
   private static final String COLUMN_STATE = "state";
   private static final String COLUMN_DETAILS = "details";
@@ -33,12 +34,14 @@ public class StateCommandHelper {
   
   public static void printDbTable(List<StateOpResultItem> items) {
 
-    String[][] header = new String[][]{{COLUMN_CHANGE_ID, COLUMN_AUTHOR, COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT}};
+    String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
+                                        COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT}};
 
     // Print only items that exists in db
     String[][] rows = items.stream()
                            .filter(item -> !item.getOrigin().equals(StateOpResultItemOrigin.CHANGE_SET))
             .map(c -> new String[]{
+                            c.getChangeUnitId(),
                             c.getId(),
                             c.getAuthor(),
                             formatState(c.getState()),
@@ -52,12 +55,14 @@ public class StateCommandHelper {
   
   public static void printCodeBaseTable(List<StateOpResultItem> items) {
 
-    String[][] header = new String[][]{{COLUMN_CHANGE_ID, COLUMN_AUTHOR, COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
+    String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
+                                        COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
 
     // Print only items that exists in code
     String[][] rows = items.stream()
                            .filter(item -> !item.getOrigin().equals(StateOpResultItemOrigin.CHANGE_ENTRY))
             .map(c -> new String[]{
+                            c.getChangeUnitId(),
                             c.getId(),
                             c.getAuthor(),
                             formatState(c.getState()),
@@ -72,11 +77,13 @@ public class StateCommandHelper {
   
   public static void printCompareTable(List<StateOpResultItem> items) {
 
-    String[][] header = new String[][]{{COLUMN_CHANGE_ID, COLUMN_AUTHOR, COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
+    String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
+                                        COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
 
     // Print all items
     String[][] rows = items.stream()
             .map(c -> new String[]{
+                            c.getChangeUnitId(),
                             c.getId(),
                             c.getAuthor(),
                             formatState(c.getState()),
@@ -139,6 +146,9 @@ public class StateCommandHelper {
   private static Attribute customColumnFormatter(String columnName, boolean isHeaderRow, String value) {
     if (isHeaderRow) {
       return BOLD();
+    }
+    else if (columnName.equals(COLUMN_CHANGE_UNIT_ID)) {
+      return CYAN_TEXT();
     }
     else if (columnName.equals(COLUMN_CHANGE_ID)) {
       return CYAN_TEXT();
