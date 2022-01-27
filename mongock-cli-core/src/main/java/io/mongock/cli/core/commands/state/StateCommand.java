@@ -66,8 +66,7 @@ public class StateCommand extends CommandBase<Integer> {
   }
   
   @Command(name = SUBCOMMAND_DB,
-          description = "(pro) - Show the current state of changes (./mongock " + CommandName.STATE + 
-                  " " + SUBCOMMAND_DB + " -h for more details)",
+          description = "(pro) - Show the current state of changes (./mongock " + CommandName.STATE + " " + SUBCOMMAND_DB + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer db() {
@@ -75,8 +74,7 @@ public class StateCommand extends CommandBase<Integer> {
   }
   
   @Command(name = SUBCOMMAND_CODE_BASE,
-          description = "(pro) - List the existing code changeUnits and their current state (./mongock " + CommandName.STATE + 
-                  " " + SUBCOMMAND_CODE_BASE + " -h for more details)",
+          description = "(pro) - List the existing code changeUnits and their current state (./mongock " + CommandName.STATE + " " + SUBCOMMAND_CODE_BASE + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer codeBase() {
@@ -84,8 +82,7 @@ public class StateCommand extends CommandBase<Integer> {
   }
   
   @Command(name = SUBCOMMAND_COMPARE,
-          description = "(pro) - Compare the existing code changeUnits with the current state of changes (./mongock " + CommandName.STATE + 
-                  " " + SUBCOMMAND_COMPARE + " -h for more details)",
+          description = "(pro) - Compare the existing code changeUnits with the current state of changes (./mongock " + CommandName.STATE + " " + SUBCOMMAND_COMPARE + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer compare() {
