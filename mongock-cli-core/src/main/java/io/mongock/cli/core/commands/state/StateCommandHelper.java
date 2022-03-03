@@ -129,7 +129,7 @@ public class StateCommandHelper {
           details.add("Rollback failed");
           break;
         case ROLLED_BACK:
-          details.add("Has been rolled back");
+          details.add("Rolled back");
           break;
       }
     }

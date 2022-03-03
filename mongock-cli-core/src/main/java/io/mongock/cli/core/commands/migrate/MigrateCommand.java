@@ -29,8 +29,7 @@ public class MigrateCommand extends CommandBase<Integer> {
   }
 
   @Command(name = SUBCOMMAND_ALL,
-          description = "Executes all the pending changes (./mongock " + CommandName.MIGRATE + 
-                  " " + SUBCOMMAND_ALL + " -h for more details)",
+          description = "Executes all the pending changes (./mongock " + CommandName.MIGRATE + " " + SUBCOMMAND_ALL + " -h for more details)",
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer all() {
