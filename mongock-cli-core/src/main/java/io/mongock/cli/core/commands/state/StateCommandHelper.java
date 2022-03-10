@@ -2,9 +2,9 @@ package io.mongock.cli.core.commands.state;
 
 import com.diogonunes.jcolor.Attribute;
 import io.mongock.cli.util.output.OutputFormatter;
-import io.mongock.professional.runner.common.executor.operation.state.StateOpResultItem;
-import io.mongock.professional.runner.common.executor.operation.state.StateOpResultItemOrigin;
-import io.mongock.professional.runner.common.executor.operation.state.StateOpResultItemState;
+import io.mongock.professional.runner.common.executor.operation.state.StateOperationResultItem;
+import io.mongock.professional.runner.common.executor.operation.state.StateOperationResultItemOrigin;
+import io.mongock.professional.runner.common.executor.operation.state.StateOperationResultItemState;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,14 +32,14 @@ public class StateCommandHelper {
   private static final DateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   
   
-  public static void printDbTable(List<StateOpResultItem> items) {
+  public static void printDbTable(List<StateOperationResultItem> items) {
 
     String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
                                         COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT}};
 
     // Print only items that exists in db
     String[][] rows = items.stream()
-                           .filter(item -> !item.getOrigin().equals(StateOpResultItemOrigin.CHANGE_SET))
+                           .filter(item -> !item.getOrigin().equals(StateOperationResultItemOrigin.CHANGE_SET))
             .map(c -> new String[]{
                             c.getChangeUnitId(),
                             c.getId(),
@@ -53,14 +53,14 @@ public class StateCommandHelper {
     printTable(header, rows);
   }
   
-  public static void printCodeBaseTable(List<StateOpResultItem> items) {
+  public static void printCodeBaseTable(List<StateOperationResultItem> items) {
 
     String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
                                         COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
 
     // Print only items that exists in code
     String[][] rows = items.stream()
-                           .filter(item -> !item.getOrigin().equals(StateOpResultItemOrigin.CHANGE_ENTRY))
+                           .filter(item -> !item.getOrigin().equals(StateOperationResultItemOrigin.CHANGE_ENTRY))
             .map(c -> new String[]{
                             c.getChangeUnitId(),
                             c.getId(),
@@ -75,7 +75,7 @@ public class StateCommandHelper {
     printTable(header, rows);
   }
   
-  public static void printCompareTable(List<StateOpResultItem> items) {
+  public static void printCompareTable(List<StateOperationResultItem> items) {
 
     String[][] header = new String[][]{{COLUMN_CHANGE_UNIT_ID, COLUMN_CHANGE_ID, COLUMN_AUTHOR, 
                                         COLUMN_STATE, COLUMN_DETAILS, COLUMN_UPDATED_AT, COLUMN_UNDOABLE}};
@@ -105,7 +105,7 @@ public class StateCommandHelper {
     System.out.println("");
   }
   
-  private static String formatState(StateOpResultItemState state) {
+  private static String formatState(StateOperationResultItemState state) {
     return state != null ? state.toString() : null;
   }
   
@@ -113,10 +113,10 @@ public class StateCommandHelper {
     return date != null ? TIMESTAMP_FORMAT.format(date) : null;
   }
   
-  private static String getDetails(StateOpResultItem item, boolean isCompareOp) {
+  private static String getDetails(StateOperationResultItem item, boolean isCompareOp) {
     List<String> details = new ArrayList<>();
     
-    if (isCompareOp && item.getOrigin().equals(StateOpResultItemOrigin.CHANGE_ENTRY)) {
+    if (isCompareOp && item.getOrigin().equals(StateOperationResultItemOrigin.CHANGE_ENTRY)) {
       details.add("Not found in code");
     }
     
@@ -154,7 +154,7 @@ public class StateCommandHelper {
       return CYAN_TEXT();
     }
     else if (columnName.equals(COLUMN_STATE) && value != null) {
-      switch (StateOpResultItemState.valueOf(value)) {
+      switch (StateOperationResultItemState.valueOf(value)) {
         case EXECUTED:
           return GREEN_TEXT();
         case PENDING:
