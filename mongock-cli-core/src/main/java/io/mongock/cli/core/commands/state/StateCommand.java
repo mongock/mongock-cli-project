@@ -2,7 +2,7 @@ package io.mongock.cli.core.commands.state;
 
 import io.mongock.api.exception.MongockException;
 import io.mongock.cli.core.VersionProvider;
-import io.mongock.professional.runner.common.executor.operation.state.StateOpResult;
+import io.mongock.professional.runner.common.executor.operation.state.StateOperationResult;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.event.EventPublisher;
 import io.mongock.runner.core.event.result.MigrationSuccessResult;
@@ -11,7 +11,7 @@ import io.mongock.runner.core.executor.MongockRunner;
 import io.mongock.cli.core.commands.CommandBase;
 import io.mongock.cli.core.commands.CommandName;
 import io.mongock.cli.core.commands.ProfessionalOperationProxy;
-import io.mongock.professional.runner.common.executor.operation.state.StateOpResultItem;
+import io.mongock.professional.runner.common.executor.operation.state.StateOperationResultItem;
 import java.util.List;
 import java.util.function.Consumer;
 import picocli.CommandLine;
@@ -43,18 +43,18 @@ public class StateCommand extends CommandBase<Integer> {
     
     MongockRunner mongockRunner = builder
             .setEventPublisher(new EventPublisher(null, successListener, null))
-            .buildRunner(ProfessionalOperationProxy.stateOp());
+            .buildRunner(ProfessionalOperationProxy.stateOperation());
     mongockRunner.forceEnable();
     mongockRunner.execute();
 
     return CommandLine.ExitCode.OK;
   }
   
-  private void processResult(MigrationSuccessResult result, Consumer<List<StateOpResultItem>> consumer) {
-    if (result == null || !(result.getResult() instanceof StateOpResult)) {
+  private void processResult(MigrationSuccessResult result, Consumer<List<StateOperationResultItem>> consumer) {
+    if (result == null || !(result.getResult() instanceof StateOperationResult)) {
       throw new MongockException("The operation has finished with invalid result.");
     } else {
-      StateOpResult stateOpResult = (StateOpResult) result.getResult();
+      StateOperationResult stateOpResult = (StateOperationResult) result.getResult();
       if (stateOpResult.getItems().isEmpty()) {
         System.out.println("");
         System.out.println(">>> The operation has finished with empty result.");

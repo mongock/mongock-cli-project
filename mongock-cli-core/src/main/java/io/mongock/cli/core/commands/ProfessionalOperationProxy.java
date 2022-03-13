@@ -9,13 +9,21 @@ public final class ProfessionalOperationProxy {
 
   private ProfessionalOperationProxy() {
   }
-
-  public static Operation undoOp(String changeId) {
-    return new io.mongock.professional.runner.common.executor.operation.undo.UndoOp(changeId);
+  
+  public static Operation migrateUpToChangeOperation(String changeId) {
+    return new io.mongock.professional.runner.common.executor.operation.migrate.MigrateUpToChangeOperation(changeId);
+  }
+  
+  public static Operation undoAllOperation() {
+    return new io.mongock.professional.runner.common.executor.operation.undo.UndoAllOperation();
   }
 
-  public static Operation stateOp() {
-    return new io.mongock.professional.runner.common.executor.operation.state.StateOp();
+  public static Operation undoUpToChangeOperation(String changeId) {
+    return new io.mongock.professional.runner.common.executor.operation.undo.UndoUpToChangeOperation(changeId);
+  }
+
+  public static Operation stateOperation() {
+    return new io.mongock.professional.runner.common.executor.operation.state.StateOperation();
   }
 
 }
