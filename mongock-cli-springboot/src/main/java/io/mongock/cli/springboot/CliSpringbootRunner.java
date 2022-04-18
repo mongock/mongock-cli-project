@@ -1,7 +1,6 @@
 package io.mongock.cli.springboot;
 
 import io.mongock.cli.core.CliCoreRunner;
-import io.mongock.cli.core.CommandHelper;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.runner.core.builder.RunnerBuilder;
@@ -16,7 +15,6 @@ import picocli.CommandLine;
 
 import java.util.Properties;
 
-import static io.mongock.runner.core.builder.BuilderType.PROFESSIONAL;
 import static picocli.CommandLine.IFactory;
 
 @SpringBootApplication
@@ -83,17 +81,12 @@ class CliSpringbootRunner implements org.springframework.boot.CommandLineRunner,
             logger.error("command format: 'mongock [operation] [parameters]'");
             exitCode = CommandLine.ExitCode.USAGE;
         } else {
-            if(CommandHelper.isProfessionalCommand(args[0]) && builder.getType() != PROFESSIONAL){
-                logger.error("Professional operation {} not supported in community edition", args[0]);
-                exitCode = CommandLine.ExitCode.USAGE;
-            } else {
-                exitCode = CliCoreRunner
-                        .builder()
-                        .factory(factory)
-                        .runnerBuilder(builder)
-                        .build()
-                        .execute(args);
-            }
+            exitCode = CliCoreRunner
+                    .builder()
+                    .factory(factory)
+                    .runnerBuilder(builder)
+                    .build()
+                    .execute(args);
         }
     }
 

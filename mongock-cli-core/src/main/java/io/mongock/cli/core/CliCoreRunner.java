@@ -1,6 +1,5 @@
 package io.mongock.cli.core;
 
-import io.mongock.api.exception.MongockException;
 import io.mongock.cli.core.commands.MainCommand;
 import io.mongock.cli.core.commands.migrate.MigrateCommand;
 import io.mongock.cli.core.commands.undo.UndoCommand;

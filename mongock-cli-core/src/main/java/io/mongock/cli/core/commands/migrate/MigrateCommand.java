@@ -50,6 +50,9 @@ public class MigrateCommand extends CommandBase<Integer> {
                   index = "0",
                   description = "ChangeUnit id up to which Mongock will execute migration(inclusive).",
                   paramLabel = "<CHANGE_UNIT_ID>") String changeUnitId) {
+    if (!checkProfessionalBuilder()) {
+      return CommandLine.ExitCode.USAGE;
+    }
     MongockRunner mongockRunner = builder.buildRunner(ProfessionalOperationProxy.migrateUpToChangeOperation(changeUnitId));
     mongockRunner.forceEnable();
     mongockRunner.execute();
