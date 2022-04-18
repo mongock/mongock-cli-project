@@ -35,6 +35,9 @@ public class UndoCommand extends CommandBase<Integer> {
           mixinStandardHelpOptions = true,
           versionProvider = VersionProvider.class)
   public Integer all() {
+    if (!checkProfessionalBuilder()) {
+      return CommandLine.ExitCode.USAGE;
+    }
     MongockRunner mongockRunner = builder.buildRunner(ProfessionalOperationProxy.undoAllOperation());
     mongockRunner.forceEnable();
     mongockRunner.execute();
@@ -50,6 +53,9 @@ public class UndoCommand extends CommandBase<Integer> {
                   index = "0",
                   description = "ChangeUnit id up to which Mongock will rollback(inclusive).",
                   paramLabel = "<CHANGE_UNIT_ID>") String changeUnitId) {
+    if (!checkProfessionalBuilder()) {
+      return CommandLine.ExitCode.USAGE;
+    }
     MongockRunner mongockRunner = builder.buildRunner(ProfessionalOperationProxy.undoUpToChangeOperation(changeUnitId));
     mongockRunner.forceEnable();
     mongockRunner.execute();

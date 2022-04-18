@@ -41,6 +41,10 @@ public class StateCommand extends CommandBase<Integer> {
   
   private int runStateOperation(Consumer<MigrationSuccessResult> successListener) {
     
+    if (!checkProfessionalBuilder()) {
+      return CommandLine.ExitCode.USAGE;
+    }
+    
     MongockRunner mongockRunner = builder
             .setEventPublisher(new EventPublisher(null, successListener, null))
             .buildRunner(ProfessionalOperationProxy.stateOperation());
