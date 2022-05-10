@@ -30,7 +30,7 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.version>5.1.0</mongock.version>
+        <mongock.version>5.1.1-SNAPSHOT</mongock.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
