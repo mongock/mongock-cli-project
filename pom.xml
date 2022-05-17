@@ -17,6 +17,7 @@
         <module>mongock-cli-springboot</module>
         <module>mongock-cli</module>
         <module>mongock-cli-util</module>
+        <module>mongock-default-app</module>
     </modules>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
