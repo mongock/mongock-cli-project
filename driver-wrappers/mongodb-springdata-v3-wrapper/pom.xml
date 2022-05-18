@@ -3,39 +3,43 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>mongock-cli-project</artifactId>
+        <artifactId>driver-wrappers</artifactId>
         <groupId>io.mongock</groupId>
         <version>5.0.26-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mongock-default-app</artifactId>
+    <artifactId>mongodb-springdata-v3-wrapper</artifactId>
 
     <properties>
-
+        <mongodb.driver-sync.version>4.3.3</mongodb.driver-sync.version>
+        <mongodb-reactivestreams.version>4.4.1</mongodb-reactivestreams.version>
+        <mongodb.spring-data.starter.version>2.6.3</mongodb.spring-data.starter.version>
     </properties>
 
     <dependencies>
-        <!-- MONGOCK RUNNER -->
+
+        <!-- MONGODB -->
         <dependency>
             <groupId>io.mongock</groupId>
-            <artifactId>mongock-standalone</artifactId>
+            <artifactId>mongodb-springdata-v3-driver</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.mongock</groupId>
-            <artifactId>mongock-driver-api</artifactId>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.4.1</version>
         </dependency>
-
-
         <dependency>
-            <groupId>io.mongock</groupId>
-            <artifactId>mongock-api</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>3.3.1</version>
         </dependency>
 
-
+        <!-- END MONGODB -->
 
     </dependencies>
+
 
     <build>
         <plugins>
@@ -61,7 +65,6 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>io.mongock.examples.StandaloneSpringdataApp</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -70,5 +73,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

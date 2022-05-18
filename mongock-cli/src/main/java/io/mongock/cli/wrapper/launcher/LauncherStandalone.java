@@ -37,7 +37,9 @@ public class LauncherStandalone implements LauncherCliJar {
 	public LauncherCliJar loadClasses() {
 
 		try {
-			this.classLoader = buildClassLoader();
+			String wrapperJar = "lib/mongodb-springdata-v3-wrapper-5.0.26-SNAPSHOT.jar";
+			this.classLoader = buildClassLoader(wrapperJar);
+			ClassLoaderUtil.loadJarClasses(new JarFile(wrapperJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
 			
@@ -58,7 +60,11 @@ public class LauncherStandalone implements LauncherCliJar {
 				MongockCliConfiguration ann = mainClass.getAnnotation(MongockCliConfiguration.class);
 				Class.forName("io.mongock.runner.core.builder.RunnerBuilderProvider", false, classLoader);
 
+
+				System.out.println("\n\nAFTERLOADED\n\n");
+
 				Class<?> builderProviderImplClass = ann.sources()[0];
+
 
 				Object runnerBuilder = getRunnerBuilder(builderProviderImplClass);
 
@@ -130,19 +136,46 @@ public class LauncherStandalone implements LauncherCliJar {
 		return cliBuilder;
 	}
 
-	private Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	private Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+
+		Class.forName("io.mongock.driver.api.driver.ConnectionDriver", false, classLoader);
+
+		//
+
+		Class<?> connectionDriverProvider = Class.forName("io.mongock.cli.wrapper.mongodb.springdata.v3.SpringDataMongoV3Wrapper", false, classLoader);
+		Constructor<?> constructorDriver = connectionDriverProvider.getDeclaredConstructor();
+		Object connectionProvider = constructorDriver.newInstance();
+
+		System.out.println("\n\n" + connectionProvider.getClass().getName()+ "\n\n");
+
+		//TODO Instead of this, pass the connectionDriverProvider to the RunnerBuilderProvider
+//		Method getDriverMethod = connectionProvider.getClass().getMethod("getDriver");
+//		Object driver = getDriverMethod.invoke(connectionProvider);
+
 		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
 		Object builderProvider = constructor.newInstance();
+
+		//setDriver
+//		Method setDriverMethod = builderProvider.getClass().getMethod("setDriver");
+//		setDriverMethod.invoke(builderProvider, driver);
+
+
 		Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
 		return getBuilderMethod.invoke(builderProvider);
 	}
 
-	private URLClassLoader buildClassLoader() throws MalformedURLException {
+
+
+	private URLClassLoader buildClassLoader(String... otherJars) throws MalformedURLException {
+		URL[] urls = new URL[2 + otherJars.length];
+		urls[0] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar));
+		urls[1] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath));
+		for(int index = 0; index < otherJars.length ; index++) {
+			urls[index + 2] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, otherJars[index]));
+		}
+
 		return URLClassLoader.newInstance(
-				new URL[]{
-						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar)),
-						new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath))
-				},
+				urls,
 				Thread.currentThread().getContextClassLoader()
 		);
 	}

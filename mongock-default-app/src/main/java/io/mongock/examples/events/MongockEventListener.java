@@ -4,7 +4,6 @@ import io.mongock.runner.core.event.MigrationFailureEvent;
 import io.mongock.runner.core.event.MigrationStartedEvent;
 import io.mongock.runner.core.event.MigrationSuccessEvent;
 
-
 public class MongockEventListener {
 
   public static void onStart(MigrationStartedEvent event) {

@@ -15,6 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <java.version>1.8</java.version>
+
     </properties>
 
     <dependencies>
@@ -33,15 +34,32 @@
             <artifactId>mongock-cli-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-default-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-api</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-runner-core</artifactId>
         </dependency>
+
+        <!-- WRAPPERS -->
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongodb-springdata-v3-wrapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- END WRAPPERS -->
+
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -121,8 +139,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <!-- Tells the plugin to replace the main artifact with the shaded one,
+                            instead of attaching it-->
                             <shadedArtifactAttached>false</shadedArtifactAttached>
 
+                            <!-- The classes to include. The rest are not included. If the filters block is removed,
+                            all the classes are included -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -132,6 +154,7 @@
                                         <include>io/mongock/cli/util/**</include>
                                         <include>io/mongock/cli/wrapper/**</include>
                                         <include>io/mongock/api/annotations/**</include>
+                                        <include>io/mongock/driver/api/**</include>
                                     </includes>
                                 </filter>
                             </filters>
