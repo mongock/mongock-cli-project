@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.mongodb.springdata.v3;
+package io.mongock.examples;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -18,11 +18,6 @@ public class SpringDataMongoV3Wrapper {
 
     public final static String MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/";
     public final static String MONGODB_MAIN_DB_NAME = "test";
-
-
-    public static void main(String... args) {
-
-    }
 
     public ConnectionDriver getDriver() {
 

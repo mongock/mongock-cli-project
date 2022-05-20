@@ -138,7 +138,6 @@
                                         <include>io/mongock/cli/util/**</include>
                                         <include>io/mongock/cli/wrapper/**</include>
                                         <include>io/mongock/api/annotations/**</include>
-                                        <include>io/mongock/driver/api/**</include>
                                     </includes>
                                 </filter>
                             </filters>

@@ -1,5 +1,6 @@
 package io.mongock.cli.core;
 
+import io.mongock.api.exception.MongockException;
 import io.mongock.cli.core.commands.MainCommand;
 import io.mongock.cli.core.commands.migrate.MigrateCommand;
 import io.mongock.cli.core.commands.undo.UndoCommand;
@@ -10,6 +11,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import io.mongock.runner.core.builder.RunnerBuilderProvider;
 import picocli.CommandLine;
 
 import static io.mongock.cli.core.commands.CommandName.MIGRATE;
@@ -32,6 +35,7 @@ public class CliCoreRunner {
         private final Set<CommandDefinition> commands = new HashSet<>();
         private IFactory factory;
         private RunnerBuilder builder;
+        private RunnerBuilderProvider builderProvider;
 
         private Builder() {
         }
@@ -51,7 +55,18 @@ public class CliCoreRunner {
             return this;
         }
 
+        public Builder runnerBuilderProvider(RunnerBuilderProvider builderProvider) {
+            this.builderProvider = builderProvider;
+            return this;
+        }
+
         public CommandLine build() {
+            if(builder == null) {
+                if(builderProvider == null) {
+                    throw new MongockException("Not injected RunnerBuilder nor RunnerBuilderProvider");
+                }
+                builder = builderProvider.getBuilder();
+            }
             addCommand(UNDO , new UndoCommand(builder));
             addCommand(MIGRATE, new MigrateCommand(builder));
             addCommand(STATE, new StateCommand(builder));
