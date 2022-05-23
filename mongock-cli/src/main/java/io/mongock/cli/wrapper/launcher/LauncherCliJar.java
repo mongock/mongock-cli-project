@@ -32,8 +32,6 @@ public interface LauncherCliJar {
 
         private String appJarFile;
 
-        private String mongockCoreJarFile;
-
 
         public LauncherBuilder() {
         }
@@ -42,8 +40,6 @@ public interface LauncherCliJar {
             this.appJarFile = appJarFile;
             return this;
         }
-
-
 
         public LauncherBuilder setJarFactory(JarFactory jarFactory) {
             this.jarFactory = jarFactory;
@@ -54,36 +50,42 @@ public interface LauncherCliJar {
         public LauncherCliJar build() throws IOException {
             cliCoreJar = jarFactory.cliCore();
             cliSpringJar = jarFactory.cliSpringboot();
-            mongockCoreJarFile = jarFactory.runnerCore();
-
             if (getAppJar().isPresent()) {
-                JarFileArchive archive = new JarFileArchive(new File(appJarFile));
-                if (JarUtil.isSpringApplication(archive)) {
-                    return buildLauncherSpring(archive);
+                JarFileArchive appArchive = new JarFileArchive(new File(appJarFile));
+                if (JarUtil.isSpringApplication(appArchive)) {
+                    return buildLauncherSpring(appArchive, appJarFile);
                 } else {
-                    return buildLauncherStandalone(archive);
+                    return buildLauncherStandalone(appArchive, appJarFile);
                 }
             } else {
-                return buildLauncherWithoutApp();
+                String defaultAppJarFile = jarFactory.defaultApp();
+                JarFileArchive defaultAppArchive = new JarFileArchive(new File(defaultAppJarFile));
+                return buildLauncherWithoutApp(defaultAppArchive, defaultAppJarFile);
             }
         }
 
-        private LauncherDefault buildLauncherWithoutApp() {
-            validateNotNullParameter(mongockCoreJarFile, "library mongock core jar");
-            validateNotNullParameter(cliCoreJar, "library cli core jar");
-            return new LauncherDefault(mongockCoreJarFile, cliCoreJar);
-        }
-
-        private LauncherStandalone buildLauncherStandalone(JarFileArchive archive) {
-            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
+        private LauncherDefault buildLauncherWithoutApp(JarFileArchive appArchive, String appJar) {
             validateNotNullParameter(cliCoreJar, "library cli core jar ");
-            return new LauncherStandalone(archive, appJarFile, cliCoreJar);
+            return new LauncherDefault(
+                    appArchive,
+                    appJar,
+                    cliCoreJar,
+                    jarFactory.runnerStandaloneBase(),
+                    jarFactory.runnerStandalone(),
+                    jarFactory.mongoSpringDataV3Wrapper()//todo get this from a factory depending on driver parameter
+                    );
         }
 
-        private LauncherSpringboot buildLauncherSpring(JarFileArchive archive) {
-            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
+        private LauncherStandalone buildLauncherStandalone(JarFileArchive appArchive, String appJar) {
+            validateNotNullParameter(appJar, "parameter " + APP_JAR_ARG_LONG);
+            validateNotNullParameter(cliCoreJar, "library cli core jar ");
+            return new LauncherStandalone(appArchive, appJar, cliCoreJar);
+        }
+
+        private LauncherSpringboot buildLauncherSpring(JarFileArchive appArchive, String appJar) {
+            validateNotNullParameter(appJar, "parameter " + APP_JAR_ARG_LONG);
             validateNotNullParameter(cliSpringJar, "library cli spring jar ");
-            return new LauncherSpringboot(archive, appJarFile, cliSpringJar);
+            return new LauncherSpringboot(appArchive, appJar, cliSpringJar);
         }
 
 
