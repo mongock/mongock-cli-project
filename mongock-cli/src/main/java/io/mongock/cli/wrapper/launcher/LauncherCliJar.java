@@ -1,5 +1,6 @@
 package io.mongock.cli.wrapper.launcher;
 
+import io.mongock.cli.wrapper.util.JarFactory;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
@@ -26,6 +27,8 @@ public interface LauncherCliJar {
 
     class LauncherBuilder {
 
+        private JarFactory jarFactory;
+
         private String cliSpringJar;
         private String cliCoreJar;
 
@@ -42,22 +45,19 @@ public interface LauncherCliJar {
             return this;
         }
 
-        public LauncherBuilder setCliSpringJar(String cliSpringJar) {
-            this.cliSpringJar = cliSpringJar;
+
+
+        public LauncherBuilder setJarFactory(JarFactory jarFactory) {
+            this.jarFactory = jarFactory;
             return this;
         }
 
-        public LauncherBuilder setCliCoreJar(String cliCoreJar) {
-            this.cliCoreJar = cliCoreJar;
-            return this;
-        }
-
-        public LauncherBuilder setMongockCoreJarFile(String mongockCoreJarFile) {
-            this.mongockCoreJarFile = mongockCoreJarFile;
-            return this;
-        }
 
         public LauncherCliJar build() throws IOException {
+            cliCoreJar = jarFactory.cliCore();
+            cliSpringJar = jarFactory.cliSpringboot();
+            mongockCoreJarFile = jarFactory.runnerCore();
+
             if (getAppJar().isPresent()) {
                 JarFileArchive archive = new JarFileArchive(new File(appJarFile));
                 if (JarUtil.isSpringApplication(archive)) {

@@ -22,7 +22,7 @@ public class JarFactory {
         return String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion);
     }
 
-    public String funnerCore() {
+    public String runnerCore() {
         return String.format("%s/mongock-runner-core-%s.jar", jarsLib, mongockCommunityVersion);
     }
 
