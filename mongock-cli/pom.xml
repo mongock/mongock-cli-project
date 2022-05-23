@@ -52,6 +52,14 @@
             <artifactId>mongock-runner-core</artifactId>
         </dependency>
 
+
+        <!-- Brought to make the default app smaller-->
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-standalone</artifactId>
+        </dependency>
+
+
         <!-- WRAPPERS -->
         <dependency>
             <groupId>io.mongock</groupId>

@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.mongodb.springdata.v3;
+package io.mongock.driver.cli.wrapper.mongodb.springdata.v3;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
