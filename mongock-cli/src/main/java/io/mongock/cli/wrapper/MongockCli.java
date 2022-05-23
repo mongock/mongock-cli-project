@@ -47,12 +47,9 @@ public class MongockCli {
         printArgs(args);
 
         try {
-            JarFactory jarFactory = buildJarFactory(args);
             LauncherCliJar.builder()
                     .setAppJarFile(getAppJar(args))
-                    .setCliCoreJar(jarFactory.cliCore())
-                    .setCliSpringJar(jarFactory.cliSpringboot())
-                    .setMongockCoreJarFile(jarFactory.cliCore())
+                    .setJarFactory(buildJarFactory(args))
                     .build()
                     .loadClasses()
                     .launch(getCleanArgs(args, argumentsToCleanUp));
