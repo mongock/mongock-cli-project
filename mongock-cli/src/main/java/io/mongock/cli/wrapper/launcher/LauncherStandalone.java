@@ -37,11 +37,17 @@ public class LauncherStandalone implements LauncherCliJar {
 	public LauncherCliJar loadClasses() {
 
 		try {
-//			String wrapperJar = "lib/mongodb-springdata-v3-wrapper-5.0.26-SNAPSHOT.jar";
-//			this.classLoader = buildClassLoader(wrapperJar);
+			String wrapperJar = "lib/mongodb-springdata-v3-wrapper-5.0.26-SNAPSHOT.jar";
 
-			this.classLoader = buildClassLoader();
-//			ClassLoaderUtil.loadJarClasses(new JarFile(wrapperJar), classLoader);
+			String runnerJar = "lib/mongock-standalone-5.1.0.jar";
+			String runnerBaseJar = "lib/mongock-standalone-base-5.1.0.jar";
+			this.classLoader = buildClassLoader(wrapperJar, runnerJar, runnerBaseJar);
+
+
+//			this.classLoader = buildClassLoader();
+			ClassLoaderUtil.loadJarClasses(new JarFile(wrapperJar), classLoader);
+			ClassLoaderUtil.loadJarClasses(new JarFile(runnerJar), classLoader);
+			ClassLoaderUtil.loadJarClasses(new JarFile(runnerBaseJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
 			
@@ -66,12 +72,10 @@ public class LauncherStandalone implements LauncherCliJar {
 
 
 				Object runnerBuilder = getRunnerBuilder(builderProviderImplClass);
-//				Object runnerBuilderProvider = getRunnerBuilderProvider(builderProviderImplClass);
 
 				Object cliBuilder = getCliBuilder();
 
 				setRunnerBuilderToCli(runnerBuilder, cliBuilder);
-//				setRunnerBuilderProviderToCli(runnerBuilderProvider, cliBuilder);
 
 				Object commandLine = buildCli(cliBuilder);
 
@@ -124,22 +128,6 @@ public class LauncherStandalone implements LauncherCliJar {
 	}
 
 
-	private void setRunnerBuilderProviderToCli(Object runnerBuilder, Object cliBuilder) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		logger.debug("loading class RunnerBuilder");
-
-		Class<?> runnerBuilderProviderClass = Class.forName("io.mongock.runner.core.builder.RunnerBuilderProvider", false, classLoader);
-		logger.debug("successfully loaded class RunnerBuilder");
-
-		logger.debug("setting RunnerBuilderProvider to MongockCli.builder");
-		Method runnerBuilderSetter = cliBuilder.getClass().getDeclaredMethod("runnerBuilderProvider", runnerBuilderProviderClass);
-		runnerBuilderSetter.setAccessible(true);
-		runnerBuilderSetter.invoke(cliBuilder, runnerBuilder);
-		logger.debug("successfully set RunnerBuilderProvider to MongockCli.builder");
-	}
-
-
-
-
 	private Object getCliBuilder() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		logger.debug("loading MongockCLI class");
 		Class<?> mongockCliClass = Class.forName("io.mongock.cli.core.CliCoreRunner", false, classLoader);
@@ -159,32 +147,6 @@ public class LauncherStandalone implements LauncherCliJar {
 		Object builderProvider = constructor.newInstance();
 		Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
 		return getBuilderMethod.invoke(builderProvider);
-	}
-
-	private Object getRunnerBuilderProvider(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
-
-		Class.forName("io.mongock.driver.api.driver.ConnectionDriver", false, classLoader);
-
-		//
-
-		Class<?> connectionDriverProvider = Class.forName("io.mongock.cli.wrapper.mongodb.springdata.v3.SpringDataMongoV3Wrapper", false, classLoader);
-		Constructor<?> constructorDriver = connectionDriverProvider.getDeclaredConstructor();
-		Object connectionProvider = constructorDriver.newInstance();
-
-
-		//TODO Instead of this, pass the connectionDriverProvider to the RunnerBuilderProvider
-//		Method getDriverMethod = connectionProvider.getClass().getMethod("getDriver");
-//		Object driver = getDriverMethod.invoke(connectionProvider);
-
-		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
-		Object builderProvider = constructor.newInstance();
-
-		//setDriver
-		Method setDriverMethod = builderProvider.getClass().getMethod("setDriverProvider", Object.class);
-		setDriverMethod.invoke(builderProvider, connectionProvider);
-
-
-		return builderProvider;
 	}
 
 
