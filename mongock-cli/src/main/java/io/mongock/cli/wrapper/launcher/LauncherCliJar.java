@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
+
 
 public interface LauncherCliJar {
 
@@ -71,20 +69,20 @@ public interface LauncherCliJar {
         }
 
         private LauncherDefault buildLauncherWithoutApp() {
-            validateNotNullParameter(mongockCoreJarFile, "parameter " + MONGOCK_CORE_JAR_ARG);
-            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
+            validateNotNullParameter(mongockCoreJarFile, "library mongock core jar");
+            validateNotNullParameter(cliCoreJar, "library cli core jar");
             return new LauncherDefault(mongockCoreJarFile, cliCoreJar);
         }
 
         private LauncherStandalone buildLauncherStandalone(JarFileArchive archive) {
             validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
-            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
+            validateNotNullParameter(cliCoreJar, "library cli core jar ");
             return new LauncherStandalone(archive, appJarFile, cliCoreJar);
         }
 
         private LauncherSpringboot buildLauncherSpring(JarFileArchive archive) {
             validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
-            validateNotNullParameter(cliSpringJar, "parameter " + CLI_SPRING_JAR_ARG);
+            validateNotNullParameter(cliSpringJar, "library cli spring jar ");
             return new LauncherSpringboot(archive, appJarFile, cliSpringJar);
         }
 
