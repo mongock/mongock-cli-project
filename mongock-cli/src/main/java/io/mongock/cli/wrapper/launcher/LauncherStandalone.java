@@ -35,23 +35,19 @@ public class LauncherStandalone implements LauncherCliJar {
 
 	@Override
 	public LauncherCliJar loadClasses() {
+		loadClassesInternal();
+		return this;
+	}
 
+	protected void loadClassesInternal(String... otherJars) {
 		try {
-			String wrapperJar = "lib/mongodb-springdata-v3-wrapper-5.0.26-SNAPSHOT.jar";
-
-			String runnerJar = "lib/mongock-standalone-5.1.0.jar";
-			String runnerBaseJar = "lib/mongock-standalone-base-5.1.0.jar";
-			this.classLoader = buildClassLoader(wrapperJar, runnerJar, runnerBaseJar);
-
-
-//			this.classLoader = buildClassLoader();
-			ClassLoaderUtil.loadJarClasses(new JarFile(wrapperJar), classLoader);
-			ClassLoaderUtil.loadJarClasses(new JarFile(runnerJar), classLoader);
-			ClassLoaderUtil.loadJarClasses(new JarFile(runnerBaseJar), classLoader);
+			this.classLoader = buildClassLoader(otherJars);
+			for(String otherJar: otherJars) {
+				ClassLoaderUtil.loadJarClasses(new JarFile(otherJar), classLoader);
+			}
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
-			
-			return this;	
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

@@ -14,6 +14,10 @@ public class JarFactory {
         this.mongockProVersion = mongockProVersion;
     }
 
+    public String defaultApp() {
+        return String.format("%s/mongock-default-app-%s.jar", jarsLib, cliVersion);
+    }
+
     public String cliSpringboot() {
         return String.format("%s/mongock-cli-springboot-%s.jar", jarsLib, cliVersion);
     }
@@ -22,8 +26,19 @@ public class JarFactory {
         return String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion);
     }
 
-    public String runnerCore() {
-        return String.format("%s/mongock-runner-core-%s.jar", jarsLib, mongockCommunityVersion);
+    public String runnerStandalone() {
+        return String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockCommunityVersion);
+    }
+
+    public String runnerStandaloneBase() {
+        return String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion);
+    }
+
+
+    // WRAPPERS
+
+    public String mongoSpringDataV3Wrapper() {
+        return String.format("%s/mongodb-springdata-v3-wrapper-%s.jar", jarsLib, cliVersion);
     }
 
 }
