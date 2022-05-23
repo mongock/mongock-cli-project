@@ -13,12 +13,9 @@ import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
 import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
 import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
 import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_SHORT;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.CLI_VERSION_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.COMMUNITY_VERSION_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.LOG_LEVEL_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.PROFESSIONAL_VERSION_ARG;
 
 public class MongockCli {
@@ -29,10 +26,7 @@ public class MongockCli {
     private static final String[] argumentsToCleanUp = {
             APP_JAR_ARG_LONG,
             APP_JAR_ARG_SHORT,
-            CLI_SPRING_JAR_ARG,
-            CLI_CORE_JAR_ARG,
             LOG_LEVEL_ARG,
-            MONGOCK_CORE_JAR_ARG,
             CLI_VERSION_ARG,
             COMMUNITY_VERSION_ARG,
             PROFESSIONAL_VERSION_ARG
