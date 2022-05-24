@@ -4,6 +4,9 @@ import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -16,10 +19,15 @@ public final class ArgsUtil {
 
 	private ArgsUtil() {}
 
-	public static String[] getCleanArgs(String[] args, String... paramNames) {
+	public static String[] getCleanArgs(String[] args) {
 
 		StringBuilder sb = new StringBuilder("cleaning arguments: ");
-		Set<String> paramNamesSet = Stream.of(paramNames)
+		Set<String> paramNamesSet = Arrays
+				.stream(Arguments.values())
+				.map(Arguments::getNames)
+				.flatMap(Collection::stream)
+				.collect(Collectors.toSet())
+				.stream()
 				.peek(arg -> sb.append(arg).append(" "))
 				.map(String::toLowerCase)
 				.collect(Collectors.toSet());
