@@ -35,10 +35,4 @@ public class JarFactory {
     }
 
 
-    // WRAPPERS
-
-    public String mongoSpringDataV3Wrapper() {
-        return String.format("%s/mongodb-springdata-v3-wrapper-%s.jar", jarsLib, cliVersion);
-    }
-
 }
