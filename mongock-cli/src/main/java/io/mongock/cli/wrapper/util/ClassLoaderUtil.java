@@ -33,7 +33,7 @@ public final class ClassLoaderUtil {
                     } catch (Throwable e) {
                         logger.warn(String.format("%s not loaded(%s)", className, e.getMessage()));
                     }
-                    logger.trace(className + " loaded ");
+                    logger.trace("Loaded: " + className);
                 }
             }
             appJarFile.close();
