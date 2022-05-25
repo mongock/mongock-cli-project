@@ -1,7 +1,5 @@
 package io.mongock.cli.wrapper.util;
 
-import java.util.Locale;
-
 public class DriverWrapperFactory {
 
     private final String jarsLib;
