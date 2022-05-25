@@ -1,4 +1,4 @@
-package io.mongock.driver.cli.wrapper.mongodb.springdata.v3;
+package io.mongock.driver.cli.wrapper.mongodb.springdata.v2;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -6,7 +6,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.mongock.driver.api.driver.ConnectionDriver;
-import io.mongock.driver.mongodb.springdata.v3.SpringDataMongoV3Driver;
+import io.mongock.driver.api.driver.ConnectionDriverProvider;
+import io.mongock.driver.mongodb.springdata.v2.SpringDataMongoV2Driver;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.core.convert.converter.Converter;
@@ -20,22 +21,22 @@ import java.util.List;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class SpringDataMongoV3Wrapper {
+public class SpringDataMongoV2DriverProvider implements ConnectionDriverProvider {
 
     public final static String MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/";
     public final static String MONGODB_MAIN_DB_NAME = "test";
 
 
+    @Override
     public ConnectionDriver getDriver() {
 
 
         MongoTemplate mongoTemplate = getMongoTemplate();
 
         // Driver
-        SpringDataMongoV3Driver driver = SpringDataMongoV3Driver.withDefaultLock(mongoTemplate);
+        SpringDataMongoV2Driver driver = SpringDataMongoV2Driver.withDefaultLock(mongoTemplate);
         driver.enableTransaction();
 
-        System.out.println("RETURNING DRIVER: " + driver);
         return driver;
     }
 

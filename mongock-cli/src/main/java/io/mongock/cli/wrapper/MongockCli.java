@@ -1,11 +1,11 @@
 package io.mongock.cli.wrapper;
 
+import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 import io.mongock.cli.wrapper.util.ArgsUtil;
-import io.mongock.cli.wrapper.util.DriverWrapperFactory;
 import io.mongock.cli.wrapper.util.JarFactory;
 
 import java.util.stream.Stream;
@@ -36,29 +36,33 @@ public class MongockCli {
             LauncherCliJar.builder()
                     .setAppJarFile(getAppJar(args))
                     .setJarFactory(buildJarFactory(args))
-                    .setDriverJar(getDriver(args))
+                    .setDriverWrapper(getDriverWrapper(args))
                     .build()
                     .loadClasses()
                     .launch(getCleanArgs(args));
             System.exit(0);
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex);
             System.exit(1);
         }
 
     }
 
-    private static String getDriver(String[] args) {
-        String driverParameter = ArgsUtil.getOptionalParam(args, DRIVER.getLongName())
+    private static DriverWrapper getDriverWrapper(String[] args) {
+        String driverName =  ArgsUtil.getOptionalParam(args, DRIVER.getLongName())
                 .orElseGet(() -> ArgsUtil.getParameter(args, DRIVER.getShortName(), false));
-        if (driverParameter != null) {
-            String cliVersion = ArgsUtil.getParameter(args, CLI_VERSION.getDefaultName(), true);
-            DriverWrapperFactory driverWrapperFactory = new DriverWrapperFactory(JARS_LIB, cliVersion);
-            return driverWrapperFactory.getJar(driverParameter);
+        if(driverName != null ) {
+            return DriverWrapper.getDriver(driverName)
+                    .setJarsLibFolder(JARS_LIB)
+                    .setVersion(ArgsUtil.getParameter(args, CLI_VERSION.getDefaultName(), true));
         } else {
             return null;
         }
+
+
     }
+
+
 
     private static JarFactory buildJarFactory(String[] args) {
         return new JarFactory(

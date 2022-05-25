@@ -43,6 +43,13 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongodb-springdata-v2-wrapper</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
         <!-- END MONGODB -->
 
@@ -72,7 +79,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>io.mongock.examples.StandaloneSpringdataApp</mainClass>
+                                    <mainClass>io.mongock.cli.app.StandaloneSpringdataApp</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
