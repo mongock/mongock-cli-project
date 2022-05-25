@@ -1,6 +1,6 @@
 package io.mongock.cli.wrapper.launcher;
 
-import io.mongock.cli.wrapper.util.DriverWrapper;
+import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.wrapper.util.JarFactory;
 import io.mongock.cli.wrapper.util.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;

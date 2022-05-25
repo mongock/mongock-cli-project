@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.util;
+package io.mongock.cli.util;
 
 public enum DriverWrapper {
     MONGODB_SPRING_DATA_V3("%s/mongodb-springdata-v3-wrapper-%s.jar"),
@@ -10,7 +10,7 @@ public enum DriverWrapper {
         this.jarTemplate = template;
     }
 
-    String getJar(String jarsLib, String version) {
+    public String getJar(String jarsLib, String version) {
         return String.format(jarTemplate, jarsLib, version);
     }
 
