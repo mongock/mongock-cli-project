@@ -41,7 +41,7 @@ public class LauncherStandalone implements LauncherCliJar {
 
 	protected void loadClassesInternal(String... otherJars) {
 		try {
-			this.classLoader = buildClassLoader(otherJars);
+			classLoader = buildClassLoader(otherJars);
 			for(String otherJar: otherJars) {
 				ClassLoaderUtil.loadJarClasses(new JarFile(otherJar), classLoader);
 			}
