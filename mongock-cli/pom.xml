@@ -44,12 +44,14 @@
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-api</artifactId>
+            <version>${mongock.community.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-runner-core</artifactId>
+            <version>${mongock.community.version}</version>
         </dependency>
 
 
@@ -57,6 +59,7 @@
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-standalone</artifactId>
+            <version>${mongock.community.version}</version>
         </dependency>
 
 

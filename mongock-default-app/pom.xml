@@ -20,6 +20,7 @@
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-standalone</artifactId>
+            <version>${mongock.community.version}</version>
             <scope>provided</scope>
         </dependency>
 
