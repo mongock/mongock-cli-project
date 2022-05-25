@@ -26,10 +26,6 @@ public class SpringDataMongoV3Wrapper {
     public final static String MONGODB_MAIN_DB_NAME = "test";
 
 
-    public static void main(String... args) {
-
-    }
-
     public ConnectionDriver getDriver() {
 
 
