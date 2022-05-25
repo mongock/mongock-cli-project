@@ -5,6 +5,7 @@ import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 import io.mongock.cli.wrapper.util.ArgsUtil;
+import io.mongock.cli.wrapper.util.JarFactory;
 
 import java.util.stream.Stream;
 
@@ -14,10 +15,15 @@ import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
 import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_SHORT;
 import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.CLI_VERSION_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.COMMUNITY_VERSION_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.LOG_LEVEL_ARG;
 import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
+import static io.mongock.cli.wrapper.util.Parameters.PROFESSIONAL_VERSION_ARG;
 
 public class MongockCli {
+
+    private static final String JARS_LIB = "lib";
     private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
 
     private static final String[] argumentsToCleanUp = {
@@ -26,7 +32,10 @@ public class MongockCli {
             CLI_SPRING_JAR_ARG,
             CLI_CORE_JAR_ARG,
             LOG_LEVEL_ARG,
-            MONGOCK_CORE_JAR_ARG
+            MONGOCK_CORE_JAR_ARG,
+            CLI_VERSION_ARG,
+            COMMUNITY_VERSION_ARG,
+            PROFESSIONAL_VERSION_ARG
     };
 
     static {
@@ -38,15 +47,12 @@ public class MongockCli {
         printArgs(args);
 
         try {
-
-            String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
-                    .orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT, false));
-
+            JarFactory jarFactory = buildJarFactory(args);
             LauncherCliJar.builder()
-                    .setAppJarFile(appJar)
-                    .setCliCoreJar(ArgsUtil.getParameter(args, CLI_CORE_JAR_ARG, false))
-                    .setCliSpringJar(ArgsUtil.getParameter(args, CLI_SPRING_JAR_ARG, false))
-                    .setMongockCoreJarFile(ArgsUtil.getParameter(args, MONGOCK_CORE_JAR_ARG, false))
+                    .setAppJarFile(getAppJar(args))
+                    .setCliCoreJar(jarFactory.cliCore())
+                    .setCliSpringJar(jarFactory.cliSpringboot())
+                    .setMongockCoreJarFile(jarFactory.cliCore())
                     .build()
                     .loadClasses()
                     .launch(getCleanArgs(args, argumentsToCleanUp));
@@ -57,6 +63,19 @@ public class MongockCli {
             System.exit(1);
         }
 
+    }
+
+    private static JarFactory buildJarFactory(String[] args) {
+        return new JarFactory(
+                JARS_LIB,
+                ArgsUtil.getParameter(args, CLI_VERSION_ARG, true),
+                ArgsUtil.getParameter(args, COMMUNITY_VERSION_ARG, true),
+                ArgsUtil.getParameter(args, PROFESSIONAL_VERSION_ARG, true));
+    }
+
+    private static String getAppJar(String[] args) {
+        return ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
+                .orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT, false));
     }
 
     // Unneeded loop when level > DEBUG...but small ;)
