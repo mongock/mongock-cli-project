@@ -16,6 +16,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-cli-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- MONGOCK RUNNER -->
         <dependency>
             <groupId>io.mongock</groupId>

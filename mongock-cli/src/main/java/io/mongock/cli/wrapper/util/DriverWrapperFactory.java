@@ -1,5 +1,7 @@
 package io.mongock.cli.wrapper.util;
 
+import io.mongock.cli.util.DriverWrapper;
+
 public class DriverWrapperFactory {
 
     private final String jarsLib;
