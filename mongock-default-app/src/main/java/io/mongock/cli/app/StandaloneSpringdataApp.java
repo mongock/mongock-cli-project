@@ -1,4 +1,4 @@
-package io.mongock.examples;
+package io.mongock.cli.app;
 
 import io.mongock.api.annotations.MongockCliConfiguration;
 

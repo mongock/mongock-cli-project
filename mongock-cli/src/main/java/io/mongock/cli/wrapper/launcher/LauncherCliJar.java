@@ -35,7 +35,7 @@ public interface LauncherCliJar {
         private String cliCoreJar;
 
         private String appJarFile;
-        private String driverJar;
+        private DriverWrapper driverWrapper;
 
 
         public LauncherBuilder() {
@@ -45,6 +45,7 @@ public interface LauncherCliJar {
             this.jarFactory = jarFactory;
             return this;
         }
+
 
         /**
          * Optional setter if Mongock is run based on an application
@@ -61,11 +62,11 @@ public interface LauncherCliJar {
         /**
          * Required if the application is not provided
          *
-         * @param driverJar the driver jar lib
+         * @param driverWrapper the driver wrapper enum
          * @return builder
          */
-        public LauncherBuilder setDriverJar(String driverJar) {
-            this.driverJar = driverJar;
+        public LauncherBuilder setDriverWrapper(DriverWrapper driverWrapper) {
+            this.driverWrapper = driverWrapper;
             return this;
         }
 
@@ -89,7 +90,7 @@ public interface LauncherCliJar {
 
         private LauncherDefault buildLauncherWithoutApp(JarFileArchive appArchive, String appJar) {
             validateNotNullParameter(cliCoreJar, "library cli core jar ");
-            if (driverJar == null) {
+            if (driverWrapper == null) {
                 String drivers = Arrays.stream(DriverWrapper.values())
                         .map(DriverWrapper::name)
                         .collect(Collectors.joining("\n"));
@@ -102,7 +103,7 @@ public interface LauncherCliJar {
                     cliCoreJar,
                     jarFactory.runnerStandaloneBase(),
                     jarFactory.runnerStandalone(),
-                    driverJar
+                    driverWrapper
             );
         }
 

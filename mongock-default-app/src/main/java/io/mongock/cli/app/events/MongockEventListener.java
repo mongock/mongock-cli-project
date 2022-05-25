@@ -1,4 +1,4 @@
-package io.mongock.examples.events;
+package io.mongock.cli.app.events;
 
 import io.mongock.runner.core.event.MigrationFailureEvent;
 import io.mongock.runner.core.event.MigrationStartedEvent;

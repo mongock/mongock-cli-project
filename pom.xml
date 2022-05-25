@@ -32,7 +32,8 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.version>5.1.0</mongock.version>
+        <mongock.community.version>5.1.1-SNAPSHOT</mongock.community.version>
+        <mongock.pro.version>5.0.31</mongock.pro.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
@@ -79,17 +80,17 @@
         </repository>
     </distributionManagement>
     
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.mongock</groupId>
-                <artifactId>mongock-bom</artifactId>
-                <version>${mongock.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>io.mongock</groupId>-->
+<!--                <artifactId>mongock-bom</artifactId>-->
+<!--                <version>${mongock.community.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
     <build>
         <plugins>

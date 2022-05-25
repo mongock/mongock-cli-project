@@ -138,7 +138,7 @@ public class LauncherStandalone implements LauncherCliJar {
 		return cliBuilder;
 	}
 
-	private Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
 		Object builderProvider = constructor.newInstance();
 		Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");

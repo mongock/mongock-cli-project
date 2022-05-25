@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>mongodb-springdata-v3-wrapper</module>
+        <module>mongodb-springdata-v2-wrapper</module>
     </modules>
 
 

@@ -69,6 +69,12 @@
             <artifactId>mongodb-springdata-v3-wrapper</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongodb-springdata-v2-wrapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- END WRAPPERS -->
 
 

@@ -78,6 +78,14 @@ public final class CliLoggerFactory {
 			}
 		}
 
+		@Override
+		public void print(Level level, Throwable ex) {
+			if(shouldLog(level)) {
+				ex.printStackTrace(level.isGreaterEqual(ERROR) ? System.err : System.out);
+			}
+
+		}
+
 		private String getFormattedClassName(String classname) {
 
 			String finalClassName = className;
