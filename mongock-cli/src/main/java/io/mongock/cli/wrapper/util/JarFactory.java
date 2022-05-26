@@ -1,5 +1,8 @@
 package io.mongock.cli.wrapper.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class JarFactory {
     private final String jarsLib;
     private final String cliVersion;
@@ -26,12 +29,22 @@ public class JarFactory {
         return String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion);
     }
 
-    public String runnerStandalone() {
-        return String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockCommunityVersion);
+    public List<String> runnerCommunityDependencies() {
+        return Arrays.asList(
+                String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion),
+                String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockCommunityVersion)
+        );
     }
 
-    public String runnerStandaloneBase() {
-        return String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion);
+    public List<String> runnerProfessionalDependencies() {
+        return Arrays.asList(
+                String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion),
+                String.format("%s/jwt-api-%s.jar", jarsLib, "1.0.3"),
+                String.format("%s/jwt-parser-%s.jar", jarsLib, "1.0.3"),
+                String.format("%s/mongock-api-%s.jar", jarsLib, mongockProVersion),
+                String.format("%s/mongock-runner-common-%s.jar", jarsLib, mongockProVersion),
+                String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockProVersion)
+        );
     }
 
 

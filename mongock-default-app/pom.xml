@@ -28,6 +28,16 @@
             <artifactId>mongock-standalone</artifactId>
             <version>${mongock.community.version}</version>
             <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.mongock.professional</groupId>
+            <artifactId>mongock-standalone</artifactId>
+            <version>${mongock.pro.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
 
 

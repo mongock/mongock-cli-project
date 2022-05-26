@@ -13,6 +13,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
+import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
@@ -39,10 +41,14 @@ public class LauncherStandalone implements LauncherCliJar {
 		return this;
 	}
 
-	protected void loadClassesInternal(String... otherJars) {
+	protected void loadClassesInternal() {
+		loadClassesInternal(Collections.emptyList());
+	}
+
+	protected void loadClassesInternal(List<String> extraJars) {
 		try {
-			classLoader = buildClassLoader(otherJars);
-			for(String otherJar: otherJars) {
+			classLoader = buildClassLoader(extraJars);
+			for(String otherJar: extraJars) {
 				ClassLoaderUtil.loadJarClasses(new JarFile(otherJar), classLoader);
 			}
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
@@ -147,12 +153,12 @@ public class LauncherStandalone implements LauncherCliJar {
 
 
 
-	private URLClassLoader buildClassLoader(String... otherJars) throws MalformedURLException {
-		URL[] urls = new URL[2 + otherJars.length];
+	private URLClassLoader buildClassLoader(List<String> extrarJars) throws MalformedURLException {
+		URL[] urls = new URL[2 + extrarJars.size()];
 		urls[0] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar));
 		urls[1] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath));
-		for(int index = 0; index < otherJars.length ; index++) {
-			urls[index + 2] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, otherJars[index]));
+		for(int index = 0; index < extrarJars.size() ; index++) {
+			urls[index + 2] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, extrarJars.get(index)));
 		}
 
 		return URLClassLoader.newInstance(
