@@ -101,9 +101,8 @@ public interface LauncherCliJar {
                     appArchive,
                     appJar,
                     cliCoreJar,
-                    jarFactory.runnerStandaloneBase(),
-                    jarFactory.runnerStandalone(),
-                    driverWrapper
+                    driverWrapper,
+                    jarFactory.runnerProfessionalDependencies()
             );
         }
 

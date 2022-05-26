@@ -6,30 +6,32 @@ import org.springframework.boot.loader.archive.JarFileArchive;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LauncherDefault extends LauncherStandalone {
 
 	private final DriverWrapper driverWrapper;
-	private final String runnerStandaloneJar;
-	private final String runnerStandaloneBaseJar;
+	private final List<String> extraJars;
 
 
 	public LauncherDefault(JarFileArchive appArchive,
 						   String appJar,
 						   String cliJar,
-						   String runnerStandaloneBaseJar,
-						   String runnerStandaloneJar,
-						   DriverWrapper driverWrapper) {
+						   DriverWrapper driverWrapper,
+						   List<String> extraJars) {
 		super(appArchive, appJar, cliJar);
 		this.driverWrapper = driverWrapper;
-		this.runnerStandaloneJar = runnerStandaloneJar;
-		this.runnerStandaloneBaseJar = runnerStandaloneBaseJar;
+		this.extraJars = extraJars;
 
 	}
 
 	@Override
 	public LauncherCliJar loadClasses() {
-		loadClassesInternal(driverWrapper.getJar(), runnerStandaloneJar, runnerStandaloneBaseJar);
+		ArrayList<String> allJars = new ArrayList<>();
+		allJars.add(driverWrapper.getJar());
+		allJars.addAll(extraJars);
+		loadClassesInternal(allJars);
 		return this;
 	}
 
