@@ -36,6 +36,7 @@ public interface LauncherCliJar {
 
         private String appJarFile;
         private DriverWrapper driverWrapper;
+        private String licenseKey;
 
 
         public LauncherBuilder() {
@@ -71,6 +72,13 @@ public interface LauncherCliJar {
         }
 
 
+        public LauncherBuilder setLicenseKey(String licenseKey) {
+            this.licenseKey = licenseKey;
+            return this;
+        }
+
+
+
         public LauncherCliJar build() throws IOException {
             cliCoreJar = jarFactory.cliCore();
             cliSpringJar = jarFactory.cliSpringboot();
@@ -101,8 +109,9 @@ public interface LauncherCliJar {
                     appArchive,
                     appJar,
                     cliCoreJar,
+                    licenseKey,
                     driverWrapper,
-                    jarFactory.runnerProfessionalDependencies()
+                    licenseKey != null? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
             );
         }
 

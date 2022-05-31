@@ -27,7 +27,7 @@ public class LauncherStandalone implements LauncherCliJar {
 	private final String appJar;
 	private final String cliJarPath;
 
-	private URLClassLoader classLoader;
+	protected URLClassLoader classLoader;
 
 	public LauncherStandalone(JarFileArchive appArchive, String appJar, String cliJarPath) {
 		this.appJarArchive = appArchive;
