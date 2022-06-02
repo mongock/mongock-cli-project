@@ -16,7 +16,7 @@ public final class JarUtil {
 	public  static final String JAR_URL_TEMPLATE = "jar:file:%s!/";
 	private JarUtil() {}
 
-	public static String getMainClass(JarFileArchive archive) throws IOException {
+	public static String getMainClassName(JarFileArchive archive) throws IOException {
 		String mainClass = getAttributes(archive).getValue(Attributes.Name.MAIN_CLASS);
 		logger.debug("%s main class: %s", archive.getUrl(), mainClass);
 		return mainClass;
