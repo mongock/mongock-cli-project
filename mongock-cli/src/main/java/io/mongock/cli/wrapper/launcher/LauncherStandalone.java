@@ -64,7 +64,7 @@ public class LauncherStandalone implements LauncherCliJar {
 	public void launch(String[] args) {
 		try {
 			logger.info("launching Mongock CLI runner with Standalone launcher");
-			String mainClassName = JarUtil.getMainClass(appJarArchive);
+			String mainClassName = JarUtil.getMainClassName(appJarArchive);
 			Class<?> mainClass = getMainClass(mainClassName);
 			if (mainClass.isAnnotationPresent(MongockCliConfiguration.class)) {
 				MongockCliConfiguration ann = mainClass.getAnnotation(MongockCliConfiguration.class);

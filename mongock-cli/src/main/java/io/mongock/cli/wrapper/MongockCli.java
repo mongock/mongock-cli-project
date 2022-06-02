@@ -12,7 +12,7 @@ import io.mongock.cli.wrapper.util.JarFactory;
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.util.Argument.APP_JAR;
+import static io.mongock.cli.wrapper.util.Argument.USER_APP_JAR;
 import static io.mongock.cli.wrapper.util.Argument.CLI_VERSION;
 import static io.mongock.cli.wrapper.util.Argument.COMMUNITY_VERSION;
 import static io.mongock.cli.wrapper.util.Argument.DRIVER;
@@ -39,7 +39,7 @@ public class MongockCli {
 
         try {
             LauncherCliJar.builder()
-                    .setAppJarFile(argumentsHolder.getOrNull(APP_JAR))
+                    .setUserAppJarFile(argumentsHolder.getOrNull(USER_APP_JAR))
                     .setJarFactory(buildJarFactory())
                     .setDriverWrapper(getDriverWrapper())
                     .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
