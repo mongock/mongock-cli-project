@@ -61,7 +61,6 @@ public class LauncherDefault extends LauncherStandalone {
 			}
 
 			Method setLicenseKeyMethod = builder.getClass().getMethod("setLicenseKey", String.class);
-			System.out.println("\n\nSetting licenseKey:\n" + licenseKey+"\n\n");
 			setLicenseKeyMethod.invoke(builder, licenseKey);
 		}
 		return builder;

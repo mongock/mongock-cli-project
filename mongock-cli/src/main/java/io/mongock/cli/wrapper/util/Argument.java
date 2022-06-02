@@ -3,9 +3,8 @@ package io.mongock.cli.wrapper.util;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
-public enum Arguments {
+public enum Argument {
 
 
     APP_JAR("-aj", "--app-jar"),
@@ -18,12 +17,12 @@ public enum Arguments {
     private String shortName;
     private String longName;
 
-    Arguments(String shortName, String longName) {
+    Argument(String shortName, String longName) {
         this.shortName = shortName;
         this.longName = longName;
     }
 
-    Arguments(String longName) {
+    Argument(String longName) {
         this.shortName = null;
         this.longName = longName;
     }
@@ -38,6 +37,10 @@ public enum Arguments {
 
     public String getDefaultName() {
         return getLongName();
+    }
+
+    public boolean hasShortName() {
+        return shortName != null;
     }
 
     public Collection<String> getNames() {
