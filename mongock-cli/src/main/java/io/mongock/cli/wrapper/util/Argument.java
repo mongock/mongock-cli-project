@@ -14,25 +14,8 @@ public enum Argument {
     LOG_LEVEL("-ll", "--log-level"),
     LICENSE_KEY("-lk", "--license-key");
 
-
-    public static void validateArguments() {
-        Set<String> insertedValues = new HashSet<>();
-        for(Argument arg: values()) {
-            checkValueInserted(insertedValues, arg.getLongName());
-            checkValueInserted(insertedValues, arg.getShortName());
-            insertedValues.add(arg.getLongName());
-            insertedValues.add(arg.getShortName());
-        }
-    }
-
-    private static void checkValueInserted(Set<String> values, String value) {
-        if(values.contains(value)) {
-            throw new RuntimeException(String.format("Argument[%s] duplicated", value));
-        }
-    }
-
-    private String shortName;
-    private String longName;
+    private final String shortName;
+    private final String longName;
 
     Argument(String shortName, String longName) {
         this.shortName = shortName;
@@ -52,5 +35,19 @@ public enum Argument {
         return getLongName();
     }
 
+    public static void validateArguments() {
+        Set<String> insertedValues = new HashSet<>();
+        for(Argument arg: values()) {
+            checkValueInserted(insertedValues, arg.getLongName());
+            checkValueInserted(insertedValues, arg.getShortName());
+            insertedValues.add(arg.getLongName());
+            insertedValues.add(arg.getShortName());
+        }
+    }
 
+    private static void checkValueInserted(Set<String> values, String value) {
+        if(values.contains(value)) {
+            throw new RuntimeException(String.format("Argument[%s] duplicated", value));
+        }
+    }
 }
