@@ -19,6 +19,7 @@
         <module>mongock-cli-util</module>
         <module>mongock-default-app</module>
         <module>driver-wrappers</module>
+        <module>mongock-default-app-professional</module>
     </modules>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -33,7 +34,7 @@
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
         <mongock.community.version>5.1.1-SNAPSHOT</mongock.community.version>
-        <mongock.pro.version>5.0.31</mongock.pro.version>
+        <mongock.pro.version>5.0.32-SNAPSHOT</mongock.pro.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
