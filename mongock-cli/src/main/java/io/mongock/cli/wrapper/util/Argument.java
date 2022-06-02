@@ -1,8 +1,7 @@
 package io.mongock.cli.wrapper.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum Argument {
 
@@ -12,7 +11,25 @@ public enum Argument {
     CLI_VERSION("-cv", "--cli-version"),
     COMMUNITY_VERSION("-mcv", "--mongock-community-version"),
     PROFESSIONAL_VERSION("-mpv", "--mongock-professional-version"),
-    LOG_LEVEL("-ll", "--log-level");
+    LOG_LEVEL("-ll", "--log-level"),
+    LICENSE_KEY("-lk", "--license-key");
+
+
+    public static void validateArguments() {
+        Set<String> insertedValues = new HashSet<>();
+        for(Argument arg: values()) {
+            checkValueInserted(insertedValues, arg.getLongName());
+            checkValueInserted(insertedValues, arg.getShortName());
+            insertedValues.add(arg.getLongName());
+            insertedValues.add(arg.getShortName());
+        }
+    }
+
+    private static void checkValueInserted(Set<String> values, String value) {
+        if(values.contains(value)) {
+            throw new RuntimeException(String.format("Argument[%s] duplicated", value));
+        }
+    }
 
     private String shortName;
     private String longName;
@@ -35,11 +52,5 @@ public enum Argument {
         return getLongName();
     }
 
-//    public Collection<String> getNames() {
-//        if (shortName != null) {
-//            return Arrays.asList(shortName, longName);
-//        } else {
-//            return Collections.singletonList(getDefaultName());
-//        }
-//    }
+
 }
