@@ -9,11 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mongock-default-app</artifactId>
+    <artifactId>mongock-default-app-professional</artifactId>
 
-    <properties>
-
-    </properties>
 
     <dependencies>
         <dependency>
@@ -24,11 +21,9 @@
 
         <!-- MONGOCK RUNNER -->
         <dependency>
-            <groupId>io.mongock</groupId>
+            <groupId>io.mongock.professional</groupId>
             <artifactId>mongock-standalone</artifactId>
-            <version>${mongock.community.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
+            <version>${mongock.pro.version}</version>
         </dependency>
 
 
@@ -80,7 +75,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>io.mongock.cli.app.DefaultApp</mainClass>
+                                    <mainClass>io.mongock.cli.app.professional.DefaultProfessionalApp</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

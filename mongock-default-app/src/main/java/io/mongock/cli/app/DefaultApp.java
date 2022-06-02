@@ -3,7 +3,7 @@ package io.mongock.cli.app;
 import io.mongock.api.annotations.MongockCliConfiguration;
 
 @MongockCliConfiguration(sources = RunnerBuilderProviderImpl.class)
-public class StandaloneSpringdataApp {
+public class DefaultApp {
 
 
   public static void main(String[] args) {
