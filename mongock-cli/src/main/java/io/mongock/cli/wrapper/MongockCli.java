@@ -5,6 +5,7 @@ import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
+import io.mongock.cli.wrapper.util.Argument;
 import io.mongock.cli.wrapper.util.ArgumentsHolder;
 import io.mongock.cli.wrapper.util.JarFactory;
 
@@ -31,6 +32,7 @@ public class MongockCli {
     }
 
     public static void main(String... args) {
+        Argument.validateArguments();
         argumentsHolder = new ArgumentsHolder(args);
         setLogger();
         printArgs(args);
