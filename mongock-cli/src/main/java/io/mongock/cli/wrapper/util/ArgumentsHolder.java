@@ -27,7 +27,7 @@ public class ArgumentsHolder {
         StringBuilder sb = new StringBuilder("cleaning arguments: ");
         Set<String> paramNamesSet = Arrays
                 .stream(Argument.values())
-                .map(Argument::getNames)
+                .map(arg -> Arrays.asList(arg.getLongName(), arg.getShortName()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet())
                 .stream()
@@ -69,15 +69,9 @@ public class ArgumentsHolder {
     }
 
     private String getByArgument(Argument argument, boolean throwException) {
-        String value = null;
-        if (argument.hasShortName()) {
-            value = getValue(argument.getShortName());
-        }
-        if (value == null) {
-            value = getValue(argument.getLongName());
-        }
-        if (value == null && throwException) {
-            String argumentName = getMissingArgumentMessage(argument);
+        String value;
+        if (((value = getValue(argument.getShortName())) == null) && ((value = getValue(argument.getLongName())) == null) && throwException) {
+            String argumentName = argument.getLongName() + " or " + argument.getShortName();
             throw new RuntimeException(
                     String.format("Found [%s] flag with missing value. Please follow the format \"%s value\"", argumentName, argumentName)
             );
@@ -98,9 +92,4 @@ public class ArgumentsHolder {
         return null;
     }
 
-    private String getMissingArgumentMessage(Argument argument) {
-        return argument.hasShortName()
-                ? argument.getLongName() + " or " + argument.getShortName()
-                : argument.getLongName();
-    }
 }

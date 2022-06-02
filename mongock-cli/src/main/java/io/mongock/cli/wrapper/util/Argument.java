@@ -9,10 +9,10 @@ public enum Argument {
 
     APP_JAR("-aj", "--app-jar"),
     DRIVER("-d", "--driver"),
-    CLI_VERSION("--cli-version"),
-    COMMUNITY_VERSION("--mongock-community-version"),
-    PROFESSIONAL_VERSION("--mongock-professional-version"),
-    LOG_LEVEL("--log-level");
+    CLI_VERSION("-cv", "--cli-version"),
+    COMMUNITY_VERSION("-mcv", "--mongock-community-version"),
+    PROFESSIONAL_VERSION("-mpv", "--mongock-professional-version"),
+    LOG_LEVEL("-ll", "--log-level");
 
     private String shortName;
     private String longName;
@@ -22,10 +22,6 @@ public enum Argument {
         this.longName = longName;
     }
 
-    Argument(String longName) {
-        this.shortName = null;
-        this.longName = longName;
-    }
 
     public String getShortName() {
         return shortName;
@@ -39,15 +35,11 @@ public enum Argument {
         return getLongName();
     }
 
-    public boolean hasShortName() {
-        return shortName != null;
-    }
-
-    public Collection<String> getNames() {
-        if(shortName != null) {
-            return Arrays.asList(shortName, longName);
-        } else {
-            return Collections.singletonList(getDefaultName());
-        }
-    }
+//    public Collection<String> getNames() {
+//        if (shortName != null) {
+//            return Arrays.asList(shortName, longName);
+//        } else {
+//            return Collections.singletonList(getDefaultName());
+//        }
+//    }
 }
