@@ -47,7 +47,6 @@ public interface LauncherCliJar {
             return this;
         }
 
-
         /**
          * Optional setter if Mongock is run based on an application
          *
@@ -71,13 +70,10 @@ public interface LauncherCliJar {
             return this;
         }
 
-
         public LauncherBuilder setLicenseKey(String licenseKey) {
             this.licenseKey = licenseKey;
             return this;
         }
-
-
 
         public LauncherCliJar build() throws IOException {
             cliCoreJar = jarFactory.cliCore();
@@ -126,7 +122,6 @@ public interface LauncherCliJar {
             validateNotNullParameter(cliSpringJar, "library cli spring jar ");
             return new LauncherSpringboot(appArchive, appJar, cliSpringJar);
         }
-
 
         private Optional<String> getAppJar() {
             return Optional.ofNullable(appJarFile);
