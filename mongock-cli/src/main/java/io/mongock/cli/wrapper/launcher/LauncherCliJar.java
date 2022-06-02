@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static io.mongock.cli.wrapper.util.Arguments.APP_JAR;
-import static io.mongock.cli.wrapper.util.Arguments.DRIVER;
+import static io.mongock.cli.wrapper.util.Argument.APP_JAR;
+import static io.mongock.cli.wrapper.util.Argument.DRIVER;
 
 
 public interface LauncherCliJar {
