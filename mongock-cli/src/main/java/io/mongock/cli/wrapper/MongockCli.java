@@ -16,6 +16,7 @@ import static io.mongock.cli.wrapper.util.Argument.APP_JAR;
 import static io.mongock.cli.wrapper.util.Argument.CLI_VERSION;
 import static io.mongock.cli.wrapper.util.Argument.COMMUNITY_VERSION;
 import static io.mongock.cli.wrapper.util.Argument.DRIVER;
+import static io.mongock.cli.wrapper.util.Argument.LICENSE_KEY;
 import static io.mongock.cli.wrapper.util.Argument.LOG_LEVEL;
 import static io.mongock.cli.wrapper.util.Argument.PROFESSIONAL_VERSION;
 
@@ -25,7 +26,6 @@ public class MongockCli {
 
     private static ArgumentsHolder argumentsHolder;
     private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
-    private static final String licenseKey = "eyJhbGciOiJSUzI1NiJ9.eyJ0b2tlblZlcnNpb24iOiIxLjAiLCJqdGkiOiJsay1jZjA0YjkxNC1lYTUxLTRiMDUtYmFjNS00MTFiYmZiZjk3NGQiLCJhdWQiOiJjLW9zYW50YW5hQG1vbmdvY2suaW8iLCJpc3MiOiJtb25nb2NrLXNlcnZlciIsInN1YiI6InRyaWFsLWxpY2Vuc2Uta2V5IiwiaWF0IjoxNjUwMzIzODM2LCJleHAiOjE2NjU4NzU4MzYsImxpY2Vuc2VJZCI6ImwtYzIyNzQwNTMtYzQ2My00NDM2LTgzMzAtNzA3ZTcxY2ZmYjY3IiwibGljZW5zZVR5cGUiOiJUUklBTCIsImVtYWlsIjoib3NhbnRhbmFAbW9uZ29jay5pbyIsImNvbXBhbnlOYW1lIjoiTW9uZ29jayBMdGQiLCJzY2hlbWFzIjoxfQ.mn00lxo4mskvRVDyECFubzlWj_iPzvqt8ARxWPPHYve5vEtgVJnG6cFaYD2oip0fDWpfIXfaqNNsscch4bw3pWgKons3j5tD6o-RQOmAbW_vQc-9AbaC3r6tAdwWl1aT80O-wAUE4rZLNHvWFZY4XVZNol-C_RGRsuC3eC5C1QnSv7ZiWcF4RNIpYqO1yTcto8AKHExz97fssLFkVihMtOYlLttntZmw7d2dOeS-36eSp-gc1dQ8iuwYLhhIp7n9KuCj9KVrd1wRB_H7LPuXU-EcfjQs6_x2KUdUKDOCa99h4X9sCe7Btm1pVJrSIDO6T0n1KaePuFIjwuEec7acyw";
 
     static {
         Banner.print(System.out);
@@ -42,7 +42,7 @@ public class MongockCli {
                     .setAppJarFile(argumentsHolder.getOrNull(APP_JAR))
                     .setJarFactory(buildJarFactory())
                     .setDriverWrapper(getDriverWrapper())
-                    .setLicenseKey(licenseKey)
+                    .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
                     .build()
                     .loadClasses()
                     .launch(argumentsHolder.getCleanArgs());
