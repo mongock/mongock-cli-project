@@ -51,7 +51,6 @@ public class LauncherStandalone implements LauncherCliJar {
 				ClassLoaderUtil.loadJarClasses(otherJar.getJarFile(), classLoader);
 			}
 			ClassLoaderUtil.loadJarClasses(appJar.getJarFile(), classLoader);
-			ClassLoaderUtil.loadJarClasses(cliJar.getJarFile(), classLoader);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);

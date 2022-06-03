@@ -47,10 +47,7 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 
 	public LauncherSpringboot loadClasses() {
 		try {
-			URLClassLoader classLoader = URLClassLoader.newInstance(
-					new URL[]{appJar.getUrl()},
-					Thread.currentThread().getContextClassLoader()
-			);
+			URLClassLoader classLoader = buildClassLoader();
 
 			ClassLoaderUtil.loadJarClasses(
 					appJar.getJarFile(),
@@ -60,6 +57,14 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private URLClassLoader buildClassLoader() {
+		URLClassLoader classLoader = URLClassLoader.newInstance(
+				new URL[]{appJar.getUrl()},
+				Thread.currentThread().getContextClassLoader()
+		);
+		return classLoader;
 	}
 
 	@Override
