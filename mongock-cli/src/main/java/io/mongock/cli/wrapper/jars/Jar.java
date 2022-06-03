@@ -4,6 +4,7 @@ import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.jar.JarFile;
 
@@ -20,8 +21,12 @@ public class Jar {
         return jarPath;
     }
 
-    public String getUrl() {
-        return String.format(JAR_URL_TEMPLATE, jarPath);
+    public URL getUrl() {
+        try {
+            return new URL(String.format(JAR_URL_TEMPLATE, jarPath));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

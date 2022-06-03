@@ -2,9 +2,10 @@ package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.launcher.springboot.CliMainMethodRunner;
 import io.mongock.cli.wrapper.jars.ClassLoaderUtil;
+import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.jars.JarUtil;
+import io.mongock.cli.wrapper.launcher.springboot.CliMainMethodRunner;
 import org.springframework.boot.loader.JarLauncher;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
 import org.springframework.boot.loader.MainMethodRunner;
@@ -24,14 +25,14 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 	private static final String CLASS_EXT = ".class";
 	private static final String SPRINGBOOT_PREFIX = "org/springframework/boot";
 
-	private final String cliJarPath;
+	private final Jar cliJar;
 	private final String cliMainClass;
-	private final String appJar;
+	private final Jar appJar;
 
-	public LauncherSpringboot(Archive archive, String appJar, String cliJarPath) {
-		super(archive);
+	public LauncherSpringboot(Jar appJar, Jar cliJar) {
+		super(appJar.getJarFileArchive());
 		this.appJar = appJar;
-		this.cliJarPath = cliJarPath;
+		this.cliJar = cliJar;
 		this.cliMainClass = SPRING_CLI_MAIN_CLASS;
 	}
 
@@ -47,12 +48,12 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 	public LauncherSpringboot loadClasses() {
 		try {
 			URLClassLoader classLoader = URLClassLoader.newInstance(
-					new URL[]{new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar))},
+					new URL[]{appJar.getUrl()},
 					Thread.currentThread().getContextClassLoader()
 			);
 
 			ClassLoaderUtil.loadJarClasses(
-					new JarFile(appJar),
+					appJar.getJarFile(),
 					classLoader,
 					entryName -> entryName.startsWith(SPRINGBOOT_PREFIX) && entryName.endsWith(CLASS_EXT));
 			return this;
@@ -86,7 +87,7 @@ public class LauncherSpringboot extends JarLauncher implements LauncherCliJar {
 		return new LaunchedURLClassLoader(
 				this.isExploded(),
 				this.getArchive(),
-				new URL[]{new URL("jar:file:" + cliJarPath + "!/")},
+				new URL[]{cliJar.getUrl()},
 				super.createClassLoader(archives));
 	}
 }

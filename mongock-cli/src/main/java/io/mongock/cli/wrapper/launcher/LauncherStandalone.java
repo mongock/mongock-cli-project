@@ -22,18 +22,16 @@ import java.util.stream.Stream;
 public class LauncherStandalone implements LauncherCliJar {
 
 	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherStandalone.class);
-	private final JarFileArchive appJarArchive;
 
 
-	private final String appJar;
-	private final String cliJarPath;
+	private final Jar cliJar;
+	private final Jar appJar;
 
 	protected URLClassLoader classLoader;
 
-	public LauncherStandalone(JarFileArchive appArchive, String appJar, String cliJarPath) {
-		this.appJarArchive = appArchive;
+	public LauncherStandalone(Jar appJar, Jar cliJar) {
 		this.appJar = appJar;
-		this.cliJarPath = cliJarPath;
+		this.cliJar = cliJar;
 	}
 
 	@Override
@@ -52,8 +50,8 @@ public class LauncherStandalone implements LauncherCliJar {
 			for(Jar otherJar: extraJars) {
 				ClassLoaderUtil.loadJarClasses(otherJar.getJarFile(), classLoader);
 			}
-			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
-			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
+			ClassLoaderUtil.loadJarClasses(appJar.getJarFile(), classLoader);
+			ClassLoaderUtil.loadJarClasses(cliJar.getJarFile(), classLoader);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -65,7 +63,7 @@ public class LauncherStandalone implements LauncherCliJar {
 	public void launch(String[] args) {
 		try {
 			logger.info("launching Mongock CLI runner with Standalone launcher");
-			String mainClassName = JarUtil.getMainClassName(appJarArchive);
+			String mainClassName = JarUtil.getMainClassName(appJar.getJarFileArchive());
 			Class<?> mainClass = getMainClass(mainClassName);
 			if (mainClass.isAnnotationPresent(MongockCliConfiguration.class)) {
 				MongockCliConfiguration ann = mainClass.getAnnotation(MongockCliConfiguration.class);
@@ -154,12 +152,12 @@ public class LauncherStandalone implements LauncherCliJar {
 
 
 
-	private URLClassLoader buildClassLoader(List<Jar> extraJars) throws MalformedURLException {
+	private URLClassLoader buildClassLoader(List<Jar> extraJars) {
 		URL[] urls = new URL[2 + extraJars.size()];
-		urls[0] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar));
-		urls[1] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath));
+		urls[0] = appJar.getUrl();
+		urls[1] = cliJar.getUrl();
 		for(int index = 0; index < extraJars.size() ; index++) {
-			urls[index + 2] = new URL(extraJars.get(index).getUrl());
+			urls[index + 2] = extraJars.get(index).getUrl();
 		}
 
 		return URLClassLoader.newInstance(
