@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.util;
+package io.mongock.cli.wrapper.jars;
 
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;

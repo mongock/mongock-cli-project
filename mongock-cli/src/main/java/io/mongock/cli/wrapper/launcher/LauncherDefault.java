@@ -33,7 +33,7 @@ public class LauncherDefault extends LauncherStandalone {
 	@Override
 	public LauncherCliJar loadClasses() {
 		ArrayList<String> allJars = new ArrayList<>();
-		allJars.add(driverWrapper.getJar());
+		allJars.add(driverWrapper.getJarPath());
 		allJars.addAll(extraJars);
 		loadClassesInternal(allJars);
 		return this;

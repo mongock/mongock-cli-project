@@ -3,8 +3,8 @@ package io.mongock.cli.wrapper.launcher;
 import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.util.ClassLoaderUtil;
-import io.mongock.cli.wrapper.util.JarUtil;
+import io.mongock.cli.wrapper.jars.ClassLoaderUtil;
+import io.mongock.cli.wrapper.jars.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.lang.reflect.Constructor;

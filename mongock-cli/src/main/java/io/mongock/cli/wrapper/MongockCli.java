@@ -4,21 +4,22 @@ import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
+import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
-import io.mongock.cli.wrapper.util.Argument;
-import io.mongock.cli.wrapper.util.ArgumentsHolder;
-import io.mongock.cli.wrapper.util.JarFactory;
+import io.mongock.cli.wrapper.argument.Argument;
+import io.mongock.cli.wrapper.argument.ArgumentsHolder;
+import io.mongock.cli.wrapper.jars.JarFactory;
 
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.util.Argument.USER_APP_JAR;
-import static io.mongock.cli.wrapper.util.Argument.CLI_VERSION;
-import static io.mongock.cli.wrapper.util.Argument.COMMUNITY_VERSION;
-import static io.mongock.cli.wrapper.util.Argument.DRIVER;
-import static io.mongock.cli.wrapper.util.Argument.LICENSE_KEY;
-import static io.mongock.cli.wrapper.util.Argument.LOG_LEVEL;
-import static io.mongock.cli.wrapper.util.Argument.PROFESSIONAL_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
+import static io.mongock.cli.wrapper.argument.Argument.CLI_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.COMMUNITY_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
+import static io.mongock.cli.wrapper.argument.Argument.LICENSE_KEY;
+import static io.mongock.cli.wrapper.argument.Argument.LOG_LEVEL;
+import static io.mongock.cli.wrapper.argument.Argument.PROFESSIONAL_VERSION;
 
 public class MongockCli {
 
@@ -39,7 +40,7 @@ public class MongockCli {
 
         try {
             LauncherCliJar.builder()
-                    .setUserAppJarFile(argumentsHolder.getOrNull(USER_APP_JAR))
+                    .setUserJar(new Jar(argumentsHolder.getOrNull(USER_APP_JAR)))
                     .setJarFactory(buildJarFactory())
                     .setDriverWrapper(getDriverWrapper())
                     .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))

@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.util;
+package io.mongock.cli.wrapper.jars;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,8 +18,12 @@ public class JarFactory {
         this.mongockProVersion = mongockProVersion;
     }
 
-    public String defaultApp() {
-        return String.format("%s/mongock-default-app-%s.jar", jarsLib, cliVersion);
+    public Jar defaultApp() {
+        return new Jar(String.format("%s/mongock-default-app-%s.jar", jarsLib, cliVersion));
+    }
+
+    public Jar defaultProfessionalApp() {
+        return new Jar(String.format("%s/mongock-default-app-professional-%s.jar", jarsLib, cliVersion));
     }
 
     public String cliSpringboot() {
@@ -39,9 +43,7 @@ public class JarFactory {
 
     //TODO generify versions
     public List<String> runnerProfessionalDependencies() {
-        return Collections.singletonList(
-                String.format("%s/mongock-default-app-professional-%s.jar", jarsLib, cliVersion)
-        );
+        return Collections.emptyList();
     }
 
 

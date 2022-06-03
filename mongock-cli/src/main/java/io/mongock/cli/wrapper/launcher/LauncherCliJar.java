@@ -1,18 +1,16 @@
 package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.DriverWrapper;
-import io.mongock.cli.wrapper.util.JarFactory;
-import io.mongock.cli.wrapper.util.JarUtil;
-import org.springframework.boot.loader.archive.JarFileArchive;
+import io.mongock.cli.wrapper.jars.Jar;
+import io.mongock.cli.wrapper.jars.JarFactory;
+import io.mongock.cli.wrapper.jars.JarUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static io.mongock.cli.wrapper.util.Argument.USER_APP_JAR;
-import static io.mongock.cli.wrapper.util.Argument.DRIVER;
+import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
+import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
 
 
 public interface LauncherCliJar {
@@ -31,10 +29,10 @@ public interface LauncherCliJar {
 
         private JarFactory jarFactory;
 
-        private String cliSpringJar;
-        private String cliCoreJar;
+//        private String cliSpringJar;
+//        private String cliCoreJar;
 
-        private String userAppJarFile;
+        private Jar userJar;
         private DriverWrapper driverWrapper;
         private String licenseKey;
 
@@ -50,11 +48,11 @@ public interface LauncherCliJar {
         /**
          * Optional setter if Mongock is run based on an application
          *
-         * @param appJarFile application jar
+         * @param userJar application jar
          * @return builder
          */
-        public LauncherBuilder setUserAppJarFile(String appJarFile) {
-            this.userAppJarFile = appJarFile;
+        public LauncherBuilder setUserJar(Jar userJar) {
+            this.userJar = userJar;
             return this;
         }
 
@@ -75,25 +73,21 @@ public interface LauncherCliJar {
             return this;
         }
 
-        public LauncherCliJar build() throws IOException {
-            cliCoreJar = jarFactory.cliCore();
-            cliSpringJar = jarFactory.cliSpringboot();
+        public LauncherCliJar build() {
             if (getAppJar().isPresent()) {
-                JarFileArchive appArchive = new JarFileArchive(new File(userAppJarFile));
-                if (JarUtil.isSpringApplication(appArchive)) {
-                    return buildLauncherSpring(appArchive, userAppJarFile);
+                if (JarUtil.isSpringApplication(userJar.getJarFileArchive())) {
+                    return buildLauncherSpring(jarFactory.cliSpringboot());
                 } else {
-                    return buildLauncherStandalone(appArchive, userAppJarFile);
+                    return buildLauncherStandalone(jarFactory.cliCore());
                 }
             } else {
-                String defaultAppJarFile = jarFactory.defaultApp();
-                JarFileArchive defaultAppArchive = new JarFileArchive(new File(defaultAppJarFile));
-                return buildLauncherWithoutApp(defaultAppArchive, defaultAppJarFile);
+                return buildLauncherWithoutApp(jarFactory.cliCore());
             }
         }
 
-        private LauncherDefault buildLauncherWithoutApp(JarFileArchive appArchive, String appJar) {
-            validateNotNullParameter(cliCoreJar, "library cli core jar ");
+        private LauncherDefault buildLauncherWithoutApp(String cliJar) {
+            Jar appJar = licenseKey != null ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp();
+            validateNotNullParameter(cliJar, "library cli core jar ");
             if (driverWrapper == null) {
                 String drivers = Arrays.stream(DriverWrapper.values())
                         .map(DriverWrapper::name)
@@ -102,29 +96,29 @@ public interface LauncherCliJar {
                 throw new RuntimeException(message);
             }
             return new LauncherDefault(
-                    appArchive,
-                    appJar,
-                    cliCoreJar,
+                    appJar.getJarFileArchive(),
+                    appJar.getUrl(),
+                    cliJar,
                     licenseKey,
                     driverWrapper,
-                    licenseKey != null? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
+                    licenseKey != null ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
             );
         }
 
-        private LauncherStandalone buildLauncherStandalone(JarFileArchive appArchive, String appJar) {
-            validateNotNullParameter(appJar, "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliCoreJar, "library cli core jar ");
-            return new LauncherStandalone(appArchive, appJar, cliCoreJar);
+        private LauncherStandalone buildLauncherStandalone(String cliJar) {
+            validateNotNullParameter(userJar.getUrl(), "parameter " + USER_APP_JAR.getDefaultName());
+            validateNotNullParameter(cliJar, "library cli core jar ");
+            return new LauncherStandalone(userJar.getJarFileArchive(), userJar.getUrl(), cliJar);
         }
 
-        private LauncherSpringboot buildLauncherSpring(JarFileArchive appArchive, String appJar) {
-            validateNotNullParameter(appJar, "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliSpringJar, "library cli spring jar ");
-            return new LauncherSpringboot(appArchive, appJar, cliSpringJar);
+        private LauncherSpringboot buildLauncherSpring(String cliJar) {
+            validateNotNullParameter(userJar.getUrl(), "parameter " + USER_APP_JAR.getDefaultName());
+            validateNotNullParameter(cliJar, "library cli spring jar ");
+            return new LauncherSpringboot(userJar.getJarFileArchive(), userJar.getUrl(), cliJar);
         }
 
         private Optional<String> getAppJar() {
-            return Optional.ofNullable(userAppJarFile);
+            return Optional.ofNullable(userJar.getUrl());
         }
 
         private void validateNotNullParameter(Object parameter, String name) {
