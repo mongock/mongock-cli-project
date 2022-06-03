@@ -6,7 +6,6 @@ import io.mongock.cli.wrapper.jars.JarFactory;
 import io.mongock.cli.wrapper.jars.JarUtil;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
@@ -71,7 +70,7 @@ public interface LauncherCliJar {
         }
 
         public LauncherCliJar build() {
-            if (getAppJar().isPresent()) {
+            if (userJar != null) {
                 if (JarUtil.isSpringApplication(userJar.getJarFileArchive())) {
                     return buildLauncherSpring(jarFactory.cliSpringboot());
                 } else {
@@ -114,9 +113,6 @@ public interface LauncherCliJar {
             return new LauncherSpringboot(userJar.getJarFileArchive(), userJar.getPath(), cliJar.getPath());
         }
 
-        private Optional<String> getAppJar() {
-            return Optional.ofNullable(userJar.getPath());
-        }
 
         private void validateNotNullParameter(Object parameter, String name) {
             if (parameter == null) {

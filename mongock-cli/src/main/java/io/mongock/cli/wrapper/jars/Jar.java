@@ -9,6 +9,7 @@ import java.util.jar.JarFile;
 
 public class Jar {
 
+    public  static final String JAR_URL_TEMPLATE = "jar:file:%s!/";
     private final String jarPath;
 
     public Jar(String jarPath) {
@@ -19,17 +20,17 @@ public class Jar {
         return jarPath;
     }
 
-    public URL getUrl() {
-        try {
-            return new JarFileArchive(new File(jarPath)).getUrl();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public String getUrl() {
+        return String.format(JAR_URL_TEMPLATE, jarPath);
     }
 
 
     public JarFile getJarFile() {
-        return null;
+        try {
+            return new JarFile(jarPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public JarFileArchive getJarFileArchive() {

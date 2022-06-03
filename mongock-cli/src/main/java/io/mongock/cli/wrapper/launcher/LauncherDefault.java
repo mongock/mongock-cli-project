@@ -1,6 +1,7 @@
 package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.DriverWrapper;
+import io.mongock.cli.wrapper.jars.Jar;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.lang.reflect.Constructor;
@@ -12,7 +13,7 @@ import java.util.List;
 public class LauncherDefault extends LauncherStandalone {
 
 	private final DriverWrapper driverWrapper;
-	private final List<String> extraJars;
+	private final List<Jar> extraJars;
 
 	private final String licenseKey;
 
@@ -22,7 +23,7 @@ public class LauncherDefault extends LauncherStandalone {
 						   String cliJar,
 						   String licenseKey,
 						   DriverWrapper driverWrapper,
-						   List<String> extraJars) {
+						   List<Jar> extraJars) {
 		super(appArchive, appJar, cliJar);
 		this.licenseKey = licenseKey;
 		this.driverWrapper = driverWrapper;
@@ -32,8 +33,8 @@ public class LauncherDefault extends LauncherStandalone {
 
 	@Override
 	public LauncherCliJar loadClasses() {
-		ArrayList<String> allJars = new ArrayList<>();
-		allJars.add(driverWrapper.getJarPath());
+		ArrayList<Jar> allJars = new ArrayList<>();
+		allJars.add(new Jar(driverWrapper.getJarPath()));
 		allJars.addAll(extraJars);
 		loadClassesInternal(allJars);
 		return this;
