@@ -34,15 +34,15 @@ public class JarFactory {
         return new Jar(String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion));
     }
 
-    public List<String> runnerCommunityDependencies() {
+    public List<Jar> runnerCommunityDependencies() {
         return Arrays.asList(
-                String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion),
-                String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockCommunityVersion)
+                new Jar(String.format("%s/mongock-standalone-base-%s.jar", jarsLib, mongockCommunityVersion)),
+                new Jar(String.format("%s/mongock-standalone-%s.jar", jarsLib, mongockCommunityVersion))
         );
     }
 
     //TODO generify versions
-    public List<String> runnerProfessionalDependencies() {
+    public List<Jar> runnerProfessionalDependencies() {
         return Collections.emptyList();
     }
 

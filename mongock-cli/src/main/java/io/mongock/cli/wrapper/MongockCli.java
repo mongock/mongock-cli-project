@@ -37,10 +37,10 @@ public class MongockCli {
         argumentsHolder = new ArgumentsHolder(args);
         setLogger();
         printArgs(args);
-
+//        new Jar(argumentsHolder.getOrNull(USER_APP_JAR))
         try {
             LauncherCliJar.builder()
-                    .setUserJar(new Jar(argumentsHolder.getOrNull(USER_APP_JAR)))
+                    .setUserJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
                     .setJarFactory(buildJarFactory())
                     .setDriverWrapper(getDriverWrapper())
                     .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))

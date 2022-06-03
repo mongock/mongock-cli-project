@@ -4,6 +4,7 @@ import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
 import io.mongock.cli.wrapper.jars.ClassLoaderUtil;
+import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.jars.JarUtil;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
@@ -45,11 +46,11 @@ public class LauncherStandalone implements LauncherCliJar {
 		loadClassesInternal(Collections.emptyList());
 	}
 
-	protected void loadClassesInternal(List<String> extraJars) {
+	protected void loadClassesInternal(List<Jar> extraJars) {
 		try {
 			classLoader = buildClassLoader(extraJars);
-			for(String otherJar: extraJars) {
-				ClassLoaderUtil.loadJarClasses(new JarFile(otherJar), classLoader);
+			for(Jar otherJar: extraJars) {
+				ClassLoaderUtil.loadJarClasses(otherJar.getJarFile(), classLoader);
 			}
 			ClassLoaderUtil.loadJarClasses(new JarFile(appJar), classLoader);
 			ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
@@ -153,12 +154,12 @@ public class LauncherStandalone implements LauncherCliJar {
 
 
 
-	private URLClassLoader buildClassLoader(List<String> extrarJars) throws MalformedURLException {
-		URL[] urls = new URL[2 + extrarJars.size()];
+	private URLClassLoader buildClassLoader(List<Jar> extraJars) throws MalformedURLException {
+		URL[] urls = new URL[2 + extraJars.size()];
 		urls[0] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, appJar));
 		urls[1] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath));
-		for(int index = 0; index < extrarJars.size() ; index++) {
-			urls[index + 2] = new URL(String.format(JarUtil.JAR_URL_TEMPLATE, extrarJars.get(index)));
+		for(int index = 0; index < extraJars.size() ; index++) {
+			urls[index + 2] = new URL(extraJars.get(index).getUrl());
 		}
 
 		return URLClassLoader.newInstance(
