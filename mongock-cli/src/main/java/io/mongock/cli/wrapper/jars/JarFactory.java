@@ -26,12 +26,12 @@ public class JarFactory {
         return new Jar(String.format("%s/mongock-default-app-professional-%s.jar", jarsLib, cliVersion));
     }
 
-    public String cliSpringboot() {
-        return String.format("%s/mongock-cli-springboot-%s.jar", jarsLib, cliVersion);
+    public Jar cliSpringboot() {
+        return new Jar(String.format("%s/mongock-cli-springboot-%s.jar", jarsLib, cliVersion));
     }
 
-    public String cliCore() {
-        return String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion);
+    public Jar cliCore() {
+        return new Jar(String.format("%s/mongock-cli-core-%s.jar", jarsLib, cliVersion));
     }
 
     public List<String> runnerCommunityDependencies() {
