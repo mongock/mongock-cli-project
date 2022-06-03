@@ -22,7 +22,7 @@ public enum DriverWrapper {
         return this;
     }
 
-    public String getJar() {
+    public String getJarPath() {
         return String.format(jarTemplate, jarsLibFolder, version);
     }
 

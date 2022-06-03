@@ -1,4 +1,4 @@
-package io.mongock.cli.wrapper.util;
+package io.mongock.cli.wrapper.argument;
 
 import java.util.HashSet;
 import java.util.Set;
