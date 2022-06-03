@@ -27,8 +27,6 @@ public class LauncherDefault extends LauncherStandalone {
 
 	@Override
 	protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-		System.out.println("GET RUNNER BUILDER");
 		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
 		Object builderProvider = constructor.newInstance();
 
