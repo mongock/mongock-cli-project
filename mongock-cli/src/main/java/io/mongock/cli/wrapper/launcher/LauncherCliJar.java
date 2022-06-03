@@ -29,9 +29,6 @@ public interface LauncherCliJar {
 
         private JarFactory jarFactory;
 
-//        private String cliSpringJar;
-//        private String cliCoreJar;
-
         private Jar userJar;
         private DriverWrapper driverWrapper;
         private String licenseKey;
@@ -85,9 +82,9 @@ public interface LauncherCliJar {
             }
         }
 
-        private LauncherDefault buildLauncherWithoutApp(String cliJar) {
+        private LauncherDefault buildLauncherWithoutApp(Jar cliJar) {
             Jar appJar = licenseKey != null ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp();
-            validateNotNullParameter(cliJar, "library cli core jar ");
+            validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
             if (driverWrapper == null) {
                 String drivers = Arrays.stream(DriverWrapper.values())
                         .map(DriverWrapper::name)
@@ -97,28 +94,28 @@ public interface LauncherCliJar {
             }
             return new LauncherDefault(
                     appJar.getJarFileArchive(),
-                    appJar.getUrl(),
-                    cliJar,
+                    appJar.getPath(),
+                    cliJar.getPath(),
                     licenseKey,
                     driverWrapper,
                     licenseKey != null ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
             );
         }
 
-        private LauncherStandalone buildLauncherStandalone(String cliJar) {
-            validateNotNullParameter(userJar.getUrl(), "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliJar, "library cli core jar ");
-            return new LauncherStandalone(userJar.getJarFileArchive(), userJar.getUrl(), cliJar);
+        private LauncherStandalone buildLauncherStandalone(Jar cliJar) {
+            validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
+            validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
+            return new LauncherStandalone(userJar.getJarFileArchive(), userJar.getPath(), cliJar.getPath());
         }
 
-        private LauncherSpringboot buildLauncherSpring(String cliJar) {
-            validateNotNullParameter(userJar.getUrl(), "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliJar, "library cli spring jar ");
-            return new LauncherSpringboot(userJar.getJarFileArchive(), userJar.getUrl(), cliJar);
+        private LauncherSpringboot buildLauncherSpring(Jar cliJar) {
+            validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
+            validateNotNullParameter(cliJar.getPath(), "library cli spring jar ");
+            return new LauncherSpringboot(userJar.getJarFileArchive(), userJar.getPath(), cliJar.getPath());
         }
 
         private Optional<String> getAppJar() {
-            return Optional.ofNullable(userJar.getUrl());
+            return Optional.ofNullable(userJar.getPath());
         }
 
         private void validateNotNullParameter(Object parameter, String name) {
