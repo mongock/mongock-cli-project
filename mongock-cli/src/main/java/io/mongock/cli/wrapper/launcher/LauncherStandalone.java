@@ -3,20 +3,11 @@ package io.mongock.cli.wrapper.launcher;
 import io.mongock.api.annotations.MongockCliConfiguration;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.jars.ClassLoaderUtil;
 import io.mongock.cli.wrapper.jars.Jar;
-import io.mongock.cli.wrapper.jars.JarUtil;
-import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collections;
-import java.util.List;
-import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 public class LauncherStandalone implements LauncherCliJar {
@@ -24,46 +15,20 @@ public class LauncherStandalone implements LauncherCliJar {
 	private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherStandalone.class);
 
 
-	private final Jar cliJar;
 	private final Jar appJar;
 
-	protected URLClassLoader classLoader;
+	protected final ClassLoader classLoader;
 
-	public LauncherStandalone(Jar appJar, Jar cliJar) {
+	public LauncherStandalone(Jar appJar, ClassLoader classLoader) {
 		this.appJar = appJar;
-		this.cliJar = cliJar;
+		this.classLoader = classLoader;
 	}
-
-	@Override
-	public LauncherCliJar loadClasses() {
-		loadClassesInternal();
-		return this;
-	}
-
-	protected void loadClassesInternal() {
-		loadClassesInternal(Collections.emptyList());
-	}
-
-	protected void loadClassesInternal(List<Jar> extraJars) {
-		try {
-			classLoader = buildClassLoader(extraJars);
-			for(Jar otherJar: extraJars) {
-				ClassLoaderUtil.loadJarClasses(otherJar.getJarFile(), classLoader);
-			}
-			ClassLoaderUtil.loadJarClasses(appJar.getJarFile(), classLoader);
-
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
 
 	@Override
 	public void launch(String[] args) {
 		try {
 			logger.info("launching Mongock CLI runner with Standalone launcher");
-			String mainClassName = JarUtil.getMainClassName(appJar.getJarFileArchive());
-			Class<?> mainClass = getMainClass(mainClassName);
+			Class<?> mainClass = appJar.getMainClass(classLoader);
 			if (mainClass.isAnnotationPresent(MongockCliConfiguration.class)) {
 				MongockCliConfiguration ann = mainClass.getAnnotation(MongockCliConfiguration.class);
 				Class.forName("io.mongock.runner.core.builder.RunnerBuilderProvider", false, classLoader);
@@ -82,19 +47,14 @@ public class LauncherStandalone implements LauncherCliJar {
 				executeCli(args, commandLine);
 
 			} else {
-				throw new RuntimeException("Main class " + mainClassName + " not annotated with MongockCliConfiguration");
+				throw new RuntimeException("Main class " + mainClass.getName() + " not annotated with MongockCliConfiguration");
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	private Class<?> getMainClass(String mainClassName) throws ClassNotFoundException {
-		logger.debug("Main class: " + mainClassName);
-		Class<?> mainClass = classLoader.loadClass(mainClassName);
-		logger.debug("loaded Main class");
-		return mainClass;
-	}
+
 
 	private void executeCli(String[] args, Object commandLine) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		StringBuilder sb = new StringBuilder();
@@ -149,19 +109,4 @@ public class LauncherStandalone implements LauncherCliJar {
 		return getBuilderMethod.invoke(builderProvider);
 	}
 
-
-
-	private URLClassLoader buildClassLoader(List<Jar> extraJars) {
-		URL[] urls = new URL[2 + extraJars.size()];
-		urls[0] = appJar.getUrl();
-		urls[1] = cliJar.getUrl();
-		for(int index = 0; index < extraJars.size() ; index++) {
-			urls[index + 2] = extraJars.get(index).getUrl();
-		}
-
-		return URLClassLoader.newInstance(
-				urls,
-				Thread.currentThread().getContextClassLoader()
-		);
-	}
 }

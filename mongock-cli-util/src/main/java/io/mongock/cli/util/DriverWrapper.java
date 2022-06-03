@@ -1,5 +1,8 @@
 package io.mongock.cli.util;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum DriverWrapper {
     MONGODB_SPRING_DATA_V3("%s/mongodb-springdata-v3-wrapper-%s.jar"),
     MONGODB_SPRING_DATA_V2("%s/mongodb-springdata-v2-wrapper-%s.jar");
@@ -28,6 +31,13 @@ public enum DriverWrapper {
 
     public static DriverWrapper getDriver(String driverName) {
         return valueOf(driverName.toUpperCase());
+    }
+
+    public static String getAllDriverNames(String separator) {
+        return Arrays.stream(values())
+                .map(DriverWrapper::name)
+                .collect(Collectors.joining(separator));
+
     }
 
 

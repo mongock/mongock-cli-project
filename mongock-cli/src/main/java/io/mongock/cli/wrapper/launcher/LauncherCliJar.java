@@ -1,9 +1,9 @@
 package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.DriverWrapper;
+import io.mongock.cli.wrapper.jars.CliClassLoader;
 import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.jars.JarFactory;
-import io.mongock.cli.wrapper.jars.JarUtil;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -15,13 +15,11 @@ import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
 public interface LauncherCliJar {
 
 
-    LauncherCliJar loadClasses();
-
     void launch(String[] args);
 
 
-    static LauncherBuilder builder() {
-        return new LauncherBuilder();
+    static LauncherBuilder builder(JarFactory jarFactory) {
+        return new LauncherBuilder(jarFactory);
     }
 
     class LauncherBuilder {
@@ -33,13 +31,10 @@ public interface LauncherCliJar {
         private String licenseKey;
 
 
-        public LauncherBuilder() {
+        public LauncherBuilder(JarFactory jarFactory) {
+            this.jarFactory = jarFactory;
         }
 
-        public LauncherBuilder setJarFactory(JarFactory jarFactory) {
-            this.jarFactory = jarFactory;
-            return this;
-        }
 
         /**
          * Optional setter if Mongock is run based on an application
@@ -71,56 +66,46 @@ public interface LauncherCliJar {
 
         public LauncherCliJar build() {
             if (userJar != null) {
-                if (JarUtil.isSpringApplication(userJar.getJarFileArchive())) {
-                    return buildLauncherSpring(jarFactory.cliSpringboot());
+                if (userJar.isSpringApplication()) {
+                    new CliClassLoader().addJar(userJar).loadClasses();
+                    return new LauncherSpringboot(userJar, jarFactory.cliSpringboot());
                 } else {
-                    return buildLauncherStandalone(jarFactory.cliCore());
+
+                    CliClassLoader cliClassLoader = new CliClassLoader()
+                            .addJar(userJar)
+                            .addJar(jarFactory.cliCore());
+                    cliClassLoader.loadClasses();
+                    return new LauncherStandalone(userJar, cliClassLoader.getClassLoader());
                 }
             } else {
-                return buildLauncherWithoutApp(jarFactory.cliCore());
+
+                CliClassLoader cliClassLoader = new CliClassLoader()
+                        .addJar(isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp())
+                        .addJar(jarFactory.cliCore())
+                        .addJar(new Jar(driverWrapper.getJarPath()))
+                        .addJars(isProfessional() ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies());
+                cliClassLoader.loadClasses();
+                validateDriverIfApply();
+                return new LauncherDefault(
+                        isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp(),
+                        licenseKey,
+                        driverWrapper,
+                        cliClassLoader.getClassLoader()
+                );
+
             }
         }
 
-        private LauncherDefault buildLauncherWithoutApp(Jar cliJar) {
-            Jar appJar = licenseKey != null ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp();
-            validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
-            validateDriverIfApply();
-            return new LauncherDefault(
-                    appJar,
-                    cliJar,
-                    licenseKey,
-                    driverWrapper,
-                    licenseKey != null ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
-            );
-        }
-
-
-        private LauncherStandalone buildLauncherStandalone(Jar cliJar) {
-            validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
-            return new LauncherStandalone(userJar, cliJar);
-        }
-
-        private LauncherSpringboot buildLauncherSpring(Jar cliJar) {
-            validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
-            validateNotNullParameter(cliJar.getPath(), "library cli spring jar ");
-            return new LauncherSpringboot(userJar, cliJar);
-        }
-
-
-        private void validateNotNullParameter(Object parameter, String name) {
-            if (parameter == null) {
-                throw new RuntimeException(name + " must be provided");
-            }
+        private boolean isProfessional() {
+            return licenseKey != null;
         }
 
         private void validateDriverIfApply() {
             if (driverWrapper == null) {
-                String drivers = Arrays.stream(DriverWrapper.values())
-                        .map(DriverWrapper::name)
-                        .collect(Collectors.joining("\n"));
-                String message = String.format("When application is missing, Parameter `%s` must be provided :  \n%s", DRIVER.getDefaultName(), drivers);
-                throw new RuntimeException(message);
+                throw new RuntimeException(String.format(
+                        "When application is missing, Parameter `%s` must be provided :  \n%s",
+                        DRIVER.getDefaultName(),
+                        DriverWrapper.getAllDriverNames("\n")));
             }
         }
     }
