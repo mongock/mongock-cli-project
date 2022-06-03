@@ -2,45 +2,33 @@ package io.mongock.cli.wrapper.launcher;
 
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.wrapper.jars.Jar;
-import org.springframework.boot.loader.archive.JarFileArchive;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LauncherDefault extends LauncherStandalone {
 
 	private final DriverWrapper driverWrapper;
-	private final List<Jar> extraJars;
 
 	private final String licenseKey;
 
 
 	public LauncherDefault(Jar appJar,
-						   Jar cliJar,
 						   String licenseKey,
 						   DriverWrapper driverWrapper,
-						   List<Jar> extraJars) {
-		super(appJar, cliJar);
+						   ClassLoader classLoader) {
+		super(appJar, classLoader);
 		this.licenseKey = licenseKey;
 		this.driverWrapper = driverWrapper;
-		this.extraJars = extraJars;
 
 	}
 
-	@Override
-	public LauncherCliJar loadClasses() {
-		ArrayList<Jar> allJars = new ArrayList<>();
-		allJars.add(new Jar(driverWrapper.getJarPath()));
-		allJars.addAll(extraJars);
-		loadClassesInternal(allJars);
-		return this;
-	}
 
 	@Override
 	protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+
+		System.out.println("GET RUNNER BUILDER");
 		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
 		Object builderProvider = constructor.newInstance();
 
