@@ -84,39 +84,43 @@ public interface LauncherCliJar {
         private LauncherDefault buildLauncherWithoutApp(Jar cliJar) {
             Jar appJar = licenseKey != null ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp();
             validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
-            if (driverWrapper == null) {
-                String drivers = Arrays.stream(DriverWrapper.values())
-                        .map(DriverWrapper::name)
-                        .collect(Collectors.joining("\n"));
-                String message = String.format("When application is missing, Parameter `%s` must be provided :  \n%s", DRIVER.getDefaultName(), drivers);
-                throw new RuntimeException(message);
-            }
+            validateDriverIfApply();
             return new LauncherDefault(
-                    appJar.getJarFileArchive(),
-                    appJar.getPath(),
-                    cliJar.getPath(),
+                    appJar,
+                    cliJar,
                     licenseKey,
                     driverWrapper,
                     licenseKey != null ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies()
             );
         }
 
+
         private LauncherStandalone buildLauncherStandalone(Jar cliJar) {
             validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
             validateNotNullParameter(cliJar.getPath(), "library cli core jar ");
-            return new LauncherStandalone(userJar.getJarFileArchive(), userJar.getPath(), cliJar.getPath());
+            return new LauncherStandalone(userJar, cliJar);
         }
 
         private LauncherSpringboot buildLauncherSpring(Jar cliJar) {
             validateNotNullParameter(userJar.getPath(), "parameter " + USER_APP_JAR.getDefaultName());
             validateNotNullParameter(cliJar.getPath(), "library cli spring jar ");
-            return new LauncherSpringboot(userJar.getJarFileArchive(), userJar.getPath(), cliJar.getPath());
+            return new LauncherSpringboot(userJar, cliJar);
         }
 
 
         private void validateNotNullParameter(Object parameter, String name) {
             if (parameter == null) {
                 throw new RuntimeException(name + " must be provided");
+            }
+        }
+
+        private void validateDriverIfApply() {
+            if (driverWrapper == null) {
+                String drivers = Arrays.stream(DriverWrapper.values())
+                        .map(DriverWrapper::name)
+                        .collect(Collectors.joining("\n"));
+                String message = String.format("When application is missing, Parameter `%s` must be provided :  \n%s", DRIVER.getDefaultName(), drivers);
+                throw new RuntimeException(message);
             }
         }
     }
