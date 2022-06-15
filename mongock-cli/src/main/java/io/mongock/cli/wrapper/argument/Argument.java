@@ -6,7 +6,7 @@ import java.util.Set;
 public enum Argument {
 
     USER_APP_JAR("-aj", "--app-jar"),
-    CHANGE_UNIT_JAR("-cj", "--changes-jar"),
+    USER_CHANGE_UNIT_JAR("-cj", "--changes-jar"),
     DRIVER("-d", "--driver"),
     CLI_VERSION("-cv", "--cli-version"),
     COMMUNITY_VERSION("-mcv", "--mongock-community-version"),

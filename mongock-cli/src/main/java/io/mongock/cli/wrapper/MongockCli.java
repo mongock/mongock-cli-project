@@ -20,6 +20,7 @@ import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
 import static io.mongock.cli.wrapper.argument.Argument.LICENSE_KEY;
 import static io.mongock.cli.wrapper.argument.Argument.LOG_LEVEL;
 import static io.mongock.cli.wrapper.argument.Argument.PROFESSIONAL_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.USER_CHANGE_UNIT_JAR;
 
 public class MongockCli {
 
@@ -40,7 +41,8 @@ public class MongockCli {
         try {
 
             LauncherCliJar.builder(buildJarFactory())
-                    .setUserJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
+                    .setUserApplicationJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
+                    .setUserChangeUnitJar(argumentsHolder.getOptional(USER_CHANGE_UNIT_JAR).map(Jar::new).orElse(null))
                     .setDriverWrapper(getDriverWrapper())
                     .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
                     .build()

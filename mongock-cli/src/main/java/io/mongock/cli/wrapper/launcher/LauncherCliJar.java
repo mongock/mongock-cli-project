@@ -5,11 +5,7 @@ import io.mongock.cli.wrapper.jars.CliClassLoader;
 import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.jars.JarFactory;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
-import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
 
 
 public interface LauncherCliJar {
@@ -26,7 +22,8 @@ public interface LauncherCliJar {
 
         private JarFactory jarFactory;
 
-        private Jar userJar;
+        private Jar userApplicationJar;
+        private Jar userChangeUnitJar;
         private DriverWrapper driverWrapper;
         private String licenseKey;
 
@@ -39,11 +36,16 @@ public interface LauncherCliJar {
         /**
          * Optional setter if Mongock is run based on an application
          *
-         * @param userJar application jar
+         * @param userApplicationJar application jar
          * @return builder
          */
-        public LauncherBuilder setUserJar(Jar userJar) {
-            this.userJar = userJar;
+        public LauncherBuilder setUserApplicationJar(Jar userApplicationJar) {
+            this.userApplicationJar = userApplicationJar;
+            return this;
+        }
+
+        public LauncherBuilder setUserChangeUnitJar(Jar userChangeUnitJar) {
+            this.userChangeUnitJar = userChangeUnitJar;
             return this;
         }
 
@@ -65,34 +67,36 @@ public interface LauncherCliJar {
         }
 
         public LauncherCliJar build() {
-            if (userJar != null) {
-                if (userJar.isSpringApplication()) {
-                    new CliClassLoader().addJar(userJar).loadClasses();
-                    return new LauncherSpringboot(userJar, jarFactory.cliSpringboot());
+            if (userApplicationJar != null) {
+                if (userApplicationJar.isSpringApplication()) {
+                    new CliClassLoader().addJar(userApplicationJar).loadClasses();
+                    return new LauncherSpringboot(userApplicationJar, jarFactory.cliSpringboot());
                 } else {
 
                     CliClassLoader cliClassLoader = new CliClassLoader()
-                            .addJar(userJar)
+                            .addJar(userApplicationJar)
                             .addJar(jarFactory.cliCore());
                     cliClassLoader.loadClasses();
-                    return new LauncherStandalone(userJar, cliClassLoader.getClassLoader());
+                    return new LauncherStandalone(userApplicationJar, cliClassLoader.getClassLoader());
                 }
-            } else {
-
+            } else if(userChangeUnitJar != null)  {
                 CliClassLoader cliClassLoader = new CliClassLoader()
                         .addJar(isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp())
                         .addJar(jarFactory.cliCore())
                         .addJar(new Jar(driverWrapper.getJarPath()))
-                        .addJars(isProfessional() ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies());
+                        .addJars(isProfessional() ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies())
+                        .addJar(userChangeUnitJar);
                 cliClassLoader.loadClasses();
                 validateDriverIfApply();
                 return new LauncherDefault(
                         isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp(),
+                        cliClassLoader.getClassLoader(),
                         licenseKey,
-                        driverWrapper,
-                        cliClassLoader.getClassLoader()
+                        driverWrapper
                 );
 
+            } else {
+                throw new RuntimeException("Either an application jar or a jar containing the change units must be provided");
             }
         }
 

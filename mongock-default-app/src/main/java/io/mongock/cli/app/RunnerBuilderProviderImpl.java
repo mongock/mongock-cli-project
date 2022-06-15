@@ -1,7 +1,7 @@
 package io.mongock.cli.app;
 
 import io.mongock.cli.app.events.MongockEventListener;
-import io.mongock.runner.core.DriverWrapperReceiver;
+import io.mongock.cli.util.DriverWrapperReceiver;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.builder.RunnerBuilderProvider;
 import io.mongock.runner.standalone.MongockStandalone;
