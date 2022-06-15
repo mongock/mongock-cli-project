@@ -25,11 +25,8 @@ public class RunnerBuilderProviderProfessionalImpl implements RunnerBuilderProvi
     }
 
     @Override
-    public void setDriverWrapperName(String driverWrapperName) {
-        if (driverWrapperName == null || driverWrapperName.isEmpty()) {
-            throw new RuntimeException("Driver must not be null");
-        }
-        this.driverWrapper = DriverWrapper.valueOf(driverWrapperName);
+    public void setDriverWrapper(DriverWrapper driverWrapper) {
+        this.driverWrapper = driverWrapper;
     }
 
 
