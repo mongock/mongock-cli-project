@@ -1,39 +1,36 @@
 package io.mongock.cli.app;
 
 import io.mongock.cli.app.events.MongockEventListener;
+import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.DriverWrapperReceiver;
 import io.mongock.runner.core.builder.RunnerBuilder;
 import io.mongock.runner.core.builder.RunnerBuilderProvider;
 import io.mongock.runner.standalone.MongockStandalone;
-import io.mongock.runner.standalone.RunnerStandaloneBuilder;
 
 public class RunnerBuilderProviderImpl implements RunnerBuilderProvider, DriverWrapperReceiver {
 
-	private String driverWrapperName;
+    private DriverWrapper driverWrapper;
 
-	@Override
-	public RunnerBuilder getBuilder() {
+    @Override
+    public RunnerBuilder getBuilder() {
 
+        return MongockStandalone.builder()
+                .setDriver(DriverFactory.getDriver(driverWrapper))
+                .addMigrationScanPackage("io.mongock.examples.changelogs")
+                .setMigrationStartedListener(MongockEventListener::onStart)
+                .setMigrationSuccessListener(MongockEventListener::onSuccess)
+                .setMigrationFailureListener(MongockEventListener::onFail)
+                .setTrackIgnored(true)
+                .setTransactionEnabled(true);
+    }
 
-		RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder()
-				.setDriver(DriverFactory.getDriver(driverWrapperName))
-				.addMigrationScanPackage("io.mongock.examples.changelogs")
-				.setMigrationStartedListener(MongockEventListener::onStart)
-				.setMigrationSuccessListener(MongockEventListener::onSuccess)
-				.setMigrationFailureListener(MongockEventListener::onFail)
-				.setTrackIgnored(true)
-				.setTransactionEnabled(true);
-		return runnerStandaloneBuilder;
-	}
-
-	@Override
-	public void setDriverWrapperName(String driverWrapperName) {
-		this.driverWrapperName = driverWrapperName;
-	}
-
-
-
-
+    @Override
+    public void setDriverWrapperName(String driverWrapperName) {
+        if (driverWrapperName == null || driverWrapperName.isEmpty()) {
+            throw new RuntimeException("Driver must not be null");
+        }
+        this.driverWrapper = DriverWrapper.valueOf(driverWrapperName);
+    }
 
 
 }
