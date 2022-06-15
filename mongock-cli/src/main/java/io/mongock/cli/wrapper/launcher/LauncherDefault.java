@@ -32,8 +32,8 @@ public class LauncherDefault extends LauncherStandalone {
 		Object builderProvider = constructor.newInstance();
 
 		// setting the DriverWrapperName
-		Method setDriverWrapperNameMethod = builderProvider.getClass().getMethod("setDriverWrapperName", String.class);
-		setDriverWrapperNameMethod.invoke(builderProvider, driverWrapper.name());
+		Method setDriverWrapperNameMethod = builderProvider.getClass().getMethod("setDriverWrapper", DriverWrapper.class);
+		setDriverWrapperNameMethod.invoke(builderProvider, driverWrapper);
 
 
 		Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
