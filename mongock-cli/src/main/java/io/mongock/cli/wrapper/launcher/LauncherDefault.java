@@ -15,9 +15,10 @@ public class LauncherDefault extends LauncherStandalone {
 
 
 	public LauncherDefault(Jar appJar,
+						   ClassLoader classLoader,
 						   String licenseKey,
-						   DriverWrapper driverWrapper,
-						   ClassLoader classLoader) {
+						   DriverWrapper driverWrapper
+						   ) {
 		super(appJar, classLoader);
 		this.licenseKey = licenseKey;
 		this.driverWrapper = driverWrapper;

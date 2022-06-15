@@ -33,7 +33,7 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.community.version>5.1.1-SNAPSHOT</mongock.community.version>
+        <mongock.community.version>5.1.0-SNAPSHOT</mongock.community.version>
         <mongock.pro.version>5.0.32-SNAPSHOT</mongock.pro.version>
 
         <project.scm.id>ossrh</project.scm.id>
