@@ -5,14 +5,19 @@ import java.util.Set;
 
 public enum Argument {
 
+
     USER_APP_JAR("-aj", "--app-jar"),
     USER_CHANGE_UNIT_JAR("-cj", "--changes-jar"),
+    USER_CONFIGURATION("-cf", "--config-file"),
+
     DRIVER("-d", "--driver"),
+    LICENSE_KEY("-lk", "--license-key"),
+
     CLI_VERSION("-cv", "--cli-version"),
     COMMUNITY_VERSION("-mcv", "--mongock-community-version"),
     PROFESSIONAL_VERSION("-mpv", "--mongock-professional-version"),
-    LOG_LEVEL("-ll", "--log-level"),
-    LICENSE_KEY("-lk", "--license-key");
+    LOG_LEVEL("-ll", "--log-level")
+    ;
 
     private final String shortName;
     private final String longName;

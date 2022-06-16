@@ -1,6 +1,6 @@
 package io.mongock.cli.wrapper.launcher;
 
-import io.mongock.cli.util.DefaultAppConfiguration;
+import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.wrapper.jars.Jar;
 import org.jetbrains.annotations.NotNull;
@@ -14,16 +14,19 @@ public class LauncherDefault extends LauncherStandalone {
     private final DriverWrapper driverWrapper;
 
     private final String licenseKey;
+    private final CliConfiguration cliConfiguration;
 
 
     public LauncherDefault(Jar appJar,
                            ClassLoader classLoader,
                            String licenseKey,
-                           DriverWrapper driverWrapper
+                           DriverWrapper driverWrapper,
+                           CliConfiguration cliConfiguration
     ) {
         super(appJar, classLoader);
         this.licenseKey = licenseKey;
         this.driverWrapper = driverWrapper;
+        this.cliConfiguration = cliConfiguration;
 
     }
 
@@ -37,30 +40,15 @@ public class LauncherDefault extends LauncherStandalone {
         Object builderProvider = constructor.newInstance();
 
         // setting configuration
-        Method setConfigMethod = builderProvider.getClass().getMethod("setConfiguration", DefaultAppConfiguration.class);
-        DefaultAppConfiguration defaultAppConfiguration = buildDefaultAppConfiguration();
-        setConfigMethod.invoke(builderProvider, defaultAppConfiguration);
+        Method setConfigMethod = builderProvider.getClass().getMethod("setConfiguration", CliConfiguration.class);
+        setConfigMethod.invoke(builderProvider, cliConfiguration);
 
         Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
         Object builder = getBuilderMethod.invoke(builderProvider);
 
-        //set licenseKey, if provided
-//        if (licenseKey != null) {
-//            Class.forName("io.mongock.professional.runner.common.RunnerBuilderProfessional", false, classLoader);
-//
-//
-//            Method setLicenseKeyMethod = builder.getClass().getMethod("setLicenseKey", String.class);
-//            setLicenseKeyMethod.invoke(builder, licenseKey);
-//        }
         return builder;
     }
 
-    @NotNull
-    private DefaultAppConfiguration buildDefaultAppConfiguration() {
-        DefaultAppConfiguration defaultAppConfiguration = new DefaultAppConfiguration();
-        defaultAppConfiguration.setDriverWrapper(driverWrapper);
-        defaultAppConfiguration.setLicenseKey(licenseKey);
-        return defaultAppConfiguration;
-    }
+
 
 }

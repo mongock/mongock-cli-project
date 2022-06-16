@@ -1,10 +1,10 @@
 package io.mongock.cli.wrapper;
 
+import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.jars.Jar;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 import io.mongock.cli.wrapper.argument.Argument;
 import io.mongock.cli.wrapper.argument.ArgumentsHolder;
@@ -21,6 +21,7 @@ import static io.mongock.cli.wrapper.argument.Argument.LICENSE_KEY;
 import static io.mongock.cli.wrapper.argument.Argument.LOG_LEVEL;
 import static io.mongock.cli.wrapper.argument.Argument.PROFESSIONAL_VERSION;
 import static io.mongock.cli.wrapper.argument.Argument.USER_CHANGE_UNIT_JAR;
+import static io.mongock.cli.wrapper.argument.Argument.USER_CONFIGURATION;
 
 public class MongockCli {
 
@@ -41,10 +42,11 @@ public class MongockCli {
         try {
 
             LauncherCliJar.builder(buildJarFactory())
-                    .setUserApplicationJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
-                    .setUserChangeUnitJar(argumentsHolder.getOptional(USER_CHANGE_UNIT_JAR).map(Jar::new).orElse(null))
-                    .setDriverWrapper(getDriverWrapper())
-                    .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
+                    .setConfiguration(getConfiguration())
+//                    .setUserApplicationJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
+//                    .setUserChangeUnitJar(argumentsHolder.getOptional(USER_CHANGE_UNIT_JAR).map(Jar::new).orElse(null))
+//                    .setDriverWrapper(getDriverWrapper())
+//                    .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
                     .build()
                     .launch(argumentsHolder.getCleanArgs());
             System.exit(0);
@@ -54,6 +56,22 @@ public class MongockCli {
         }
 
     }
+
+    private static CliConfiguration getConfiguration() {
+        return argumentsHolder.getOptional(USER_CONFIGURATION)
+                .map(file -> CliConfiguration.fileBuilder().setConfigFile(file).build())
+                .orElseGet(CliConfiguration::new)
+                .setJarsLibFolder(JARS_LIB)
+                .setCliVersion(argumentsHolder.getOrException(CLI_VERSION))
+                .setDriverNameIfNotNull(argumentsHolder.getOrNull(DRIVER))
+                .setUserAppIfNotNull(argumentsHolder.getOrNull(USER_APP_JAR))
+                .setUserChangeUnitIfNotNull(argumentsHolder.getOrNull(USER_CHANGE_UNIT_JAR))
+                .setLicenseKeyIfNotNull(argumentsHolder.getOrNull(LICENSE_KEY))
+
+                ;
+    }
+
+
 
     private static DriverWrapper getDriverWrapper() {
         String driverName = argumentsHolder.getOrNull(DRIVER);
