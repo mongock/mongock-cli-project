@@ -1,25 +1,24 @@
 package io.mongock.cli.wrapper;
 
 import io.mongock.cli.util.CliConfiguration;
-import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 import io.mongock.cli.wrapper.argument.Argument;
 import io.mongock.cli.wrapper.argument.ArgumentsHolder;
 import io.mongock.cli.wrapper.jars.JarFactory;
+import io.mongock.cli.wrapper.launcher.LauncherCliJar;
 
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
 import static io.mongock.cli.wrapper.argument.Argument.CLI_VERSION;
 import static io.mongock.cli.wrapper.argument.Argument.COMMUNITY_VERSION;
 import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
 import static io.mongock.cli.wrapper.argument.Argument.LICENSE_KEY;
 import static io.mongock.cli.wrapper.argument.Argument.LOG_LEVEL;
 import static io.mongock.cli.wrapper.argument.Argument.PROFESSIONAL_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
 import static io.mongock.cli.wrapper.argument.Argument.USER_CHANGE_UNIT_JAR;
 import static io.mongock.cli.wrapper.argument.Argument.USER_CONFIGURATION;
 
@@ -43,10 +42,6 @@ public class MongockCli {
 
             LauncherCliJar.builder(buildJarFactory())
                     .setConfiguration(getConfiguration())
-//                    .setUserApplicationJar(argumentsHolder.getOptional(USER_APP_JAR).map(Jar::new).orElse(null))
-//                    .setUserChangeUnitJar(argumentsHolder.getOptional(USER_CHANGE_UNIT_JAR).map(Jar::new).orElse(null))
-//                    .setDriverWrapper(getDriverWrapper())
-//                    .setLicenseKey(argumentsHolder.getOrNull(LICENSE_KEY))
                     .build()
                     .launch(argumentsHolder.getCleanArgs());
             System.exit(0);
@@ -67,24 +62,9 @@ public class MongockCli {
                 .setUserAppIfNotNull(argumentsHolder.getOrNull(USER_APP_JAR))
                 .setUserChangeUnitIfNotNull(argumentsHolder.getOrNull(USER_CHANGE_UNIT_JAR))
                 .setLicenseKeyIfNotNull(argumentsHolder.getOrNull(LICENSE_KEY))
-
                 ;
     }
 
-
-
-    private static DriverWrapper getDriverWrapper() {
-        String driverName = argumentsHolder.getOrNull(DRIVER);
-        if (driverName != null) {
-            return DriverWrapper.getDriver(driverName)
-                    .setJarsLibFolder(JARS_LIB)
-                    .setVersion(argumentsHolder.getOrException(CLI_VERSION));
-        } else {
-            return null;
-        }
-
-
-    }
 
     private static JarFactory buildJarFactory() {
         return new JarFactory(

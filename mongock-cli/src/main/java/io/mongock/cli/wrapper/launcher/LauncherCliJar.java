@@ -22,13 +22,7 @@ public interface LauncherCliJar {
     class LauncherBuilder {
 
         private JarFactory jarFactory;
-
         private CliConfiguration configuration;
-
-//        private Jar userApplicationJar;
-//        private Jar userChangeUnitJar;
-
-
 
         public LauncherBuilder(JarFactory jarFactory) {
             this.jarFactory = jarFactory;
@@ -38,25 +32,6 @@ public interface LauncherCliJar {
             this.configuration = configuration;
             return this;
         }
-
-        //        /**
-//         * Optional setter if Mongock is run based on an application
-//         *
-//         * @param userApplicationJar application jar
-//         * @return builder
-//         */
-//        public LauncherBuilder setUserApplicationJar(Jar userApplicationJar) {
-//            this.userApplicationJar = userApplicationJar;
-//            return this;
-//        }
-
-//        public LauncherBuilder setUserChangeUnitJar(Jar userChangeUnitJar) {
-//            this.userChangeUnitJar = userChangeUnitJar;
-//            return this;
-//        }
-
-
-
 
 
         public LauncherCliJar build() {
