@@ -102,7 +102,9 @@ public class LauncherStandalone implements LauncherCliJar {
 		return cliBuilder;
 	}
 
-	protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+		Class.forName("io.mongock.runner.core.builder.RunnerBuilderProvider", false, classLoader);
+
 		Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
 		Object builderProvider = constructor.newInstance();
 		Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
