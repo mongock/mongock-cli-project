@@ -3,6 +3,7 @@ package io.mongock.cli.wrapper.launcher;
 import io.mongock.cli.util.DefaultAppConfiguration;
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.wrapper.jars.Jar;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -37,22 +38,29 @@ public class LauncherDefault extends LauncherStandalone {
 
         // setting configuration
         Method setConfigMethod = builderProvider.getClass().getMethod("setConfiguration", DefaultAppConfiguration.class);
-        DefaultAppConfiguration defaultAppConfiguration = new DefaultAppConfiguration();
-        defaultAppConfiguration.setDriverWrapper(driverWrapper);
+        DefaultAppConfiguration defaultAppConfiguration = buildDefaultAppConfiguration();
         setConfigMethod.invoke(builderProvider, defaultAppConfiguration);
 
         Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
         Object builder = getBuilderMethod.invoke(builderProvider);
 
         //set licenseKey, if provided
-        if (licenseKey != null) {
-            Class.forName("io.mongock.professional.runner.common.RunnerBuilderProfessional", false, classLoader);
-
-
-            Method setLicenseKeyMethod = builder.getClass().getMethod("setLicenseKey", String.class);
-            setLicenseKeyMethod.invoke(builder, licenseKey);
-        }
+//        if (licenseKey != null) {
+//            Class.forName("io.mongock.professional.runner.common.RunnerBuilderProfessional", false, classLoader);
+//
+//
+//            Method setLicenseKeyMethod = builder.getClass().getMethod("setLicenseKey", String.class);
+//            setLicenseKeyMethod.invoke(builder, licenseKey);
+//        }
         return builder;
+    }
+
+    @NotNull
+    private DefaultAppConfiguration buildDefaultAppConfiguration() {
+        DefaultAppConfiguration defaultAppConfiguration = new DefaultAppConfiguration();
+        defaultAppConfiguration.setDriverWrapper(driverWrapper);
+        defaultAppConfiguration.setLicenseKey(licenseKey);
+        return defaultAppConfiguration;
     }
 
 }
