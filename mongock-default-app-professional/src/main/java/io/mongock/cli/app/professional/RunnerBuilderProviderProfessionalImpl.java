@@ -1,7 +1,7 @@
 package io.mongock.cli.app.professional;
 
 import io.mongock.cli.app.professional.events.MongockEventListener;
-import io.mongock.cli.util.DefaultAppConfiguration;
+import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.util.RunnerBuilderProviderConfigurable;
 import io.mongock.runner.core.builder.RunnerBuilder;
@@ -11,7 +11,7 @@ import io.mongock.runner.standalone.MongockStandalone;
 public class RunnerBuilderProviderProfessionalImpl implements RunnerBuilderProvider, RunnerBuilderProviderConfigurable {
 
     private DriverWrapper driverWrapper;
-    private DefaultAppConfiguration configuration;
+    private CliConfiguration configuration;
 
     @Override
     public RunnerBuilder getBuilder() {
@@ -28,7 +28,7 @@ public class RunnerBuilderProviderProfessionalImpl implements RunnerBuilderProvi
     }
 
     @Override
-    public void setConfiguration(DefaultAppConfiguration configuration) {
+    public void setConfiguration(CliConfiguration configuration) {
         this.configuration = configuration;
         this.driverWrapper = configuration.getDriverWrapper();
     }
