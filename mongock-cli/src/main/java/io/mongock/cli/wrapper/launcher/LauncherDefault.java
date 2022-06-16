@@ -3,7 +3,6 @@ package io.mongock.cli.wrapper.launcher;
 import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.DriverWrapper;
 import io.mongock.cli.wrapper.jars.Jar;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
