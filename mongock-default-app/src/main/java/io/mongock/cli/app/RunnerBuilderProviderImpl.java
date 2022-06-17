@@ -17,7 +17,7 @@ public class RunnerBuilderProviderImpl implements RunnerBuilderProvider, RunnerB
     public RunnerBuilder getBuilder() {
 
         return MongockStandalone.builder()
-                .setDriver(DriverFactory.getDriver(driverWrapper))
+                .setDriver(DriverFactory.getDriver(driverWrapper, configuration))
                 .addMigrationScanPackage(configuration.getScanPackage())
                 .setMigrationStartedListener(MongockEventListener::onStart)
                 .setMigrationSuccessListener(MongockEventListener::onSuccess)

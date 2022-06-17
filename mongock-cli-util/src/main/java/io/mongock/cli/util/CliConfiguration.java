@@ -8,6 +8,11 @@ public class CliConfiguration {
 
     private String driverName;
 
+    private String databaseUrl;
+
+    private String databaseName;
+
+
     private String jarsLibFolder;
 
     private String cliVersion;
@@ -83,6 +88,24 @@ public class CliConfiguration {
         return this;
     }
 
+    public String getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    public CliConfiguration setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl != null ? databaseUrl : this.databaseUrl;
+        return this;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public CliConfiguration setDatabaseName(String databaseName) {
+        this.databaseName = databaseName != null ? databaseName : this.databaseName;
+        return this;
+    }
+
     public static class Builder {
 
         private String configFile;
@@ -101,7 +124,7 @@ public class CliConfiguration {
             try {
                 CliConfiguration config = new CliConfiguration();
                 for (String configLine : Files.readAllLines(Paths.get(configFile))) {
-                    if(configLine != null && !configLine.isEmpty()) {
+                    if (configLine != null && !configLine.isEmpty()) {
                         String[] parts = configLine.split("=");
                         setConfigValue(config, parts[0], parts[1]);
                     }
@@ -120,6 +143,10 @@ public class CliConfiguration {
                     return config.setScanPackage(propertyValue);
                 case "driver":
                     return config.setDriverNameIfNotNull(propertyValue);
+                case "databaseurl":
+                    return config.setDatabaseUrl(propertyValue);
+                case "databasename":
+                    return config.setDatabaseName(propertyValue);
 
                 default:
                     return config;//IGNORED

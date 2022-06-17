@@ -1,15 +1,11 @@
 package io.mongock.driver.cli.wrapper.mongodb.springdata.v3;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
+import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.ConnectionDriverProvider;
 import io.mongock.driver.api.driver.ConnectionDriver;
 import io.mongock.driver.mongodb.springdata.v3.SpringDataMongoV3Driver;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
@@ -18,20 +14,14 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
 public class SpringDataMongoV3DriverProvider implements ConnectionDriverProvider {
-
-    public final static String MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/";
-    public final static String MONGODB_MAIN_DB_NAME = "test";
 
 
     @Override
-    public ConnectionDriver getDriver() {
+    public ConnectionDriver getDriver(CliConfiguration configuration) {
 
 
-        MongoTemplate mongoTemplate = getMongoTemplate();
+        MongoTemplate mongoTemplate = getMongoTemplate(configuration.getDatabaseUrl(), configuration.getDatabaseName());
 
         // Driver
         SpringDataMongoV3Driver driver = SpringDataMongoV3Driver.withDefaultLock(mongoTemplate);
@@ -43,10 +33,10 @@ public class SpringDataMongoV3DriverProvider implements ConnectionDriverProvider
     /**
      * Main MongoTemplate for Mongock to work.
      */
-    private static MongoTemplate getMongoTemplate() {
+    private static MongoTemplate getMongoTemplate(String connectionString, String dbName) {
 
-        MongoClient mongoClient = MongoClients.create(MONGODB_CONNECTION_STRING);
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, MONGODB_MAIN_DB_NAME);
+        MongoClient mongoClient = MongoClients.create(connectionString);
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, dbName);
 
         // Custom converters to map ZonedDateTime.
         MappingMongoConverter mongoMapping = (MappingMongoConverter) mongoTemplate.getConverter();
@@ -57,11 +47,6 @@ public class SpringDataMongoV3DriverProvider implements ConnectionDriverProvider
     }
 
 
-    private static MongoDatabase getDatabase() {
-        MongoClient mongoClient = buildMongoClientWithCodecs(MONGODB_CONNECTION_STRING);
-        return mongoClient.getDatabase("secondaryDb");
-    }
-
 
     private static MongoCustomConversions customConversions() {
         List<Converter<?, ?>> converters = new ArrayList<>();
@@ -70,17 +55,5 @@ public class SpringDataMongoV3DriverProvider implements ConnectionDriverProvider
         return new MongoCustomConversions(converters);
     }
 
-    /**
-     * Helper to create MongoClients customized including Codecs
-     */
-    private static MongoClient buildMongoClientWithCodecs(String connectionString) {
 
-        CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-
-        return MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(connectionString))
-                .codecRegistry(codecRegistry)
-                .build());
-    }
 }
