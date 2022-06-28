@@ -1,0 +1,7 @@
+@echo off
+REM Generated cli script
+java -jar ${project.artifactId}-${project.version}.jar ^
+ --cli-spring-jar lib/mongock-cli-springboot-${project.version}.jar ^
+ --cli-core-jar lib/mongock-cli-core-${project.version}.jar ^
+ --mongock-core-jar lib/mongock-runner-core-${mongock.version}.jar ^
+ %*
