@@ -63,6 +63,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/linux_script_template</include>
+                    <include>**/windows_script_template</include>
                 </includes>
             </resource>
             <resource>
@@ -70,6 +71,7 @@
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/linux_script_template</exclude>
+                    <exclude>**/windows_script_template</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -90,6 +92,20 @@
                                 <copy file="${project.build.outputDirectory}/linux_script_template"
                                       toFile="target/mongock" overwrite="true" />
                                 <chmod file="target/mongock" perm="ugo+rx"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>windows-script</id> <!-- has to be set -->
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="windows-script">
+                                <copy file="${project.build.outputDirectory}/windows_script_template"
+                                      toFile="target/mongock.bat" overwrite="true" />
+                                <chmod file="target/mongock.bat" perm="ugo+rx"/>
                             </target>
                         </configuration>
                     </execution>

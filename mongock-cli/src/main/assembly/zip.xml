@@ -16,6 +16,10 @@
             <source>${project.build.directory}/mongock</source>
             <outputDirectory>/</outputDirectory>
         </file>
+        <file>
+            <source>${project.build.directory}/mongock.bat</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
     </files>
 
     <dependencySets>
