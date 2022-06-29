@@ -1,103 +1,88 @@
 package io.mongock.cli.wrapper.launcher;
 
-import io.mongock.cli.wrapper.util.JarUtil;
-import org.springframework.boot.loader.archive.JarFileArchive;
+import io.mongock.cli.util.CliConfiguration;
+import io.mongock.cli.util.DriverWrapper;
+import io.mongock.cli.wrapper.jars.CliClassLoader;
+import io.mongock.cli.wrapper.jars.Jar;
+import io.mongock.cli.wrapper.jars.JarFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
+import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
 
-import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
 
 public interface LauncherCliJar {
 
 
-    LauncherCliJar loadClasses();
-
     void launch(String[] args);
 
 
-    static LauncherBuilder builder() {
-        return new LauncherBuilder();
+    static LauncherBuilder builder(JarFactory jarFactory) {
+        return new LauncherBuilder(jarFactory);
     }
 
     class LauncherBuilder {
 
-        private String cliSpringJar;
-        private String cliCoreJar;
+        private JarFactory jarFactory;
+        private CliConfiguration configuration;
 
-        private String appJarFile;
-
-        private String mongockCoreJarFile;
-
-
-        public LauncherBuilder() {
+        public LauncherBuilder(JarFactory jarFactory) {
+            this.jarFactory = jarFactory;
         }
 
-        public LauncherBuilder setAppJarFile(String appJarFile) {
-            this.appJarFile = appJarFile;
+        public LauncherBuilder setConfiguration(CliConfiguration configuration) {
+            this.configuration = configuration;
             return this;
         }
 
-        public LauncherBuilder setCliSpringJar(String cliSpringJar) {
-            this.cliSpringJar = cliSpringJar;
-            return this;
-        }
 
-        public LauncherBuilder setCliCoreJar(String cliCoreJar) {
-            this.cliCoreJar = cliCoreJar;
-            return this;
-        }
-
-        public LauncherBuilder setMongockCoreJarFile(String mongockCoreJarFile) {
-            this.mongockCoreJarFile = mongockCoreJarFile;
-            return this;
-        }
-
-        public LauncherCliJar build() throws IOException {
-            if (getAppJar().isPresent()) {
-                JarFileArchive archive = new JarFileArchive(new File(appJarFile));
-                if (JarUtil.isSpringApplication(archive)) {
-                    return buildLauncherSpring(archive);
+        public LauncherCliJar build() {
+            if (configuration.getUserApplication().isPresent()) {
+                Jar userApplicationJar = new Jar(configuration.getUserApplication().get());
+                if (userApplicationJar.isSpringApplication()) {
+                    new CliClassLoader().addJar(userApplicationJar).loadClasses();
+                    return new LauncherSpringboot(userApplicationJar, jarFactory.cliSpringboot());
                 } else {
-                    return buildLauncherStandalone(archive);
+
+                    CliClassLoader cliClassLoader = new CliClassLoader()
+                            .addJar(userApplicationJar)
+                            .addJar(jarFactory.cliCore());
+                    cliClassLoader.loadClasses();
+                    return new LauncherStandalone(userApplicationJar, cliClassLoader.getClassLoader());
                 }
+            } else if(configuration.getUserChangeUnit().isPresent())  {
+                DriverWrapper driverWrapper = configuration.getDriverWrapper();
+                CliClassLoader cliClassLoader = new CliClassLoader()
+                        .addJar(isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp())
+                        .addJar(jarFactory.cliCore())
+                        .addJar(new Jar(driverWrapper.getJarPath()))
+                        .addJars(isProfessional() ? jarFactory.runnerProfessionalDependencies() : jarFactory.runnerCommunityDependencies())
+                        .addJar(new Jar(configuration.getUserChangeUnit().get()));
+                cliClassLoader.loadClasses();
+                validateDriverIfApply(driverWrapper);
+                return new LauncherDefault(
+                        isProfessional() ? jarFactory.defaultProfessionalApp() : jarFactory.defaultApp(),
+                        cliClassLoader.getClassLoader(),
+                        configuration.getLicenseKey().get(),
+                        driverWrapper,
+                        configuration
+                );
+
             } else {
-                return buildLauncherWithoutApp();
+                throw new RuntimeException("Either an application jar or a jar containing the change units must be provided");
             }
         }
 
-        private LauncherDefault buildLauncherWithoutApp() {
-            validateNotNullParameter(mongockCoreJarFile, "parameter " + MONGOCK_CORE_JAR_ARG);
-            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
-            return new LauncherDefault(mongockCoreJarFile, cliCoreJar);
+        private boolean isProfessional() {
+            return configuration.getLicenseKey().isPresent();
         }
 
-        private LauncherStandalone buildLauncherStandalone(JarFileArchive archive) {
-            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
-            validateNotNullParameter(cliCoreJar, "parameter " + CLI_CORE_JAR_ARG);
-            return new LauncherStandalone(archive, appJarFile, cliCoreJar);
+        private void validateDriverIfApply(DriverWrapper driverWrapper) {
+            if (driverWrapper == null) {
+                throw new RuntimeException(String.format(
+                        "When application is missing, Parameter `%s` must be provided :  \n%s",
+                        DRIVER.getDefaultName(),
+                        DriverWrapper.getAllDriverNames("\n")));
+            }
         }
-
-        private LauncherSpringboot buildLauncherSpring(JarFileArchive archive) {
-            validateNotNullParameter(appJarFile, "parameter " + APP_JAR_ARG_LONG);
-            validateNotNullParameter(cliSpringJar, "parameter " + CLI_SPRING_JAR_ARG);
-            return new LauncherSpringboot(archive, appJarFile, cliSpringJar);
-        }
-
-
-        private Optional<String> getAppJar() {
-            return Optional.ofNullable(appJarFile);
-        }
-
-        private void validateNotNullParameter(Object parameter, String name) {
-        	if(parameter == null) {
-        		throw new RuntimeException(name + " must be provided");
-			}
-		}
     }
 
 }

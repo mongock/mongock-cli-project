@@ -17,6 +17,9 @@
         <module>mongock-cli-springboot</module>
         <module>mongock-cli</module>
         <module>mongock-cli-util</module>
+        <module>mongock-default-app</module>
+        <module>driver-wrappers</module>
+        <module>mongock-default-app-professional</module>
     </modules>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -27,10 +30,12 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <spring-boot.version>[2.0.0, 3.0.0)</spring-boot.version>
         <picocli.version>4.6.1</picocli.version>
+        <slf4j.version>1.7.32</slf4j.version>
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.version>5.1.0</mongock.version>
+        <mongock.community.version>5.1.0-SNAPSHOT</mongock.community.version>
+        <mongock.pro.version>5.0.32-SNAPSHOT</mongock.pro.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
@@ -77,17 +82,17 @@
         </repository>
     </distributionManagement>
     
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.mongock</groupId>
-                <artifactId>mongock-bom</artifactId>
-                <version>${mongock.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>io.mongock</groupId>-->
+<!--                <artifactId>mongock-bom</artifactId>-->
+<!--                <version>${mongock.community.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
     <build>
         <plugins>
