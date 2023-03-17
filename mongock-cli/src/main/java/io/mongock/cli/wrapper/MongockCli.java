@@ -1,62 +1,79 @@
 package io.mongock.cli.wrapper;
 
+import io.mongock.cli.util.CliConfiguration;
 import io.mongock.cli.util.banner.Banner;
 import io.mongock.cli.util.logger.CliLogger;
 import io.mongock.cli.util.logger.CliLoggerFactory;
+import io.mongock.cli.wrapper.argument.Argument;
+import io.mongock.cli.wrapper.argument.ArgumentsHolder;
+import io.mongock.cli.wrapper.jars.JarFactory;
 import io.mongock.cli.wrapper.launcher.LauncherCliJar;
-import io.mongock.cli.wrapper.util.ArgsUtil;
 
 import java.util.stream.Stream;
 
 import static io.mongock.cli.util.logger.CliLogger.Level.INFO;
-import static io.mongock.cli.wrapper.util.ArgsUtil.getCleanArgs;
-import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_LONG;
-import static io.mongock.cli.wrapper.util.Parameters.APP_JAR_ARG_SHORT;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_CORE_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.CLI_SPRING_JAR_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.LOG_LEVEL_ARG;
-import static io.mongock.cli.wrapper.util.Parameters.MONGOCK_CORE_JAR_ARG;
+import static io.mongock.cli.wrapper.argument.Argument.CLI_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.COMMUNITY_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.DRIVER;
+import static io.mongock.cli.wrapper.argument.Argument.LICENSE_KEY;
+import static io.mongock.cli.wrapper.argument.Argument.LOG_LEVEL;
+import static io.mongock.cli.wrapper.argument.Argument.PROFESSIONAL_VERSION;
+import static io.mongock.cli.wrapper.argument.Argument.USER_APP_JAR;
+import static io.mongock.cli.wrapper.argument.Argument.USER_CHANGE_UNIT_JAR;
+import static io.mongock.cli.wrapper.argument.Argument.USER_CONFIGURATION;
 
 public class MongockCli {
-    private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
 
-    private static final String[] argumentsToCleanUp = {
-            APP_JAR_ARG_LONG,
-            APP_JAR_ARG_SHORT,
-            CLI_SPRING_JAR_ARG,
-            CLI_CORE_JAR_ARG,
-            LOG_LEVEL_ARG,
-            MONGOCK_CORE_JAR_ARG
-    };
+    private static final String JARS_LIB = "lib";
+
+    private static ArgumentsHolder argumentsHolder;
+    private static final CliLogger logger = CliLoggerFactory.getLogger(MongockCli.class);
 
     static {
         Banner.print(System.out);
     }
 
     public static void main(String... args) {
-        setLogger(args);
+        Argument.validateArguments();
+        argumentsHolder = new ArgumentsHolder(args);
+        setLogger();
         printArgs(args);
-
         try {
 
-            String appJar = ArgsUtil.getOptionalParam(args, APP_JAR_ARG_LONG)
-                    .orElseGet(() -> ArgsUtil.getParameter(args, APP_JAR_ARG_SHORT, false));
-
-            LauncherCliJar.builder()
-                    .setAppJarFile(appJar)
-                    .setCliCoreJar(ArgsUtil.getParameter(args, CLI_CORE_JAR_ARG, false))
-                    .setCliSpringJar(ArgsUtil.getParameter(args, CLI_SPRING_JAR_ARG, false))
-                    .setMongockCoreJarFile(ArgsUtil.getParameter(args, MONGOCK_CORE_JAR_ARG, false))
+            LauncherCliJar.builder(buildJarFactory())
+                    .setConfiguration(getConfiguration())
                     .build()
-                    .loadClasses()
-                    .launch(getCleanArgs(args, argumentsToCleanUp));
+                    .launch(argumentsHolder.getCleanArgs());
             System.exit(0);
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex);
             System.exit(1);
         }
 
     }
+
+    private static CliConfiguration getConfiguration() {
+        return argumentsHolder.getOptional(USER_CONFIGURATION)
+                .map(file -> CliConfiguration.fileBuilder().setConfigFile(file).build())
+                .orElseGet(CliConfiguration::new)
+                .setJarsLibFolder(JARS_LIB)
+                .setCliVersion(argumentsHolder.getOrException(CLI_VERSION))
+                .setDriverNameIfNotNull(argumentsHolder.getOrNull(DRIVER))
+                .setUserAppIfNotNull(argumentsHolder.getOrNull(USER_APP_JAR))
+                .setUserChangeUnitIfNotNull(argumentsHolder.getOrNull(USER_CHANGE_UNIT_JAR))
+                .setLicenseKeyIfNotNull(argumentsHolder.getOrNull(LICENSE_KEY))
+                ;
+    }
+
+
+    private static JarFactory buildJarFactory() {
+        return new JarFactory(
+                JARS_LIB,
+                argumentsHolder.getOrException(CLI_VERSION),
+                argumentsHolder.getOrException(COMMUNITY_VERSION),
+                argumentsHolder.getOrException(PROFESSIONAL_VERSION));
+    }
+
 
     // Unneeded loop when level > DEBUG...but small ;)
     private static void printArgs(String[] args) {
@@ -65,8 +82,8 @@ public class MongockCli {
         logger.debug(sb.toString());
     }
 
-    private static void setLogger(String[] args) {
-        CliLoggerFactory.setLevel(ArgsUtil.getOptionalParam(args, LOG_LEVEL_ARG)
+    private static void setLogger() {
+        CliLoggerFactory.setLevel(argumentsHolder.getOptional(LOG_LEVEL)
                 .map(CliLogger.Level::fromStringDefaultInfo)
                 .orElse(INFO));
     }

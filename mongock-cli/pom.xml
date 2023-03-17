@@ -15,6 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <java.version>1.8</java.version>
+
     </properties>
 
     <dependencies>
@@ -33,20 +34,66 @@
             <artifactId>mongock-cli-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-default-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-default-app-professional</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-api</artifactId>
+            <version>${mongock.community.version}</version>
         </dependency>
+
+
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-runner-core</artifactId>
+            <version>${mongock.community.version}</version>
         </dependency>
+
+
+        <!-- Brought to make the default app smaller-->
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongock-standalone</artifactId>
+            <version>${mongock.community.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mongock.professional</groupId>
+            <artifactId>mongock-standalone</artifactId>
+            <version>${mongock.pro.version}</version>
+        </dependency>
+
+
+        <!-- WRAPPERS -->
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongodb-springdata-v3-wrapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mongock</groupId>
+            <artifactId>mongodb-springdata-v2-wrapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- END WRAPPERS -->
+
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,6 +158,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -121,8 +169,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <!-- Tells the plugin to replace the main artifact with the shaded one,
+                            instead of attaching it-->
                             <shadedArtifactAttached>false</shadedArtifactAttached>
 
+                            <!-- The classes to include. The rest are not included. If the filters block is removed,
+                            all the classes are included -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>

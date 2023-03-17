@@ -37,6 +37,7 @@ public interface CliLogger {
 		print(TRACE, format, arguments);
 	}
 
+
 	default void debug(String format, Object... arguments) {
 		print(DEBUG, format, arguments);
 	}
@@ -49,14 +50,24 @@ public interface CliLogger {
 		print(WARN, format, arguments);
 	}
 
-//	void warn(String format, Throwable th);
+
+
+	default void warn(Throwable ex) {
+		print(WARN, ex);
+	}
 
 
 	default void error(String format, Object... arguments) {
 		print(ERROR, format, arguments);
 	}
 
+	default void error(Throwable ex) {
+		print(ERROR, ex);
+	}
+
 	//	void error(String format, Throwable th);
 
 	void print(Level level, String format, Object... arguments);
+
+	void print(Level level, Throwable ex);
 }

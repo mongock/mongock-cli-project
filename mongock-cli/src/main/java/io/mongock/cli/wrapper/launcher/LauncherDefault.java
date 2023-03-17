@@ -1,101 +1,53 @@
 package io.mongock.cli.wrapper.launcher;
 
-import io.mongock.cli.util.logger.CliLogger;
-import io.mongock.cli.util.logger.CliLoggerFactory;
-import io.mongock.cli.wrapper.util.ClassLoaderUtil;
-import io.mongock.cli.wrapper.util.JarUtil;
+import io.mongock.cli.util.CliConfiguration;
+import io.mongock.cli.util.DriverWrapper;
+import io.mongock.cli.wrapper.jars.Jar;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
-public class LauncherDefault implements LauncherCliJar {
+public class LauncherDefault extends LauncherStandalone {
 
-    private static final CliLogger logger = CliLoggerFactory.getLogger(LauncherDefault.class);
+    private final DriverWrapper driverWrapper;
 
-    private final String cliJarPath;
+    private final String licenseKey;
+    private final CliConfiguration cliConfiguration;
 
-    private final String mongockCoreJarFile;
 
-    private URLClassLoader classLoader;
+    public LauncherDefault(Jar appJar,
+                           ClassLoader classLoader,
+                           String licenseKey,
+                           DriverWrapper driverWrapper,
+                           CliConfiguration cliConfiguration
+    ) {
+        super(appJar, classLoader);
+        this.licenseKey = licenseKey;
+        this.driverWrapper = driverWrapper;
+        this.cliConfiguration = cliConfiguration;
 
-    public LauncherDefault(String mongockCoreJarFile, String cliJarPath) {
-        this.mongockCoreJarFile = mongockCoreJarFile;
-        this.cliJarPath = cliJarPath;
-    }
-
-    @Override
-    public LauncherCliJar loadClasses() {
-
-        try {
-            this.classLoader = buildClassLoader();
-            ClassLoaderUtil.loadJarClasses(new JarFile(mongockCoreJarFile), classLoader);
-            ClassLoaderUtil.loadJarClasses(new JarFile(cliJarPath), classLoader);
-            return this;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 
     @Override
-    public void launch(String[] args) {
-        try {
-            logger.info("launching Mongock CLI runner with default launcher");
+    protected Object getRunnerBuilder(Class<?> builderProviderImplClass) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
 
-            Object commandLine = buildCli(getCliBuilder());
+        Class.forName("io.mongock.runner.core.builder.RunnerBuilderProvider", false, classLoader);
 
-            StringBuilder sb = new StringBuilder();
-            Stream.of(args).forEach(s -> sb.append(s).append(" "));
-            logger.debug("executing CommandLine with args: " + sb);
-            Method executeMethod = commandLine.getClass().getDeclaredMethod("execute", String[].class);
-            executeMethod.setAccessible(true);
-            executeMethod.invoke(commandLine, new Object[]{args});
-            logger.debug("successful call to commandLine.execute()");
+        Constructor<?> constructor = builderProviderImplClass.getDeclaredConstructor();
+        Object builderProvider = constructor.newInstance();
 
+        // setting configuration
+        Method setConfigMethod = builderProvider.getClass().getMethod("setConfiguration", CliConfiguration.class);
+        setConfigMethod.invoke(builderProvider, cliConfiguration);
 
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        Method getBuilderMethod = builderProvider.getClass().getMethod("getBuilder");
+        Object builder = getBuilderMethod.invoke(builderProvider);
+
+        return builder;
     }
 
 
-    private Object buildCli(Object cliBuilder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        logger.debug("building CommandLine");
-        Method buildMethod = cliBuilder.getClass().getDeclaredMethod("build");
-        buildMethod.setAccessible(true);
-        Object commandLine = buildMethod.invoke(cliBuilder);
-        logger.debug("successful built commandLine " + commandLine);
-        return commandLine;
-    }
 
-
-    private Object getCliBuilder() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        logger.debug("loading MongockCLI class");
-        Class<?> mongockCliClass = Class.forName("io.mongock.cli.core.CliCoreRunner", false, classLoader);
-        logger.debug("successfully loaded MongockCLI class");
-
-
-        logger.debug("obtaining builder setter");
-        Method builderMethod = mongockCliClass.getDeclaredMethod("builder");
-        builderMethod.setAccessible(true);
-        Object cliBuilder = builderMethod.invoke(null);
-        logger.debug("obtained cliBuilder");
-        return cliBuilder;
-    }
-
-
-    private URLClassLoader buildClassLoader() throws MalformedURLException {
-        return URLClassLoader.newInstance(
-                new URL[]{
-                        new URL(String.format(JarUtil.JAR_URL_TEMPLATE, mongockCoreJarFile)),
-                        new URL(String.format(JarUtil.JAR_URL_TEMPLATE, cliJarPath))
-                },
-                Thread.currentThread().getContextClassLoader()
-        );
-    }
 }
