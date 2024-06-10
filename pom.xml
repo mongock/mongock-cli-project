@@ -11,7 +11,7 @@
     <groupId>io.mongock</groupId>
     <artifactId>mongock-cli-project</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.38-SNAPSHOT</version>
+    <version>5.0.39-SNAPSHOT</version>
     <modules>
         <module>mongock-cli-core</module>
         <module>mongock-cli-springboot</module>
@@ -30,7 +30,7 @@
         <!-- CORE
         TODO UPDATE THIS VERSION FOR CORE UPDATES
         -->
-        <mongock.version>5.4.2</mongock.version>
+        <mongock.version>5.4.3</mongock.version>
 
         <project.scm.id>ossrh</project.scm.id>
     </properties>
@@ -48,7 +48,7 @@
         <connection>scm:git:git@github.com:mongock/mongock-cli-project.git</connection>
         <developerConnection>scm:git:https://github.com/mongock/mongock-cli-project.git</developerConnection>
         <url>https://github.com/mongock/mongock-cli-project</url>
-        <tag>:mongock-cli-project-5.0.38-SNAPSHOT</tag>
+        <tag>:mongock-cli-project-5.0.39-SNAPSHOT</tag>
     </scm>
 
     <developers>
